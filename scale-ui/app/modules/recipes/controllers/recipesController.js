@@ -155,7 +155,7 @@
             stateService.setRecipesParams(vm.recipesParams);
             vm.updateColDefs();
             vm.getRecipeTypes();
-            navService.updateLocation('recipes');
+            navService.updateLocation('processing');
         };
 
         vm.initialize();

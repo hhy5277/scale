@@ -48,7 +48,7 @@
         };
 
         vm.initialize = function () {
-            navService.updateLocation('recipes');
+            navService.updateLocation('processing');
             vm.getRecipeDetail(vm.recipeId);
         };
 

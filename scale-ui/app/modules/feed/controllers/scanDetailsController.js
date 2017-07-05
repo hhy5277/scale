@@ -207,7 +207,7 @@
                     });
                 }
             }
-            navService.updateLocation('feed');
+            navService.updateLocation('data');
             subnavService.setCurrentPath('feed/scans');
         };
 

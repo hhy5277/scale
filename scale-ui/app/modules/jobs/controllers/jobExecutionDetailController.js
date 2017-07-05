@@ -22,7 +22,7 @@
 
         var initialize = function () {
             getJobExecutionDetail($routeParams.id);
-            navService.updateLocation('jobs');
+            navService.updateLocation('processing');
         };
 
         initialize();

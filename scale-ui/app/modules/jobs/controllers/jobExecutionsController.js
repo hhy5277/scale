@@ -198,7 +198,7 @@
             var user = userService.getUserCreds();
             vm.readonly = !(user && user.is_admin);
             vm.getJobTypes();
-            navService.updateLocation('jobs/executions');
+            navService.updateLocation('processing');
         };
 
         vm.initialize();

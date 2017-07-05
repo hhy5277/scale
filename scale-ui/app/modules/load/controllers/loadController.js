@@ -82,7 +82,7 @@
                 vm.loading = false
             });
 
-            navService.updateLocation('load');
+            navService.updateLocation('processing');
         };
         initialize();
     });

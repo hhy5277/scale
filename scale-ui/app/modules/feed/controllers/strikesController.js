@@ -232,7 +232,7 @@
                     });
                 }
             }
-            navService.updateLocation('feed');
+            navService.updateLocation('configuration');
             subnavService.setCurrentPath('feed/strikes');
         };
 

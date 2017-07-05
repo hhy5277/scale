@@ -229,11 +229,9 @@
             "configuration": [
                 { "path": "jobs/types", "label": "Job Types" },
                 { "path": "recipes/types", "label": "Recipe Types" },
-                { "path": "feed/ingests", "label": "Ingest Records" },
                 { "path": "feed/strikes", "label": "Strikes" },
                 { "path": "feed/scans", "label": "Scans" },
-                { "path": "batch", "label": "Batches" },
-                { "path": "batch/0", "label": "Create Batch" }
+                { "path": "batch", "label": "Batches" }
             ],
             "processing": [
                 { "path": "jobs", "label": "Jobs" },
@@ -246,6 +244,7 @@
             ],
             "data": [
                 { "path": "feed", "label": "Status" },
+                { "path": "feed/ingests", "label": "Ingest Records" },
                 { "path": "data/source", "label": "Source Files" }
             ]
         },

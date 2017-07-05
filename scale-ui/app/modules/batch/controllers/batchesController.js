@@ -180,7 +180,7 @@
             vm.readonly = !(user && user.is_admin);
             vm.getRecipeTypes()
                 .then(vm.getBatches);
-            navService.updateLocation('batch');
+            navService.updateLocation('configuration');
         };
 
         vm.initialize();

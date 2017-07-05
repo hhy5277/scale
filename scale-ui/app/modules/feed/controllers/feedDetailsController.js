@@ -90,7 +90,7 @@
         };
 
         var initialize = function () {
-            navService.updateLocation('feed');
+            navService.updateLocation('data');
             subnavService.setCurrentPath('feed');
             getFeed();
         };

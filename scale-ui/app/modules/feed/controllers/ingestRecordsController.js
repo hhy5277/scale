@@ -219,7 +219,7 @@
             vm.updateColDefs();
             vm.getStrikes();
             if (!$scope.$parent.hasParentCtrl) {
-                navService.updateLocation('feed');
+                navService.updateLocation('data');
             }
         };
 

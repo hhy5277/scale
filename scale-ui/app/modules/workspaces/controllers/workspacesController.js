@@ -163,7 +163,7 @@
                     });
                 }
             }
-            navService.updateLocation('workspaces');
+            navService.updateLocation('configuration');
         };
 
         initialize();

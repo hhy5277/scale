@@ -122,7 +122,7 @@
         };
 
         var initialize = function () {
-            navService.updateLocation('jobs');
+            navService.updateLocation('processing');
             var user = userService.getUserCreds();
             vm.readonly = !(user && user.is_admin);
             getJobDetail(vm.jobId);

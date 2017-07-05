@@ -35,7 +35,7 @@
         subnavService.setCurrentPath('recipes/types');
 
         var initialize = function () {
-            navService.updateLocation('recipes');
+            navService.updateLocation('configuration');
             getRecipeTypes();
         };
 

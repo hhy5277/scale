@@ -10,7 +10,7 @@
         vm.loading = false;
 
         var initialize = function () {
-            navService.updateLocation('load');
+            navService.updateLocation('processing');
         };
 
         initialize();

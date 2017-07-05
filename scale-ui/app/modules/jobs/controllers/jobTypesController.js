@@ -155,7 +155,7 @@
         var initialize = function () {
             vm.jobTypesParams = stateService.getJobTypesParams();
             getJobTypes();
-            navService.updateLocation('jobs');
+            navService.updateLocation('configuration');
         };
 
         initialize();

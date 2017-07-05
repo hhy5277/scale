@@ -146,7 +146,7 @@
             vm.getScans();
             stateService.setScansParams(vm.scansParams);
             vm.updateColDefs();
-            navService.updateLocation('feed');
+            navService.updateLocation('configuration');
         };
 
         vm.initialize();

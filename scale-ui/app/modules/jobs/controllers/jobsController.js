@@ -281,7 +281,7 @@
             vm.readonly = !(user && user.is_admin);
             vm.getJobTypes();
             if (!$scope.$parent.hasParentCtrl) {
-                navService.updateLocation('jobs');
+                navService.updateLocation('processing');
             }
         };
 

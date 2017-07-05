@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('batchDetailsController', function ($scope, $routeParams, $location, scaleConfig, navService, userService, batchService, recipeService, jobTypeService, Batch, toastr, moment) {
+    angular.module('scaleApp').controller('batchDetailsController', function ($scope, $routeParams, $location, scaleConfig, subnavService, navService, userService, batchService, recipeService, jobTypeService, Batch, toastr, moment) {
         var vm = this;
 
         subnavService.setCurrentPath('batch');
@@ -201,7 +201,7 @@
         var initialize = function () {
             var user = userService.getUserCreds();
             vm.readonly = !(user && user.is_admin);
-            navService.updateLocation('batch');
+            navService.updateLocation('configuration');
 
             if (vm.mode === 'create') {
                 getRecipeTypes()

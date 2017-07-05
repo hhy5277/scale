@@ -84,7 +84,7 @@
         };
 
         var initialize = function() {
-            navService.updateLocation('nodes');
+            navService.updateLocation('processing');
             jobTypeService.getJobTypesOnce().then(function (data) {
                 jobTypes = data.results;
                 getNodeDetails(vm.nodeId);

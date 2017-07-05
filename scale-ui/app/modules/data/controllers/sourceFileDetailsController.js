@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('sourceFileDetailsController', function($scope, $location, $routeParams, $timeout, $uibModal, scaleConfig, stateService, navService, dataService, gridFactory, SourceFile, Product, moment) {
+    angular.module('scaleApp').controller('sourceFileDetailsController', function($scope, $location, $routeParams, $timeout, $uibModal, scaleConfig, stateService, subnavService, navService, dataService, gridFactory, SourceFile, Product, moment) {
         var ctrl = this,
             sourceFileId = parseInt($routeParams.id),
             qs = $location.search();

@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('nodesController', function($scope, $location, $timeout, $uibModal, subnavService, navService, nodeService, nodeUpdateService, statusService, stateService, userService, jobTypeService, gridFactory, toastr, poller) {
+    angular.module('scaleApp').controller('nodesController', function($scope, $location, $timeout, $uibModal, scaleConfig, subnavService, navService, nodeService, nodeUpdateService, statusService, stateService, userService, jobTypeService, gridFactory, toastr, poller) {
         var vm = this;
 
         subnavService.setCurrentPath('nodes');
@@ -228,7 +228,7 @@
             vm.updateColDefs();
             var user = userService.getUserCreds();
             vm.readonly = !(user && user.is_admin);
-            navService.updateLocation('nodes');
+            navService.updateLocation('processing');
         };
 
         initialize();
