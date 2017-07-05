@@ -3,7 +3,7 @@
 
     angular.module('scaleApp').controller('jobTypesController', function ($rootScope, $scope, $routeParams, $location, hotkeys, scaleService, navService, stateService, jobTypeService, scaleConfig, subnavService, nodeService, localStorage, userService) {
         var vm = this;
-        
+
         vm.containerStyle = '';
         vm.requestedJobTypeId = parseInt($routeParams.id);
         vm.jobTypes = [];
@@ -24,7 +24,7 @@
         vm.jobDetailsClass = 'hidden';
         vm.pauseBtnClass = 'fa-pause';
         vm.user = userService.getUserCreds();
-        vm.subnavLinks = scaleConfig.subnavLinks.jobs;
+        vm.subnavLinks = scaleConfig.subnavLinks.configuration;
         subnavService.setCurrentPath('jobs/types');
 
         $scope.$watchCollection('vm.jobTypesParams',function(newValue){

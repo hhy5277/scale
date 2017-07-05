@@ -39,6 +39,7 @@
         vm.gridOptions.paginationCurrentPage = vm.batchesParams.page || 1;
         vm.gridOptions.paginationPageSize = vm.batchesParams.page_size || vm.gridOptions.paginationPageSize;
         vm.gridOptions.data = [];
+        vm.subnavLinks = scaleConfig.subnavLinks.configuration;
 
         var filteredByBatchStatus = vm.batchesParams.status ? true : false,
             filteredByRecipeType = vm.batchesParams.recipe_type_id ? true : false,

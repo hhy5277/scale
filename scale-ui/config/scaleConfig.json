@@ -226,31 +226,26 @@
         },
 
         "subnavLinks": {
-            "jobs": [
+            "configuration": [
                 { "path": "jobs/types", "label": "Job Types" },
-                { "path": "jobs", "label": "Jobs" },
-                { "path": "jobs/failure-rates", "label": "Failure Rates"}
-            ],
-            "load": [
-                { "path": "load/running", "label": "Running" },
-                { "path": "load/queued", "label": "Queued" },
-                { "path": "load/depth", "label": "Job Load" }
-            ],
-            "recipes": [
                 { "path": "recipes/types", "label": "Recipe Types" },
-                { "path": "recipes", "label": "Recipes" }
-            ],
-            "feed": [
-                { "path": "feed", "label": "Status" },
                 { "path": "feed/ingests", "label": "Ingest Records" },
                 { "path": "feed/strikes", "label": "Strikes" },
-                { "path": "feed/scans", "label": "Scans" }
-            ],
-            "batch": [
+                { "path": "feed/scans", "label": "Scans" },
                 { "path": "batch", "label": "Batches" },
                 { "path": "batch/0", "label": "Create Batch" }
             ],
+            "processing": [
+                { "path": "jobs", "label": "Jobs" },
+                { "path": "jobs/failure-rates", "label": "Failure Rates"},
+                { "path": "load/running", "label": "Running" },
+                { "path": "load/queued", "label": "Queued" },
+                { "path": "load/depth", "label": "Job Load" },
+                { "path": "recipes", "label": "Recipes" },
+                { "path": "nodes", "label": "Nodes" }
+            ],
             "data": [
+                { "path": "feed", "label": "Status" },
                 { "path": "data/source", "label": "Source Files" }
             ]
         },

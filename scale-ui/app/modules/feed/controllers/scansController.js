@@ -9,7 +9,7 @@
         vm.scansParams = stateService.getScansParams();
         vm.stateService = stateService;
         vm.loading = true;
-        vm.subnavLinks = scaleConfig.subnavLinks.feed;
+        vm.subnavLinks = scaleConfig.subnavLinks.configuration;
         vm.lastModifiedStart = moment.utc(vm.scansParams.started).toDate();
         vm.lastModifiedStartPopup = {
             opened: false

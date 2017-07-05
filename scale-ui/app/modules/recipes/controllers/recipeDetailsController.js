@@ -7,7 +7,7 @@
 
         vm.recipe = {};
         vm.recipeId = $routeParams.id;
-        vm.subnavLinks = scaleConfig.subnavLinks.recipes;
+        vm.subnavLinks = scaleConfig.subnavLinks.processing;
         subnavService.setCurrentPath('recipes');
         vm.loadingRecipeDetail = true;
         vm.activeTab = 'status';

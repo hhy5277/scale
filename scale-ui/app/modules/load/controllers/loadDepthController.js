@@ -3,8 +3,8 @@
 
     angular.module('scaleApp').controller('loadDepthController', function ($scope, $location, navService, scaleConfig, subnavService) {
         var vm = this;
-        
-        vm.subnavLinks = scaleConfig.subnavLinks.load;
+
+        vm.subnavLinks = scaleConfig.subnavLinks.processing;
         subnavService.setCurrentPath('load/depth');
 
         vm.loading = false;

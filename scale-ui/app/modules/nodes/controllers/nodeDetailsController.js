@@ -1,11 +1,13 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('nodeDetailsController', function($scope, $location, $routeParams, $timeout, navService, nodeService, scaleConfig, scaleService, statusService, jobTypeService, moment) {
+    angular.module('scaleApp').controller('nodeDetailsController', function($scope, $location, $routeParams, $timeout, subnavService, navService, nodeService, scaleConfig, scaleService, statusService, jobTypeService, moment) {
         var vm = this,
             nodes = [],
             jobTypes = [];
-        
+
+        subnavService.setCurrentPath('nodes');
+
         vm.scaleConfig = scaleConfig;
         vm.moment = moment;
         vm._ = _;
@@ -20,6 +22,7 @@
         vm.algorithmJobs = [];
         vm.dataJobs = [];
         vm.scaleService = scaleService;
+        vm.subnavLinks = scaleConfig.subnavLinks.processing;
 
         var getNodes = function () {
             statusService.getStatus(true).then(null, null, function (data) {

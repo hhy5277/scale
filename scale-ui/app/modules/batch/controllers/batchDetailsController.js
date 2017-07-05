@@ -4,7 +4,10 @@
     angular.module('scaleApp').controller('batchDetailsController', function ($scope, $routeParams, $location, scaleConfig, navService, userService, batchService, recipeService, jobTypeService, Batch, toastr, moment) {
         var vm = this;
 
+        subnavService.setCurrentPath('batch');
+
         vm.scaleConfig = scaleConfig;
+        vm.subnavLinks = scaleConfig.subnavLinks.configuration;
         vm.moment = moment;
         vm.loading = true;
         vm.mode = $routeParams.id > 0 ? 'details' : 'create';

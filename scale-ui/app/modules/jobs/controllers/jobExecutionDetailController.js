@@ -3,11 +3,11 @@
 
     angular.module('scaleApp').controller('jobExecutionDetailController', function ($scope, $location, $routeParams, navService, jobExecutionService, nodeService, scaleConfig, subnavService) {
         var vm = this;
-        
+
         vm.jobExecution = {};
         vm.jobExecutionId = $routeParams.id;
         vm.loading = true;
-        vm.subnavLinks = scaleConfig.subnavLinks.jobs;
+        vm.subnavLinks = scaleConfig.subnavLinks.processing;
         subnavService.setCurrentPath('jobs/runs');
 
         var getJobExecutionDetail = function () {

@@ -13,7 +13,7 @@
         vm.loading = true;
         vm.recipeTypeValues = [recipeTypeViewAll];
         vm.selectedRecipeType = vm.recipesParams.type_id ? vm.recipesParams.type_id : recipeTypeViewAll;
-        vm.subnavLinks = scaleConfig.subnavLinks.recipes;
+        vm.subnavLinks = scaleConfig.subnavLinks.processing;
         vm.lastModifiedStart = moment.utc(vm.recipesParams.started).toDate();
         vm.lastModifiedStartPopup = {
             opened: false

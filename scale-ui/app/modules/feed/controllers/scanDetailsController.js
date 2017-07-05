@@ -5,6 +5,8 @@
         var vm = this,
             currScan = {};
 
+        subnavService.setCurrentPath('scans');
+
         vm.loading = true;
         vm.scaleConfig = scaleConfig;
         vm.workspaces = [];
@@ -22,6 +24,7 @@
         vm.user = userService.getUserCreds();
         vm.readonly = !(vm.user && vm.user.is_admin);
         vm.JSON = JSON;
+        vm.subnavLinks = scaleConfig.subnavLinks.configuration;
 
         vm.cancelCreate = function () {
             vm.mode = 'view';

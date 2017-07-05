@@ -5,6 +5,8 @@
         var vm = this,
             currStrike = {};
 
+        subnavService.setCurrentPath('strikes');
+
         vm.loading = true;
         vm.scaleConfig = scaleConfig;
         vm.strikes = [];
@@ -26,6 +28,7 @@
         vm.sortableOptions = {
             handle: '.sortable-handle'
         };
+        vm.subnavLinks = scaleConfig.subnavLinks.configuration;
 
         vm.cancelCreate = function () {
             vm.mode = 'view';

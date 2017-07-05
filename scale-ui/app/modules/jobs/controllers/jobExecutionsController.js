@@ -17,7 +17,7 @@
         vm.selectedJobType = vm.jobExecutionsParams.job_type_id ? vm.jobExecutionsParams.job_type_id : jobTypeViewAll;
         vm.jobStatusValues = scaleConfig.jobStatus;
         vm.selectedJobStatus = vm.jobExecutionsParams.status || vm.jobStatusValues[0];
-        vm.subnavLinks = scaleConfig.subnavLinks.jobs;
+        vm.subnavLinks = scaleConfig.subnavLinks.processing;
         vm.actionClicked = false;
         vm.lastModifiedStart = moment.utc(vm.jobExecutionsParams.started).toDate();
         vm.lastModifiedStartPopup = {

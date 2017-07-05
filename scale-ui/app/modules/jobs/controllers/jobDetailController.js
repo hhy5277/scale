@@ -3,10 +3,10 @@
 
     angular.module('scaleApp').controller('jobDetailController', function ($scope, $rootScope, $location, $routeParams, $uibModal, stateService, navService, jobService, jobExecutionService, nodeService, loadService, scaleConfig, subnavService, userService, scaleService, toastr) {
         var vm = this;
-        
+
         vm.job = {};
         vm.jobId = $routeParams.id;
-        vm.subnavLinks = scaleConfig.subnavLinks.jobs;
+        vm.subnavLinks = scaleConfig.subnavLinks.processing;
         subnavService.setCurrentPath('jobs');
         vm.loadingJobDetail = false;
         vm.latestExecution = null;
@@ -88,7 +88,7 @@
                 vm.loading = false;
             });
         };
-        
+
         vm.calculateFileSize = function (size) {
             return scaleService.calculateFileSizeFromBytes(size);
         };

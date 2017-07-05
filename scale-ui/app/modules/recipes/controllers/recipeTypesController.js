@@ -3,7 +3,7 @@
 
     angular.module('scaleApp').controller('recipeTypesController', function ($rootScope, $scope, $routeParams, $location, $uibModal, hotkeys, scaleService, navService, recipeService, subnavService, jobTypeService, scaleConfig, RecipeType, userService, localStorage) {
         var vm = this;
-        
+
         vm.loading = true;
         vm.containerStyle = '';
         vm.recipeTypes = [];
@@ -31,14 +31,14 @@
         vm.scaleConfig = scaleConfig;
         vm.localRecipeTypes = [];
 
-        vm.subnavLinks = scaleConfig.subnavLinks.recipes;
+        vm.subnavLinks = scaleConfig.subnavLinks.configuration;
         subnavService.setCurrentPath('recipes/types');
 
         var initialize = function () {
             navService.updateLocation('recipes');
             getRecipeTypes();
         };
-        
+
         var getRecipeTypes = function () {
             recipeService.getRecipeTypes().then(function (data) {
                 vm.recipeTypes = data.results;

@@ -1,8 +1,10 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('nodesController', function($scope, $location, $timeout, $uibModal, navService, nodeService, nodeUpdateService, statusService, stateService, userService, jobTypeService, gridFactory, toastr, poller) {
+    angular.module('scaleApp').controller('nodesController', function($scope, $location, $timeout, $uibModal, subnavService, navService, nodeService, nodeUpdateService, statusService, stateService, userService, jobTypeService, gridFactory, toastr, poller) {
         var vm = this;
+
+        subnavService.setCurrentPath('nodes');
 
         vm.nodesParams = stateService.getNodesParams();
 
@@ -18,6 +20,7 @@
         vm.nodeTotals = '';
         vm.nodeStates = [];
         vm.selectedNodeState = $location.search().state || 'All';
+        vm.subnavLinks = scaleConfig.subnavLinks.processing;
 
         $scope.pauseReason = '';
 

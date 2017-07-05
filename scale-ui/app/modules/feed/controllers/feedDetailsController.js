@@ -3,10 +3,10 @@
 
     angular.module('scaleApp').controller('feedDetailsController', function ($scope, $location, scaleConfig, navService, subnavService, feedService, moment) {
         var vm = this;
-        
+
         vm.loading = true;
         vm.feedData = {};
-        vm.subnavLinks = scaleConfig.subnavLinks.feed;
+        vm.subnavLinks = scaleConfig.subnavLinks.data;
         vm.useIngestTime = 'false';
         vm.filterValue = 1;
         vm.filterDuration = 'w';

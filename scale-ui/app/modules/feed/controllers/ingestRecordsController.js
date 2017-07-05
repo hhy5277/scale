@@ -10,7 +10,7 @@
 
         vm.stateService = stateService;
         vm.loading = true;
-        vm.subnavLinks = scaleConfig.subnavLinks.feed;
+        vm.subnavLinks = scaleConfig.subnavLinks.data;
         vm.ingestStatusValues = scaleConfig.ingestStatus;
         vm.selectedIngestStatus = vm.ingestsParams.status || vm.ingestStatusValues[0];
         vm.lastModifiedStart = moment.utc(vm.ingestsParams.started).toDate();

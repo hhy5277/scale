@@ -7,6 +7,8 @@
             activeWorkspaces = [],
             inactiveWorkspaces = [];
 
+        subnavService.setCurrentPath('workspaces');
+
         vm.loading = true;
         vm.scaleConfig = scaleConfig;
         vm.showActive = stateService.getShowActiveWorkspaces();
@@ -21,6 +23,7 @@
         vm.readonly = !(vm.user && vm.user.is_admin);
         vm.brokerDescription = '';
         vm.availableWorkspaceTypes = _.cloneDeep(scaleConfig.workspaceTypes);
+        vm.subnavLinks = scaleConfig.subnavLinks.configuration;
 
         vm.cancelCreate = function () {
             vm.mode = 'view';
@@ -46,7 +49,7 @@
                 vm.mode = 'view';
                 getWorkspaces();
             }).catch(function () {
-                
+
             });
         };
 
@@ -56,7 +59,7 @@
             });
             $location.path('/workspaces');
         };
-        
+
         vm.newWorkspace = function () {
             vm.mode = 'add';
             vm.loadWorkspace(0);

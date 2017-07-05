@@ -3,14 +3,14 @@
 
     angular.module('scaleApp').controller('loadController', function($scope, $location, scaleService, stateService, navService, loadService, uiGridConstants, scaleConfig, subnavService, QueueStatus, gridFactory) {
         var vm = this;
-        
+
         vm.loading = true;
         vm.queueStatusError = null;
         vm.queueStatusErrorStatus = null;
         vm.totalQueued = 0;
-        vm.subnavLinks = scaleConfig.subnavLinks.load;
+        vm.subnavLinks = scaleConfig.subnavLinks.processing;
         subnavService.setCurrentPath('load/queued');
-        
+
         var jobsParams = stateService.getJobsParams();
 
         vm.getPage = function (pageNumber, pageSize) {

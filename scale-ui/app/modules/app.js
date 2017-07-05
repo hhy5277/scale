@@ -57,6 +57,24 @@
                 controllerAs: 'vm',
                 templateUrl: 'modules/about/partials/aboutTemplate.html'
             })
+            .when('/configuration', {
+                controller: 'jobTypesController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/jobs/partials/jobTypesTemplate.html',
+                reloadOnSearch: false
+            })
+            .when('/processing', {
+                controller: 'jobsController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/jobs/partials/jobsTemplate.html',
+                reloadOnSearch: false
+            })
+            .when('/data', {
+                controller: 'feedDetailsController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/feed/partials/feedDetailsTemplate.html',
+                reloadOnSearch: false
+            })
             .when('/data/source', {
                 controller: 'sourceFilesController',
                 controllerAs: 'vm',

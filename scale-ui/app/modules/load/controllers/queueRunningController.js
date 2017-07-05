@@ -3,12 +3,12 @@
 
     angular.module('scaleApp').controller('queueRunningController', function($scope, $location, scaleService, stateService, navService, jobService, gridFactory, uiGridConstants, scaleConfig, subnavService) {
         var vm = this;
-        
+
         vm.loading = true;
         vm.runningJobsError = null;
         vm.runningJobsErrorStatus = null;
         vm.totalRunning = 0;
-        vm.subnavLinks = scaleConfig.subnavLinks.load;
+        vm.subnavLinks = scaleConfig.subnavLinks.processing;
         subnavService.setCurrentPath('load/running');
 
         var jobsParams = stateService.getJobsParams();

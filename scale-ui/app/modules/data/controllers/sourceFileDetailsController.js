@@ -6,11 +6,14 @@
             sourceFileId = parseInt($routeParams.id),
             qs = $location.search();
 
+        subnavService.setCurrentPath('data/source');
+
         $scope.jobsData = null;
         $scope.productsData = null;
         $scope.ingestsData = null;
         $scope.hasParentCtrl = true;
 
+        ctrl.subnavLinks = scaleConfig.subnavLinks.data;
         ctrl.loading = true;
         ctrl._ = _;
         ctrl.sourceFile = null;

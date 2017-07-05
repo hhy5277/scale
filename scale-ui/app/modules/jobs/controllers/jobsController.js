@@ -19,7 +19,7 @@
         vm.selectedJobStatus = vm.jobsParams.status || vm.jobStatusValues[0];
         vm.errorCategoryValues = _.map(scaleConfig.errorCategories, 'name');
         vm.selectedErrorCategory = vm.jobsParams.error_category || vm.errorCategoryValues[0];
-        vm.subnavLinks = scaleConfig.subnavLinks.jobs;
+        vm.subnavLinks = scaleConfig.subnavLinks.processing;
         vm.actionClicked = false;
         vm.lastModifiedStart = moment.utc(vm.jobsParams.started).toDate();
         vm.lastModifiedStartPopup = {

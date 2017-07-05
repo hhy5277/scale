@@ -1,11 +1,11 @@
 (function () {
     'use strict';
-    
+
     angular.module('scaleApp').controller('ingestRecordDetailsController', function ($scope, $routeParams, scaleConfig, scaleService, navService, subnavService, feedService) {
         var vm = this;
-        
+
         vm.loading = false;
-        vm.subnavLinks = scaleConfig.subnavLinks.feed;
+        vm.subnavLinks = scaleConfig.subnavLinks.data;
         vm.scaleService = scaleService;
         vm.moment = moment;
         vm.ingestRecord = null;

@@ -33,6 +33,7 @@
         vm.searchText = vm.sourceFilesParams.file_name || '';
         vm.gridOptions = gridFactory.defaultGridOptions();
         vm.gridOptions.data = [];
+        vm.subnavLinks = scaleConfig.subnavLinks.data;
 
         $timeout(function () {
             vm.gridOptions.paginationCurrentPage = vm.sourceFilesParams.page || 1;

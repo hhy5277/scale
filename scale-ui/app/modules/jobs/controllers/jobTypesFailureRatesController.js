@@ -1,6 +1,6 @@
 (function () {
     'use strict';
-    
+
     angular.module('scaleApp').controller('jobTypesFailureRatesController', function ($scope, $location, scaleConfig, stateService, scaleService, subnavService, jobTypeService, metricsService, gridFactory, JobType, toastr, moment) {
         var vm = this,
             jobTypeViewAll = { name: 'VIEW ALL', title: 'VIEW ALL', version: '', id: 0 };
@@ -89,7 +89,7 @@
         };
         vm.currSortField = '';
         vm.currSortErrorType = '';
-        vm.subnavLinks = scaleConfig.subnavLinks.jobs;
+        vm.subnavLinks = scaleConfig.subnavLinks.processing;
         subnavService.setCurrentPath('jobs/failure-rates');
 
         var defaultColumnDefs = [
@@ -146,7 +146,7 @@
                 }
             });
         };
-        
+
         vm.setStyle = function (colField, errorType) {
             var errorValue = (colField[errorType] / colField.total).toFixed(2);
             var textColor = errorValue >= 0.5 ? '#fff' : '#000';
@@ -158,7 +158,7 @@
             var percentage = ((error / total) * 100).toFixed(0);
             return percentage > 0 ? 'width: ' + percentage + '%' : 'display: none';
         };
-        
+
         vm.getPercentageOfTotal = function (errorTotal, total) {
             if (total === 0) {
                 return '0%';
@@ -315,7 +315,7 @@
                 });
             });
         };
-        
+
         initialize();
 
         $scope.$watch('vm.selectedJobType', function (newValue, oldValue) {
