@@ -1,0 +1,28 @@
+swagger: "3.0"
+info:
+  title: Scale API
+  description: >
+                 [Scale](http://ngageoint.github.io/scale/index.html) is an open source system that provides management
+                   of automated processing on a cluster of machines. It allows users to define jobs, which can be any
+                   type of script or algorithm. These jobs run on ingested source data and produce product files. The
+                   produced products can be disseminated to appropriate users and/or used to evaluate the producing
+                   algorithm in terms of performance and accuracy.
+  version: {{self.api_default}}
+  contact:
+    name: Scale Support
+    url: https://gitter.im/ngageoint/scale
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+host: {{self.api_host}}
+basePath: {{self.api_default}}
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  $ref: './paths/index.yaml'
+definitions:
+  $ref: './definition/index.yaml'
