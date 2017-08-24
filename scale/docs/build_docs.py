@@ -54,11 +54,15 @@ class BuildDocs():
 
 
     BuildDocs output description:
-        blah blah blah
+        NotYetImplemented
     """
 
     def __init__(self):
-        """"""
+        """Build docs"""
+
+        self.api_default = settings.REST_FRAMEWORK['DEFAULT_VERSION']
+        self.api_versions = '` `'.join(list(settings.REST_FRAMEWORK['ALLOWED_VERSIONS']))
+
         self.schama_map = {
             'batch_definition': BATCH_DEFINITION_SCHEMA,
             'configuration': CONFIGURATION_SCHEMA,
@@ -76,44 +80,12 @@ class BuildDocs():
             'workspace_configuration': WORKSPACE_CONFIGURATION_SCHEMA
         }
 
-        self.generate_schemas()
-        self.get_versions()
-        self.get_urls()
+        self.path_map = {}
+
         self.generate_paths()
+        self.generate_schemas()
 
-    def alter_schemas(self):
-        """Converts all schemas to YAML"""
-
-        for schema_name, schema_definition in self.schama_map.items():
-            self.schama_map[schema_name] = self._json_to_yaml(schema_name, schema_definition)
-
-    def get_urls(self):
-        """Pulls all needed urls out of Scale urls"""
-
-        self.urls = {}
-
-        def catch_url(urls):
-            """Loops through the Scale urls and adds them to a dict"""
-            for url in urls.url_patterns:
-                if isinstance(url, RegexURLResolver):
-                    catch_url(url)
-                if isinstance(url, RegexURLPattern):
-                    self.urls[url.name.replace('_', ' ').title()] = {
-                        'pattern': url.regex.pattern,
-                        'function': url.lookup_str
-                    }
-
-        for version in urlpatterns:
-            if self.api_default in version.regex.pattern:
-                catch_url(version)
-
-    def get_versions(self):
-        """Pulls all needed versions out of Scale settings"""
-
-        self.api_default = settings.REST_FRAMEWORK['DEFAULT_VERSION']
-        self.api_versions = '` `'.join(list(settings.REST_FRAMEWORK['ALLOWED_VERSIONS']))
-
-    def get_url_doc_strings(self):
+    def build_path_map(self):
         """Pulls out all needed Scale view doc strings"""
 
         scale_view_functions = [
@@ -125,31 +97,80 @@ class BuildDocs():
             'retrieve'
         ]
 
-        for name, properties in self.urls.items():
+        for name, properties in self.path_map.items():
             module_name = properties['function'].rsplit('.', 1)
             module = __import__(module_name[0], globals(), locals(), [module_name[-1]], -1)
             module_method = getattr(module, module_name[-1])
-            self.urls[name]['description'] = inspect.getdoc(module_method)
+            self.path_map[name]['description'] = inspect.getdoc(module_method)
 
-            self.urls[name]['endpoints'] = {}
+            self.path_map[name]['endpoints'] = {}
             for endpoint, _v in module_method.__dict__.items():
                 if endpoint in scale_view_functions:
-                    self.urls[name]['endpoints'][endpoint] = inspect.getdoc(getattr(module_method, endpoint))
+                    self.path_map[name]['endpoints'][endpoint] = inspect.getdoc(getattr(module_method, endpoint))
+
+    def build_schema_map(self):
+        """Converts all schemas to YAML"""
+
+        for schema_name, schema_definition in self.schama_map.items():
+            self.schama_map[schema_name] = self._json_to_yaml(schema_name, schema_definition)
+
+    def get_paths(self):
+        """Pulls all needed urls out of Scale urls"""
+
+        def catch_url(urls):
+            """Loops through the Scale urls and adds them to a dict"""
+            for url in urls.url_patterns:
+                if isinstance(url, RegexURLResolver):
+                    catch_url(url)
+                if isinstance(url, RegexURLPattern):
+                    self.path_map[url.name.replace('_', ' ').title()] = {
+                        'pattern': url.regex.pattern,
+                        'function': url.lookup_str
+                    }
+
+        for version in urlpatterns:
+            if self.api_default in version.regex.pattern:
+                catch_url(version)
 
     def generate_paths(self):
         """Generates everything for paths"""
 
-        self.get_url_doc_strings()
+        self.get_paths()
+        self.build_path_map()
+        self.write_paths()
+        self.write_path_index()
 
     def generate_schemas(self):
         """Generates everything for schemas"""
 
-        self.alter_schemas()
+        self.build_schema_map()
         self.write_schemas()
         self.write_schema_index()
 
+    def write_paths(self):
+        """Writes out YAML files for each path"""
+
+        pass
+
+    def write_schemas(self):
+        """Writes out YAML files for each schema"""
+
+        for schema_name, schema_definition in self.schama_map.items():
+            target = self._generate_file_path(schema_name)
+
+            if not os.path.isdir(os.path.dirname(target)):
+                os.makedirs(os.path.dirname(target))
+
+            with open(os.path.join(target), 'w') as file_out:
+                file_out.write(schema_definition)
+
+    def write_path_index(self):
+        """Creates a glue file that links all paths into one 'paths' file"""
+
+        pass
+
     def write_schema_index(self):
-        """Creates a glue file that links all other schemas into one definition file"""
+        """Creates a glue file that links all schemas into one 'definition' file"""
 
         glue = {}
 
@@ -163,18 +184,6 @@ class BuildDocs():
 
         with open(os.path.join(target), 'w') as file_out:
             file_out.write(yaml.dump(yaml.load(json.dumps(glue)), default_flow_style=False))
-
-    def write_schemas(self):
-        """Writes out YAML files for each schema"""
-
-        for schema_name, schema_definition in self.schama_map.items():
-            target = self._generate_file_path(schema_name)
-
-            if not os.path.isdir(os.path.dirname(target)):
-                os.makedirs(os.path.dirname(target))
-
-            with open(os.path.join(target), 'w') as file_out:
-                file_out.write(schema_definition)
 
     def _generate_file_path(self, schema_name, absolute_path=True):
         """Generates the absolute OR relative file path for a schema"""
