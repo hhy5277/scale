@@ -112,7 +112,7 @@ class BuildDocs():
         """Converts all schemas to YAML"""
 
         for schema_name, schema_definition in self.schama_map.items():
-            self.schama_map[schema_name] = self._json_to_yaml(schema_name, schema_definition)
+            self.schama_map[schema_name] = self._schema_json_to_yaml(schema_name, schema_definition)
 
     def get_paths(self):
         """Pulls all needed urls out of Scale urls"""
@@ -156,7 +156,7 @@ class BuildDocs():
         """Writes out YAML files for each schema"""
 
         for schema_name, schema_definition in self.schama_map.items():
-            target = self._generate_file_path(schema_name)
+            target = self._generate_file_path(schema_name, 'components')
 
             if not os.path.isdir(os.path.dirname(target)):
                 os.makedirs(os.path.dirname(target))
@@ -175,9 +175,9 @@ class BuildDocs():
         glue = {}
 
         for key, _value in self.schama_map.items():
-            glue[key] = '#'.join([self._generate_file_path(key, absolute_path=False), key])
+            glue[key] = '#'.join([self._generate_file_path(key, 'components', absolute_path=False), key])
 
-        target = self._generate_file_path('index')
+        target = self._generate_file_path('index', 'components')
 
         if not os.path.isdir(os.path.dirname(target)):
             os.makedirs(os.path.dirname(target))
@@ -185,20 +185,20 @@ class BuildDocs():
         with open(os.path.join(target), 'w') as file_out:
             file_out.write(yaml.dump(yaml.load(json.dumps(glue)), default_flow_style=False))
 
-    def _generate_file_path(self, schema_name, absolute_path=True):
-        """Generates the absolute OR relative file path for a schema"""
+    def _generate_file_path(self, name, folder, absolute_path=True):
+        """Generates the absolute OR relative file path for a file"""
 
         if absolute_path:
             actual_dir = os.path.dirname(os.path.abspath(__file__))
-            target_dir = os.path.join(actual_dir, 'components')
+            target_dir = os.path.join(actual_dir, folder)
         else:
             target_dir = '/'
 
-        file_name = '.'.join([schema_name, 'yaml'])
+        file_name = '.'.join([name, 'yaml'])
         return os.path.join(target_dir, file_name)
 
 
-    def _json_to_yaml(self, schema_name, schema):
+    def _schema_json_to_yaml(self, schema_name, schema):
         """Converts django json schema to swagger ingestable YAML"""
 
         obj_properties = schema['properties'] if 'properties' in schema else {}
