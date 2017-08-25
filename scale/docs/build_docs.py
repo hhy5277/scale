@@ -3,7 +3,7 @@
 import inspect
 import json
 import os
-import yaml
+from ruamel import yaml
 
 from django.conf import settings
 from django.conf.urls import RegexURLPattern, RegexURLResolver
@@ -256,7 +256,7 @@ class BuildDocs():
         glue = {}
 
         for key, _value in self.path_map.items():
-            glue[key] = '#'.join([self._generate_file_path(key, 'paths', absolute_path=False), key])
+            glue[key] = '#' + self._generate_file_path(key, 'paths', absolute_path=False)
 
         target = self._generate_file_path('index', 'paths')
 
@@ -264,7 +264,8 @@ class BuildDocs():
             os.makedirs(os.path.dirname(target))
 
         with open(os.path.join(target), 'w') as file_out:
-            file_out.write(yaml.dump(yaml.load(json.dumps(glue)), default_flow_style=False))
+            for _key, link in glue.items():
+                file_out.write("$ref: '%s'\n" % link)
 
     def write_schema_index(self):
         """Creates a glue file that links all schemas into one 'definition' file"""
@@ -280,7 +281,8 @@ class BuildDocs():
             os.makedirs(os.path.dirname(target))
 
         with open(os.path.join(target), 'w') as file_out:
-            file_out.write(yaml.dump(yaml.load(json.dumps(glue)), default_flow_style=False))
+            for _key, link in glue.items():
+                file_out.write("$ref: '%s'\n" % link)
 
     @staticmethod
     def _fix_path_description(description):
@@ -358,11 +360,11 @@ class BuildDocs():
                 path[path_name][endpoint_name][method]['tags'] = [path_name]
                 if 'function' in path_definition:
                     print path_definition['function']
-                path[path_name][endpoint_name][method]['operationID'] = '.'.join(list(endpoint_definiton['function'],
-                                                                                      method))
+                path[path_name][endpoint_name][method]['operationID'] = '.'.join([endpoint_definiton['function'],
+                                                                                  method])
 
         for _name, content in path.items():
-            return yaml.dump(yaml.load(json.dumps(content)), default_flow_style=False)
+            return yaml.safe_dump(yaml.safe_load(json.dumps(content)), default_flow_style=False)
 
     def _schema_json_to_yaml(self, schema_name, schema):
         """Converts django json schema to swagger ingestable YAML"""
@@ -382,7 +384,7 @@ class BuildDocs():
             schema_name: schema
         }
 
-        return yaml.dump(yaml.load(json.dumps(schema)), default_flow_style=False)
+        return yaml.safe_dump(yaml.safe_load(json.dumps(schema)), default_flow_style=False)
 
 
 if __name__ == '__main__':
