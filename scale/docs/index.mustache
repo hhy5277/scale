@@ -7,15 +7,15 @@ info:
                    type of script or algorithm. These jobs run on ingested source data and produce product files. The
                    produced products can be disseminated to appropriate users and/or used to evaluate the producing
                    algorithm in terms of performance and accuracy.
-  version: {{self.api_default}}
+  version: {{api_version}}
   contact:
     name: Scale Support
     url: https://gitter.im/ngageoint/scale
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-host: {{self.api_host}}
-basePath: {{self.api_default}}
+host: {{host}}
+basePath: {{basepath}}
 schemes:
   - http
 consumes:
@@ -23,6 +23,8 @@ consumes:
 produces:
   - application/json
 paths:
-  $ref: './paths/index.yaml'
+  $ref: {{paths_ref}}
 definitions:
-  $ref: './definition/index.yaml'
+  $ref: {{definitions_ref}}
+tags:
+  $ref: {{tags_ref}}

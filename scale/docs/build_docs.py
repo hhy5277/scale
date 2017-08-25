@@ -3,6 +3,7 @@
 import inspect
 import json
 import os
+import pystache
 from ruamel import yaml
 
 from django.conf import settings
@@ -95,6 +96,8 @@ class BuildDocs():
     def __init__(self):
         """Build docs"""
 
+        self.mustache_file_name = 'index.mustache' # MUST ME IN SAME DIR AS THIS FILE
+        
         self.api_default = settings.REST_FRAMEWORK['DEFAULT_VERSION']
         self.api_versions = ' '.join('`{0}`'.format(ver) for ver in list(settings.REST_FRAMEWORK['ALLOWED_VERSIONS']))
 
@@ -115,10 +118,17 @@ class BuildDocs():
             'workspace_configuration': WORKSPACE_CONFIGURATION_SCHEMA
         }
 
+        self.mustache_map = {
+            'host': 'need_to_get_this_somewhow',
+            'basepath': '/' + self.api_default,
+            'version': self.api_default
+        }
         self.path_map = {}
+        self.tag_map = {}
 
         self.generate_paths()
         self.generate_schemas()
+        self.write_index()
 
     def build_path_map(self):
         """Pulls out all needed Scale view doc strings"""
@@ -154,10 +164,12 @@ class BuildDocs():
     def build_tag_map(self, path_map):
         """Builds a map for all tags with their descriptions."""
 
-        tag_map = {}
+        tag_map = []
         for tag, tag_value in path_map.items():
-            tag_map[tag] = {}
-            tag_map[tag]['description'] = tag_value['description']
+            tag_map.append({
+                'name': tag,
+                'description': tag_value['description']
+            })
 
         self.tag_map = tag_map
 
@@ -187,6 +199,7 @@ class BuildDocs():
         self.optimize_path_map()
         self.write_paths()
         self.write_path_index()
+        self.write_tags()
 
     def generate_schemas(self):
         """Generates everything for schemas"""
@@ -225,30 +238,30 @@ class BuildDocs():
         # Construct the tag map before returning
         self.build_tag_map(new_path_map)
 
+    def write_index(self):
+        """Writes out the base YAML file for swagger"""
+
+        target = self._generate_file_path('index')
+        template_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), self.mustache_file_name)
+
+        with open(template_file, 'r') as template_f:
+            template = template_f.read()
+            output = pystache.render(template, self.mustache_map)
+            self._write_object(target, output)
+
     def write_paths(self):
         """Writes out YAML files for each path"""
 
         for path_name, path_definition in self.path_map.items():
-            if path_definition:
-                target = self._generate_file_path(path_name, 'paths')
-
-                if not os.path.isdir(os.path.dirname(target)):
-                    os.makedirs(os.path.dirname(target))
-
-                with open(os.path.join(target), 'w') as file_out:
-                    file_out.write(path_definition)
+            target = self._generate_file_path(path_name, 'paths')
+            self._write_object(target, path_definition)
 
     def write_schemas(self):
         """Writes out YAML files for each schema"""
 
         for schema_name, schema_definition in self.schama_map.items():
             target = self._generate_file_path(schema_name, 'components')
-
-            if not os.path.isdir(os.path.dirname(target)):
-                os.makedirs(os.path.dirname(target))
-
-            with open(os.path.join(target), 'w') as file_out:
-                file_out.write(schema_definition)
+            self._write_object(target, schema_definition)
 
     def write_path_index(self):
         """Creates a glue file that links all paths into one 'paths' file"""
@@ -259,13 +272,9 @@ class BuildDocs():
             glue[key] = '#' + self._generate_file_path(key, 'paths', absolute_path=False)
 
         target = self._generate_file_path('index', 'paths')
+        self.mustache_map['paths_ref'] = target
 
-        if not os.path.isdir(os.path.dirname(target)):
-            os.makedirs(os.path.dirname(target))
-
-        with open(os.path.join(target), 'w') as file_out:
-            for _key, link in glue.items():
-                file_out.write("$ref: '%s'\n" % link)
+        self._write_index(target, glue)
 
     def write_schema_index(self):
         """Creates a glue file that links all schemas into one 'definition' file"""
@@ -276,13 +285,17 @@ class BuildDocs():
             glue[key] = '#'.join([self._generate_file_path(key, 'components', absolute_path=False), key])
 
         target = self._generate_file_path('index', 'components')
+        self.mustache_map['definitions_ref'] = target
 
-        if not os.path.isdir(os.path.dirname(target)):
-            os.makedirs(os.path.dirname(target))
+        self._write_index(target, glue)
 
-        with open(os.path.join(target), 'w') as file_out:
-            for _key, link in glue.items():
-                file_out.write("$ref: '%s'\n" % link)
+    def write_tags(self):
+        """Create a YAML file for the tags used in the paths."""
+
+        target = self._generate_file_path('index', 'tags')
+        self.mustache_map['tags_ref'] = target
+        to_write = yaml.safe_dump(yaml.safe_load(json.dumps(self.tag_map)), default_flow_style=False)
+        self._write_object(target, to_write)
 
     @staticmethod
     def _fix_path_description(description):
@@ -316,12 +329,14 @@ class BuildDocs():
 
         return pattern
 
-    def _generate_file_path(self, name, folder, absolute_path=True):
+    @staticmethod
+    def _generate_file_path(name, folder=None, absolute_path=True):
         """Generates the absolute OR relative file path for a file"""
 
         if absolute_path:
-            actual_dir = os.path.dirname(os.path.abspath(__file__))
-            target_dir = os.path.join(actual_dir, folder)
+            target_dir = os.path.dirname(os.path.abspath(__file__))
+            if folder:
+                target_dir = os.path.join(target_dir, folder)
         else:
             target_dir = '/'
 
@@ -386,6 +401,26 @@ class BuildDocs():
 
         return yaml.safe_dump(yaml.safe_load(json.dumps(schema)), default_flow_style=False)
 
+    @staticmethod
+    def _write_index(target, json_dict):
+        """Writes index files out to disk"""
+
+        if not os.path.isdir(os.path.dirname(target)):
+            os.makedirs(os.path.dirname(target))
+
+        with open(os.path.join(target), 'w') as file_out:
+            for _key, link in json_dict.items():
+                file_out.write("$ref: '%s'\n" % link)
+
+    @staticmethod
+    def _write_object(target, yaml_str):
+        """Writes YAML out to disk"""
+
+        if not os.path.isdir(os.path.dirname(target)):
+            os.makedirs(os.path.dirname(target))
+
+        with open(os.path.join(target), 'w') as file_out:
+            file_out.write(yaml_str)
 
 if __name__ == '__main__':
     BuildDocs()
