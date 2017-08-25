@@ -102,11 +102,13 @@ class BuildDocs():
             module = __import__(module_name[0], globals(), locals(), [module_name[-1]], -1)
             module_method = getattr(module, module_name[-1])
             self.path_map[name]['description'] = inspect.getdoc(module_method)
+            self.path_map[name]['global_description'] = inspect.getdoc(module)
 
             self.path_map[name]['endpoints'] = {}
             for endpoint, _v in module_method.__dict__.items():
                 if endpoint in scale_view_functions:
-                    self.path_map[name]['endpoints'][endpoint] = inspect.getdoc(getattr(module_method, endpoint))
+                    description = self._fix_path_description(inspect.getdoc(getattr(module_method, endpoint)))
+                    self.path_map[name]['endpoints'][endpoint] = description
 
     def build_schema_map(self):
         """Converts all schemas to YAML"""
@@ -124,7 +126,7 @@ class BuildDocs():
                     catch_url(url)
                 if isinstance(url, RegexURLPattern):
                     self.path_map[url.name.replace('_', ' ').title()] = {
-                        'pattern': url.regex.pattern,
+                        'pattern': self._fix_path_pattern(url.regex.pattern),
                         'function': url.lookup_str
                     }
 
@@ -137,8 +139,13 @@ class BuildDocs():
 
         self.get_paths()
         self.build_path_map()
-        self.write_paths()
-        self.write_path_index()
+        self.optimize_path_map()
+        print json.dumps(self.path_map)
+        #self.write_paths()
+        #self.write_path_index()
+
+        # for path_name, path_definition in self.path_map.items():
+        #     self.path_map[path_name] = self._path_json_to_yaml(path_name, path_definition)
 
     def generate_schemas(self):
         """Generates everything for schemas"""
@@ -147,10 +154,44 @@ class BuildDocs():
         self.write_schemas()
         self.write_schema_index()
 
+    def optimize_path_map(self):
+        """Reorganize something we just made to ease swagger doc generation"""
+
+        new_path_map = {}
+
+        for view, description in self.path_map.items():
+            new_index = description['function'].split('.')[0]
+
+            if new_index not in new_path_map:
+                new_path_map[new_index] = {}
+                new_path_map[new_index]['endpoints'] = {}
+                new_path_map[new_index]['description'] = description['global_description']
+
+            new_path_map[new_index]['endpoints'][description['pattern']] = {}
+
+            new_path_map[new_index]['endpoints'][description['pattern']]['description'] = description['description']
+            new_path_map[new_index]['endpoints'][description['pattern']]['function'] = description['function']
+            new_path_map[new_index]['endpoints'][description['pattern']]['pretty_name'] = view
+            new_path_map[new_index]['endpoints'][description['pattern']]['methods'] = {}
+
+            for request, summary in description['endpoints'].items():
+                new_path_map[new_index]['endpoints'][description['pattern']]['methods'][request] = summary
+
+        self.path_map = new_path_map
+
     def write_paths(self):
         """Writes out YAML files for each path"""
 
-        pass
+        for _path_name, path_definition in self.path_map.items():
+            if path_definition:
+                path_group = path_definition['pattern'].split('/')[0]
+                target = self._generate_file_path(path_group, 'paths')
+
+                if not os.path.isdir(os.path.dirname(target)):
+                    os.makedirs(os.path.dirname(target))
+
+                with open(os.path.join(target), 'w') as file_out:
+                    file_out.write(path_definition)
 
     def write_schemas(self):
         """Writes out YAML files for each schema"""
@@ -185,6 +226,38 @@ class BuildDocs():
         with open(os.path.join(target), 'w') as file_out:
             file_out.write(yaml.dump(yaml.load(json.dumps(glue)), default_flow_style=False))
 
+    @staticmethod
+    def _fix_path_description(description):
+        """Fixes the doc strings to be more friendly on the eyes (and swagger)"""
+
+        if not description:
+            return ''
+
+        description = description.split(':param')[0]
+        description = description.rstrip()
+
+        return description
+
+    @staticmethod
+    def _fix_path_pattern(pattern):
+        """Fixes the regex strings to be more friendly on the eyes (and swagger)"""
+
+        things_to_replace = {
+            'metrics/([\\w-]+)': 'metrics/{metric_name}',
+            '(stdout|stderr|combined)': '{log_type}',
+            '^': '',
+            '$': '',
+            '(?P<': '{',
+            '>\\d+)': '}',
+            '>[\\w.]{0,250})': '}',
+            '(\\d+)': '{id}'
+        }
+
+        for old, new in things_to_replace.items():
+            pattern = pattern.replace(old, new)
+
+        return pattern
+
     def _generate_file_path(self, name, folder, absolute_path=True):
         """Generates the absolute OR relative file path for a file"""
 
@@ -197,6 +270,21 @@ class BuildDocs():
         file_name = '.'.join([name, 'yaml'])
         return os.path.join(target_dir, file_name)
 
+
+    def _path_json_to_yaml(self, path_name, path_definition):
+        """Converts the constructed path_map to swagger ingestable YAML"""
+
+        request_alias = {
+            'list': 'get',
+            'create': 'post'
+        }
+
+        if not path_definition['endpoints']:
+            return {}
+
+        for endpoint_name, endpoint_definiton in path_definition['endpoints'].items():
+            if endpoint_name in request_alias:
+                endpoint_name = request_alias[endpoint_name]
 
     def _schema_json_to_yaml(self, schema_name, schema):
         """Converts django json schema to swagger ingestable YAML"""
