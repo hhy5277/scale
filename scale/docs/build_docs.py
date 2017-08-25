@@ -52,6 +52,41 @@ class BuildDocs():
     ==URLs
         scale.urls (urlpatterns)
 
+    ==Views
+        All swagger description and summary strings are pulled from Scale View docstrings.  There are three places
+        that are checked and pulled:
+            - Module docstring located at the top of each view.py file.
+            - Class docstring located at the top of each view Class.
+            - Method docstring located at the top of each function (function name must match scale_view_functions).
+
+        Within each of those docstrings Markdown (github flavor) is supported.  Additionally, Method docstrings support
+        several custom fields that help to populate the swagger docs. Those custom fields are:
+            - paramaters - a JSON object
+            - responses - a JSON object
+
+        Example:_______________________________________________________________________________________________________
+
+        def foo(bar):
+            '''*This* is where you can put some markdown
+
+            | foo | bar |
+            |-----|-----|
+            | like| this|
+
+            _Two concurrent empty lines are required to indicate the end of the section_
+
+
+            paramaters: {
+                'some': 'stuff'
+            }
+
+            responses: {
+                'other': 'stuff'
+            }
+
+            '''
+        ---------------------------------------------------------------------------------------------------------------
+
 
     BuildDocs output description:
         NotYetImplemented
@@ -61,7 +96,7 @@ class BuildDocs():
         """Build docs"""
 
         self.api_default = settings.REST_FRAMEWORK['DEFAULT_VERSION']
-        self.api_versions = '` `'.join(list(settings.REST_FRAMEWORK['ALLOWED_VERSIONS']))
+        self.api_versions = ' '.join('`{0}`'.format(ver) for ver in list(settings.REST_FRAMEWORK['ALLOWED_VERSIONS']))
 
         self.schama_map = {
             'batch_definition': BATCH_DEFINITION_SCHEMA,
@@ -116,6 +151,16 @@ class BuildDocs():
         for schema_name, schema_definition in self.schama_map.items():
             self.schama_map[schema_name] = self._schema_json_to_yaml(schema_name, schema_definition)
 
+    def build_tag_map(self, path_map):
+        """Builds a map for all tags with their descriptions."""
+
+        tag_map = {}
+        for tag, tag_value in path_map.items():
+            tag_map[tag] = {}
+            tag_map[tag]['description'] = tag_value['description']
+
+        self.tag_map = tag_map
+
     def get_paths(self):
         """Pulls all needed urls out of Scale urls"""
 
@@ -140,12 +185,8 @@ class BuildDocs():
         self.get_paths()
         self.build_path_map()
         self.optimize_path_map()
-        print json.dumps(self.path_map)
-        #self.write_paths()
-        #self.write_path_index()
-
-        # for path_name, path_definition in self.path_map.items():
-        #     self.path_map[path_name] = self._path_json_to_yaml(path_name, path_definition)
+        self.write_paths()
+        self.write_path_index()
 
     def generate_schemas(self):
         """Generates everything for schemas"""
@@ -177,15 +218,19 @@ class BuildDocs():
             for request, summary in description['endpoints'].items():
                 new_path_map[new_index]['endpoints'][description['pattern']]['methods'][request] = summary
 
-        self.path_map = new_path_map
+        self.path_map = {}
+        for path_name, path_definition in new_path_map.items():
+            self.path_map[path_name] = self._path_json_to_yaml(path_name, path_definition)
+
+        # Construct the tag map before returning
+        self.build_tag_map(new_path_map)
 
     def write_paths(self):
         """Writes out YAML files for each path"""
 
-        for _path_name, path_definition in self.path_map.items():
+        for path_name, path_definition in self.path_map.items():
             if path_definition:
-                path_group = path_definition['pattern'].split('/')[0]
-                target = self._generate_file_path(path_group, 'paths')
+                target = self._generate_file_path(path_name, 'paths')
 
                 if not os.path.isdir(os.path.dirname(target)):
                     os.makedirs(os.path.dirname(target))
@@ -208,7 +253,18 @@ class BuildDocs():
     def write_path_index(self):
         """Creates a glue file that links all paths into one 'paths' file"""
 
-        pass
+        glue = {}
+
+        for key, _value in self.path_map.items():
+            glue[key] = '#'.join([self._generate_file_path(key, 'paths', absolute_path=False), key])
+
+        target = self._generate_file_path('index', 'paths')
+
+        if not os.path.isdir(os.path.dirname(target)):
+            os.makedirs(os.path.dirname(target))
+
+        with open(os.path.join(target), 'w') as file_out:
+            file_out.write(yaml.dump(yaml.load(json.dumps(glue)), default_flow_style=False))
 
     def write_schema_index(self):
         """Creates a glue file that links all schemas into one 'definition' file"""
@@ -274,6 +330,8 @@ class BuildDocs():
     def _path_json_to_yaml(self, path_name, path_definition):
         """Converts the constructed path_map to swagger ingestable YAML"""
 
+        path = {path_name: {}}
+
         request_alias = {
             'list': 'get',
             'create': 'post'
@@ -283,8 +341,28 @@ class BuildDocs():
             return {}
 
         for endpoint_name, endpoint_definiton in path_definition['endpoints'].items():
+            if not endpoint_definiton['methods']:
+                pass
+
             if endpoint_name in request_alias:
                 endpoint_name = request_alias[endpoint_name]
+
+            path[path_name][endpoint_name] = {}
+            for method, method_info in endpoint_definiton['methods'].items():
+                path[path_name][endpoint_name][method] = {}
+                path[path_name][endpoint_name][method]['description'] = method_info
+                # Implement when model_info is more robust
+                # path[path_name][endpoint_name][method]['description'] = method_info['info']
+                # path[path_name][endpoint_name][method]['parameters'] = method_info['params']
+                # path[path_name][endpoint_name][method]['responses'] = method_info['responses']
+                path[path_name][endpoint_name][method]['tags'] = [path_name]
+                if 'function' in path_definition:
+                    print path_definition['function']
+                path[path_name][endpoint_name][method]['operationID'] = '.'.join(list(endpoint_definiton['function'],
+                                                                                      method))
+
+        for _name, content in path.items():
+            return yaml.dump(yaml.load(json.dumps(content)), default_flow_style=False)
 
     def _schema_json_to_yaml(self, schema_name, schema):
         """Converts django json schema to swagger ingestable YAML"""
