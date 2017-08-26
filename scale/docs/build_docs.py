@@ -4,7 +4,6 @@ import inspect
 import json
 import os
 import pystache
-from ruamel import yaml
 
 from django.conf import settings
 from django.conf.urls import RegexURLPattern, RegexURLResolver
@@ -97,11 +96,11 @@ class BuildDocs():
         """Build docs"""
 
         self.mustache_file_name = 'index.mustache' # MUST ME IN SAME DIR AS THIS FILE
-        
+
         self.api_default = settings.REST_FRAMEWORK['DEFAULT_VERSION']
         self.api_versions = ' '.join('`{0}`'.format(ver) for ver in list(settings.REST_FRAMEWORK['ALLOWED_VERSIONS']))
 
-        self.schama_map = {
+        self.component_map = {
             'batch_definition': BATCH_DEFINITION_SCHEMA,
             'configuration': CONFIGURATION_SCHEMA,
             'error_interface': ERROR_INTERFACE_SCHEMA,
@@ -120,14 +119,14 @@ class BuildDocs():
 
         self.mustache_map = {
             'host': 'need_to_get_this_somewhow',
-            'basepath': '/' + self.api_default,
+            'basepath': '.',
             'version': self.api_default
         }
         self.path_map = {}
         self.tag_map = {}
 
         self.generate_paths()
-        self.generate_schemas()
+        self.generate_components()
         self.write_index()
 
     def build_path_map(self):
@@ -155,11 +154,11 @@ class BuildDocs():
                     description = self._fix_path_description(inspect.getdoc(getattr(module_method, endpoint)))
                     self.path_map[name]['endpoints'][endpoint] = description
 
-    def build_schema_map(self):
-        """Converts all schemas to YAML"""
+    def build_component_map(self):
+        """Converts all components to pretty JSON"""
 
-        for schema_name, schema_definition in self.schama_map.items():
-            self.schama_map[schema_name] = self._schema_json_to_yaml(schema_name, schema_definition)
+        for component_name, component_definition in self.component_map.items():
+            self.component_map[component_name] = self._process_component_json(component_name, component_definition)
 
     def build_tag_map(self, path_map):
         """Builds a map for all tags with their descriptions."""
@@ -201,12 +200,12 @@ class BuildDocs():
         self.write_path_index()
         self.write_tags()
 
-    def generate_schemas(self):
-        """Generates everything for schemas"""
+    def generate_components(self):
+        """Generates everything for components"""
 
-        self.build_schema_map()
-        self.write_schemas()
-        self.write_schema_index()
+        self.build_component_map()
+        self.write_components()
+        self.write_component_index()
 
     def optimize_path_map(self):
         """Reorganize something we just made to ease swagger doc generation"""
@@ -233,13 +232,13 @@ class BuildDocs():
 
         self.path_map = {}
         for path_name, path_definition in new_path_map.items():
-            self.path_map[path_name] = self._path_json_to_yaml(path_name, path_definition)
+            self.path_map[path_name] = self._process_path_json(path_name, path_definition)
 
         # Construct the tag map before returning
         self.build_tag_map(new_path_map)
 
     def write_index(self):
-        """Writes out the base YAML file for swagger"""
+        """Writes out the base JSON file for swagger"""
 
         target = self._generate_file_path('index')
         template_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), self.mustache_file_name)
@@ -250,18 +249,18 @@ class BuildDocs():
             self._write_object(target, output)
 
     def write_paths(self):
-        """Writes out YAML files for each path"""
+        """Writes out JSON files for each path"""
 
         for path_name, path_definition in self.path_map.items():
             target = self._generate_file_path(path_name, 'paths')
             self._write_object(target, path_definition)
 
-    def write_schemas(self):
-        """Writes out YAML files for each schema"""
+    def write_components(self):
+        """Writes out JSON files for each component"""
 
-        for schema_name, schema_definition in self.schama_map.items():
-            target = self._generate_file_path(schema_name, 'components')
-            self._write_object(target, schema_definition)
+        for component_name, component_definition in self.component_map.items():
+            target = self._generate_file_path(component_name, 'components')
+            self._write_object(target, component_definition)
 
     def write_path_index(self):
         """Creates a glue file that links all paths into one 'paths' file"""
@@ -276,12 +275,12 @@ class BuildDocs():
 
         self._write_index(target, glue)
 
-    def write_schema_index(self):
-        """Creates a glue file that links all schemas into one 'definition' file"""
+    def write_component_index(self):
+        """Creates a glue file that links all components into one 'definition' file"""
 
         glue = {}
 
-        for key, _value in self.schama_map.items():
+        for key, _value in self.component_map.items():
             glue[key] = '#'.join([self._generate_file_path(key, 'components', absolute_path=False), key])
 
         target = self._generate_file_path('index', 'components')
@@ -290,11 +289,11 @@ class BuildDocs():
         self._write_index(target, glue)
 
     def write_tags(self):
-        """Create a YAML file for the tags used in the paths."""
+        """Create a JSON file for the tags used in the paths."""
 
         target = self._generate_file_path('index', 'tags')
         self.mustache_map['tags_ref'] = target
-        to_write = yaml.safe_dump(yaml.safe_load(json.dumps(self.tag_map)), default_flow_style=False)
+        to_write = json.dumps(self.tag_map)
         self._write_object(target, to_write)
 
     @staticmethod
@@ -340,12 +339,12 @@ class BuildDocs():
         else:
             target_dir = '/'
 
-        file_name = '.'.join([name, 'yaml'])
+        file_name = '.'.join([name, 'json'])
         return os.path.join(target_dir, file_name)
 
 
-    def _path_json_to_yaml(self, path_name, path_definition):
-        """Converts the constructed path_map to swagger ingestable YAML"""
+    def _process_path_json(self, path_name, path_definition):
+        """Converts the constructed path_map to swagger ingestable JSON"""
 
         path = {path_name: {}}
 
@@ -379,27 +378,27 @@ class BuildDocs():
                                                                                   method])
 
         for _name, content in path.items():
-            return yaml.safe_dump(yaml.safe_load(json.dumps(content)), default_flow_style=False)
+            return json.dumps(content)
 
-    def _schema_json_to_yaml(self, schema_name, schema):
-        """Converts django json schema to swagger ingestable YAML"""
+    def _process_component_json(self, component_name, component):
+        """Converts django json component to swagger ingestable JSON"""
 
-        obj_properties = schema['properties'] if 'properties' in schema else {}
+        obj_properties = component['properties'] if 'properties' in component else {}
 
-        if 'definitions' in schema:
-            obj_definitions = schema['definitions']
+        if 'definitions' in component:
+            obj_definitions = component['definitions']
             for key, value in obj_properties.items():
                 if 'items' in value:
                     if '$ref' in value['items']:
                         obj_properties[key]['items'] = obj_definitions[value['items']['$ref'].split('/')[-1]]
-            schema['properties'] = obj_properties
-            del schema['definitions']
+            component['properties'] = obj_properties
+            del component['definitions']
 
-        schema = {
-            schema_name: schema
+        component = {
+            component_name: component
         }
 
-        return yaml.safe_dump(yaml.safe_load(json.dumps(schema)), default_flow_style=False)
+        return json.dumps(component)
 
     @staticmethod
     def _write_index(target, json_dict):
@@ -410,17 +409,17 @@ class BuildDocs():
 
         with open(os.path.join(target), 'w') as file_out:
             for _key, link in json_dict.items():
-                file_out.write("$ref: '%s'\n" % link)
+                file_out.write("'$ref': '%s'\n" % link)
 
     @staticmethod
-    def _write_object(target, yaml_str):
-        """Writes YAML out to disk"""
+    def _write_object(target, json_str):
+        """Writes JSON out to disk"""
 
         if not os.path.isdir(os.path.dirname(target)):
             os.makedirs(os.path.dirname(target))
 
         with open(os.path.join(target), 'w') as file_out:
-            file_out.write(yaml_str)
+            file_out.write(json_str)
 
 if __name__ == '__main__':
     BuildDocs()
