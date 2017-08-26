@@ -1,30 +1,42 @@
-swagger: "3.0"
-info:
-  title: Scale API
-  description: >
-                 [Scale](http://ngageoint.github.io/scale/index.html) is an open source system that provides management
-                   of automated processing on a cluster of machines. It allows users to define jobs, which can be any
-                   type of script or algorithm. These jobs run on ingested source data and produce product files. The
-                   produced products can be disseminated to appropriate users and/or used to evaluate the producing
-                   algorithm in terms of performance and accuracy.
-  version: {{api_version}}
-  contact:
-    name: Scale Support
-    url: https://gitter.im/ngageoint/scale
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
-host: {{host}}
-basePath: {{basepath}}
-schemes:
-  - http
-consumes:
-  - application/json
-produces:
-  - application/json
-paths:
-  $ref: {{paths_ref}}
-definitions:
-  $ref: {{definitions_ref}}
-tags:
-  $ref: {{tags_ref}}
+{
+    "swagger": {{openapi_version}},
+    "info": {
+        "title": "Scale API",
+        "description": "[Scale](http://ngageoint.github.io/scale/index.html) is an open source system that provides
+                        management  of automated processing on a cluster of machines. It allows users to define
+                        jobs, which can be any type of script or algorithm. These jobs run on ingested source
+                        data and produce product files. The produced products can be disseminated to appropriate
+                        users and/or used to evaluate the producing algorithm in terms of performance and accuracy.",
+        "version": {{api_version}},
+        "contact": {
+            "name": "Scale Support",
+            "url": "https://gitter.im/ngageoint/scale"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        }
+    },
+    "host": {
+        "[object Object]": null
+    },
+    "basePath": {{basepath}},
+    "schemes": [
+        "http"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "$ref": "{{paths_ref}}"
+    },
+    "definitions": {
+        "$ref": "{{definitions_ref}}"
+    },
+    "tags": {
+        "$ref": "{{tags_ref}}"
+    }
+}

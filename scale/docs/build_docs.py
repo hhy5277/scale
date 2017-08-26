@@ -120,7 +120,8 @@ class BuildDocs():
         self.mustache_map = {
             'host': 'need_to_get_this_somewhow',
             'basepath': '.',
-            'version': self.api_default
+            'version': self.api_default,
+            'openapi_version': '2.0'
         }
         self.path_map = {}
         self.tag_map = {}
