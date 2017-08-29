@@ -4,9 +4,11 @@ import inspect
 import json
 import os
 import pystache
+import yaml
 
 from django.conf import settings
 from django.conf.urls import RegexURLPattern, RegexURLResolver
+
 from scale.urls import urlpatterns
 
 from batch.configuration.definition.batch_definition import BATCH_DEFINITION_SCHEMA
@@ -73,17 +75,33 @@ class BuildDocs():
             |-----|-----|
             | like| this|
 
-            _Two concurrent empty lines are required to indicate the end of the section_
+            _The five charater pattern `-*-*-` indicates that the description is over_
 
+            Note: `parameters` and `responses` below need to be valid YAML
+            -*-*-
+            parameters:
+              - name: username
+                description: Foobar long description goes here
+                required: true
+                type: string
+                paramType: form
+              - name: password
+                paramType: form
+                required: true
+                type: string
 
-            paramaters: {
-                'some': 'stuff'
-            }
+            responses:
+                "200":
+                  description: Everything went as expected
+                  schema:
+                    type: array
+                    $ref: BATCH_DEFINITION_SCHEMA
+                "204":
+                  description: Created!
+            -*-*-
 
-            responses: {
-                'other': 'stuff'
-            }
-
+            :param bar: Some silly param
+            "param type: var
             '''
         ---------------------------------------------------------------------------------------------------------------
 
@@ -152,7 +170,7 @@ class BuildDocs():
             self.path_map[name]['endpoints'] = {}
             for endpoint, _v in module_method.__dict__.items():
                 if endpoint in scale_view_functions:
-                    description = self._fix_path_description(inspect.getdoc(getattr(module_method, endpoint)))
+                    description = inspect.getdoc(getattr(module_method, endpoint))
                     self.path_map[name]['endpoints'][endpoint] = description
 
     def build_component_map(self):
@@ -298,18 +316,6 @@ class BuildDocs():
         self._write_object(target, to_write)
 
     @staticmethod
-    def _fix_path_description(description):
-        """Fixes the doc strings to be more friendly on the eyes (and swagger)"""
-
-        if not description:
-            return ''
-
-        description = description.split(':param')[0]
-        description = description.rstrip()
-
-        return description
-
-    @staticmethod
     def _fix_path_pattern(pattern):
         """Fixes the regex strings to be more friendly on the eyes (and swagger)"""
 
@@ -343,6 +349,39 @@ class BuildDocs():
         file_name = '.'.join([name, 'json'])
         return os.path.join(target_dir, file_name)
 
+    @staticmethod
+    def _get_method_description(method_text):
+        """Pulls out the markdown text that defines the method"""
+
+        if method_text:
+            descript = method_text.split('-*-*-')[0]
+            descript.rstrip()
+        else:
+            descript = None
+
+        return descript
+
+    @staticmethod
+    def _get_method_params(method_text):
+        """Pulls out the YAML text that defines the method parameters and responses"""
+
+        if method_text:
+            text_split = method_text.split('-*-*-')
+        else: 
+            text_split = []
+
+        params = None
+        responses = None
+
+        for string in text_split:
+            try:
+                yaml_dict = yaml.load(string)
+                params = json.dumps(yaml_dict['parameters'])
+                responses = json.dumps(yaml_dict['responses'])
+            except (yaml.scanner.ScannerError, KeyError) as e:
+                pass
+
+        return params, responses
 
     def _process_path_json(self, path_name, path_definition):
         """Converts the constructed path_map to swagger ingestable JSON"""
@@ -366,12 +405,17 @@ class BuildDocs():
 
             path[path_name][endpoint_name] = {}
             for method, method_info in endpoint_definiton['methods'].items():
+                descript = self._get_method_description(method_info)
+                params, responses = self._get_method_params(method_info)
+
                 path[path_name][endpoint_name][method] = {}
-                path[path_name][endpoint_name][method]['description'] = method_info
-                # Implement when model_info is more robust
-                # path[path_name][endpoint_name][method]['description'] = method_info['info']
-                # path[path_name][endpoint_name][method]['parameters'] = method_info['params']
-                # path[path_name][endpoint_name][method]['responses'] = method_info['responses']
+                if descript:
+                    path[path_name][endpoint_name][method]['description'] = descript
+                if params:
+                    path[path_name][endpoint_name][method]['parameters'] = params
+                if responses:
+                    path[path_name][endpoint_name][method]['responses'] = responses
+
                 path[path_name][endpoint_name][method]['tags'] = [path_name]
                 if 'function' in path_definition:
                     print path_definition['function']
@@ -424,4 +468,3 @@ class BuildDocs():
 
 if __name__ == '__main__':
     BuildDocs()
-        
