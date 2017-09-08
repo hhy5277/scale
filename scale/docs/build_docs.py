@@ -1,5 +1,6 @@
 """Tools needed ot Scale's API documentation"""
 
+from collections import defaultdict
 import inspect
 import json
 import os
@@ -139,7 +140,10 @@ class BuildDocs():
             'host': 'need_to_get_this_somewhow',
             'basepath': '.',
             'version': self.api_default,
-            'openapi_version': '2.0'
+            'openapi_version': '2.0',
+            'paths': [],
+            'components': [],
+            'tags': {}
         }
         self.path_map = {}
         self.tag_map = {}
@@ -273,6 +277,7 @@ class BuildDocs():
         for path_name, path_definition in self.path_map.items():
             target = self._generate_file_path(path_name, 'paths')
             self._write_object(target, path_definition)
+            self.mustache_map['paths'].append({'name': path_name, 'definition': path_definition})
 
     def write_components(self):
         """Writes out JSON files for each component"""
@@ -280,6 +285,7 @@ class BuildDocs():
         for component_name, component_definition in self.component_map.items():
             target = self._generate_file_path(component_name, 'components')
             self._write_object(target, component_definition)
+            self.mustache_map['components'].append(component_definition)
 
     def write_path_index(self):
         """Creates a glue file that links all paths into one 'paths' file"""
@@ -290,7 +296,6 @@ class BuildDocs():
             glue[key] = '#' + self._generate_file_path(key, 'paths', absolute_path=False)
 
         target = self._generate_file_path('index', 'paths')
-        self.mustache_map['paths_ref'] = target
 
         self._write_index(target, glue)
 
@@ -303,15 +308,14 @@ class BuildDocs():
             glue[key] = '#'.join([self._generate_file_path(key, 'components', absolute_path=False), key])
 
         target = self._generate_file_path('index', 'components')
-        self.mustache_map['definitions_ref'] = target
 
         self._write_index(target, glue)
 
     def write_tags(self):
         """Create a JSON file for the tags used in the paths."""
 
+        self.mustache_map['tags'] = self.tag_map
         target = self._generate_file_path('index', 'tags')
-        self.mustache_map['tags_ref'] = target
         to_write = json.dumps(self.tag_map)
         self._write_object(target, to_write)
 
@@ -367,7 +371,7 @@ class BuildDocs():
 
         if method_text:
             text_split = method_text.split('-*-*-')
-        else: 
+        else:
             text_split = []
 
         params = None

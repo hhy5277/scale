@@ -27,12 +27,19 @@
         "application/json"
     ],
     "paths": {
-        "$ref": "{{paths_ref}}"
+        {{#paths}}
+          {{name}}: {{definition}}
+        {{/paths}}
     },
     "definitions": {
-        "$ref": "{{definitions_ref}}"
+        {{#components}}
+          {{name}}: {{definition}}
+        {{/components}}
     },
     "tags": {
-        "$ref": "{{tags_ref}}"
+        {{#tags}}
+          {{name}}
+          {{description}}
+        {{/tags}}
     }
 }
