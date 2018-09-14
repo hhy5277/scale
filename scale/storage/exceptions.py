@@ -1,5 +1,5 @@
 """Defines the exceptions related to files and storage methods"""
-from __future__ import unicode_literals
+
 
 from error.exceptions import ScaleError
 

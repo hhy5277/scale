@@ -1,9 +1,7 @@
 from abc import ABCMeta
 
 
-class JobDataFields(object):
-    __metaclass__ = ABCMeta
-
+class JobDataFields(object, metaclass=ABCMeta):
     def __init__(self, data):
         self.dict = data
 

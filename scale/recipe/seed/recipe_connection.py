@@ -1,5 +1,5 @@
 """Defines connections that will provide data to execute recipes"""
-from __future__ import unicode_literals
+
 
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.data.recipe_data import ValidationWarning

@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 
 import os
 import shutil
@@ -266,13 +266,13 @@ class TestHostBrokerMoveFiles(TestCase):
         self.broker.move_files(volume_path, [file_1_mv, file_2_mv])
 
         # Check results
-        two_calls = [call(os.path.dirname(full_new_workspace_path_1), mode=0755),
-                     call(os.path.dirname(full_new_workspace_path_2), mode=0755)]
+        two_calls = [call(os.path.dirname(full_new_workspace_path_1), mode=0o755),
+                     call(os.path.dirname(full_new_workspace_path_2), mode=0o755)]
         mock_makedirs.assert_has_calls(two_calls)
         two_calls = [call(full_old_workspace_path_1, full_new_workspace_path_1),
                      call(full_old_workspace_path_2, full_new_workspace_path_2)]
         mock_move.assert_has_calls(two_calls)
-        two_calls = [call(full_new_workspace_path_1, 0644), call(full_new_workspace_path_2, 0644)]
+        two_calls = [call(full_new_workspace_path_1, 0o644), call(full_new_workspace_path_2, 0o644)]
         mock_chmod.assert_has_calls(two_calls)
 
         self.assertEqual(file_1.file_path, new_workspace_path_1)
@@ -317,13 +317,13 @@ class TestHostBrokerUploadFiles(TestCase):
         self.broker.upload_files(volume_path, [file_1_up, file_2_up])
 
         # Check results
-        two_calls = [call(os.path.dirname(full_workspace_path_file_1), mode=0755),
-                     call(os.path.dirname(full_workspace_path_file_2), mode=0755)]
+        two_calls = [call(os.path.dirname(full_workspace_path_file_1), mode=0o755),
+                     call(os.path.dirname(full_workspace_path_file_2), mode=0o755)]
         mock_makedirs.assert_has_calls(two_calls)
         two_calls = [call(local_path_file_1, full_workspace_path_file_1),
                      call(local_path_file_2, full_workspace_path_file_2)]
         mock_copy.assert_has_calls(two_calls)
-        two_calls = [call(full_workspace_path_file_1, 0644), call(full_workspace_path_file_2, 0644)]
+        two_calls = [call(full_workspace_path_file_1, 0o644), call(full_workspace_path_file_2, 0o644)]
         mock_chmod.assert_has_calls(two_calls)
 
 

@@ -183,7 +183,7 @@ class SecretsHandler(object):
             }
             check_mount = self._make_request('GET', url, headers=headers)
 
-            if 'scale/' not in json.loads(check_mount.content).keys():
+            if 'scale/' not in list(json.loads(check_mount.content).keys()):
                 self._create_vault_store()
 
     def _create_vault_store(self):
@@ -224,7 +224,7 @@ class SecretsHandler(object):
         })
         request_auth = self._make_request('POST', url, data=data)
         self.secrets_url += '/secrets/v1'
-        access_token = [k + '=' + v for k, v in request_auth.json().items()][0]
+        access_token = [k + '=' + v for k, v in list(request_auth.json().items())][0]
 
         return access_token
 

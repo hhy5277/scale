@@ -1,5 +1,5 @@
 """Defines the class that manages caching task secrets to memory"""
-from __future__ import unicode_literals
+
 
 import logging
 

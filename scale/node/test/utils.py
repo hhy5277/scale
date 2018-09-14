@@ -1,5 +1,5 @@
 """Defines utility methods for testing nodes"""
-from __future__ import unicode_literals
+
 
 from node.models import Node
 

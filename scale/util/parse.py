@@ -1,5 +1,5 @@
 """Defines utility functions for parsing data."""
-from __future__ import unicode_literals
+
 
 import datetime
 import re

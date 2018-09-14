@@ -1,5 +1,5 @@
 """Provides initialization functionality for the Scale system"""
-from __future__ import unicode_literals
+
 
 import logging
 

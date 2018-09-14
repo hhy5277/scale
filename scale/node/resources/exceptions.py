@@ -1,5 +1,5 @@
 """Defines exceptions that can occur when interacting with resources"""
-from __future__ import unicode_literals
+
 
 
 class InvalidResources(Exception):

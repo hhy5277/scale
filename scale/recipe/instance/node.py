@@ -1,14 +1,12 @@
 """Defines the classes for representing nodes within a recipe"""
-from __future__ import unicode_literals
+
 
 from abc import ABCMeta
 
 
-class NodeInstance(object):
+class NodeInstance(object, metaclass=ABCMeta):
     """Represents a node within a recipe
     """
-
-    __metaclass__ = ABCMeta
 
     def __init__(self, definition):
         """Constructor
@@ -47,7 +45,7 @@ class NodeInstance(object):
         self.blocks_child_jobs = False
 
         # If any of this node's parents block child jobs, then this job blocks child jobs as well
-        for parent_node in self.parents.values():
+        for parent_node in list(self.parents.values()):
             self.blocks_child_jobs = self.blocks_child_jobs or parent_node.blocks_child_jobs
 
 

@@ -1,6 +1,6 @@
 """Defines the class that manages all scheduling"""
-from __future__ import absolute_import
-from __future__ import unicode_literals
+
+
 
 import datetime
 import logging
@@ -112,12 +112,12 @@ class SchedulingManager(object):
         """
 
         allocated_resources = {}
-        for node in nodes.values():
+        for node in list(nodes.values()):
             allocated_resources[node.agent_id] = node.allocated_resources
 
         resources_offers = resource_mgr.allocate_offers(allocated_resources, now())  # Use most recent time
 
-        for node in nodes.values():
+        for node in list(nodes.values()):
             offers = []
             if node.agent_id in resources_offers:
                 offers = resources_offers[node.agent_id]
@@ -136,7 +136,7 @@ class SchedulingManager(object):
         """
 
         job_type_limits = {}
-        for job_type in job_types.values():
+        for job_type in list(job_types.values()):
             if job_type.max_scheduled:
                 job_type_limits[job_type.id] = job_type.max_scheduled
         for running_job_exe in running_job_exes:
@@ -159,7 +159,7 @@ class SchedulingManager(object):
         ignore_job_type_ids = set()
 
         # Ignore paused job types
-        for job_type in job_types.values():
+        for job_type in list(job_types.values()):
             if job_type.is_paused:
                 ignore_job_type_ids.add(job_type.id)
 
@@ -185,7 +185,7 @@ class SchedulingManager(object):
 
         # Start and launch tasks in the task manager
         all_tasks = []
-        for node in nodes.values():
+        for node in list(nodes.values()):
             node.start_job_exe_tasks()
             all_tasks.extend(node.allocated_tasks)
         task_mgr.launch_tasks(all_tasks, started)
@@ -197,7 +197,7 @@ class SchedulingManager(object):
         total_task_count = 0
         total_offer_resources = NodeResources()
         total_task_resources = NodeResources()
-        for node in nodes.values():
+        for node in list(nodes.values()):
             mesos_offer_ids = []
             mesos_tasks = []
             offers = node.allocated_offers
@@ -450,7 +450,7 @@ class SchedulingManager(object):
         best_reservation_node = None
         best_reservation_score = None
 
-        for node in nodes.values():
+        for node in list(nodes.values()):
             # Check node for scheduling this job execution
             score = node.score_job_exe_for_scheduling(job_exe, job_type_resources)
             if score is not None:
@@ -503,7 +503,7 @@ class SchedulingManager(object):
 
         # Can only use nodes that are ready for new job executions
         available_nodes = {}  # {Node ID: SchedulingNode}
-        for node in nodes.values():
+        for node in list(nodes.values()):
             if node.is_ready_for_new_job:
                 available_nodes[node.node_id] = node
 
@@ -536,7 +536,7 @@ class SchedulingManager(object):
         except DatabaseError:
             logger.exception('Error occurred while scheduling new jobs from the queue')
             job_exe_count = 0
-            for node in available_nodes.values():
+            for node in list(available_nodes.values()):
                 node.reset_new_job_exes()
 
         return job_exe_count
@@ -565,7 +565,7 @@ class SchedulingManager(object):
             task_scheduled = False
             best_scheduling_node = None
             best_scheduling_score = None
-            for node in nodes.values():
+            for node in list(nodes.values()):
                 # Check node for scheduling this system task
                 score = node.score_system_task_for_scheduling(task, job_type_resources)
                 if score is not None:
@@ -614,7 +614,7 @@ class SchedulingManager(object):
         waiting_tasks = []
 
         # Schedule waiting node tasks first
-        for node in nodes.values():
+        for node in list(nodes.values()):
             has_waiting_tasks = node.accept_node_tasks(when, waiting_tasks)
             if node.is_ready_for_next_job_task and not has_waiting_tasks:
                 # A node can only be fulfilled if it is able to run waiting tasks and it has no more waiting tasks

@@ -1,5 +1,5 @@
 """Defines the configuration for an ingest trigger"""
-from __future__ import unicode_literals
+
 
 import logging
 

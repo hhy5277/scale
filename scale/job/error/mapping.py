@@ -1,6 +1,6 @@
 """Defines the class for handling the error mapping for a job type"""
-from __future__ import absolute_import
-from __future__ import unicode_literals
+
+
 
 import logging
 
@@ -36,7 +36,7 @@ def create_legacy_error_mapping(error_dict):
         error_dict['exit_codes'] = {}
     if not isinstance(error_dict['exit_codes'], dict):
         raise InvalidInterfaceDefinition('Invalid error interface')
-    for exit_code, error_name in error_dict['exit_codes'].items():
+    for exit_code, error_name in list(error_dict['exit_codes'].items()):
         exit_code = int(exit_code)
         error = JobError(None, error_name)
         mapping.add_mapping(exit_code, error)
@@ -114,13 +114,13 @@ class JobErrorMapping(object):
         :rtype: {string}
         """
 
-        return {error.name for error in self._mapping.values()}
+        return {error.name for error in list(self._mapping.values())}
 
     def save_models(self):
         """Saves this mapping as error models in the database
         """
 
-        error_models = [error.create_model() for error in self._mapping.values()]
+        error_models = [error.create_model() for error in list(self._mapping.values())]
         Error.objects.save_job_error_models(self.job_type_name, error_models)
 
     # TODO: remove this when legacy style job types are removed

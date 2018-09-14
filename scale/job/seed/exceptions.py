@@ -1,5 +1,5 @@
 """Defines exceptions that can occur when interacting with a Seed job interface"""
-from __future__ import unicode_literals
+
 
 from util.exceptions import ValidationException
 

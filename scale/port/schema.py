@@ -1,5 +1,5 @@
 """Defines the class for managing a configuration export."""
-from __future__ import unicode_literals
+
 
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
@@ -85,7 +85,7 @@ class Configuration(object):
         try:
             validate(configuration, CONFIGURATION_SCHEMA)
         except ValidationError as ex:
-            raise InvalidConfiguration('Invalid export configuration: %s' % unicode(ex))
+            raise InvalidConfiguration('Invalid export configuration: %s' % str(ex))
 
     def get_dict(self):
         """Returns the internal dictionary that represents this export configuration

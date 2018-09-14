@@ -1,5 +1,5 @@
 """Defines general classes used to manage metrics"""
-from __future__ import unicode_literals
+
 
 import abc
 import datetime
@@ -47,7 +47,7 @@ class MetricsType(object):
         :returns: The metrics type column names.
         :rtype: list[string]
         """
-        return self._get_column_map().keys()
+        return list(self._get_column_map().keys())
 
     def get_column(self, column_name):
         """Gets the column model associated with the given name.
@@ -251,7 +251,7 @@ class MetricsPlotData(object):
                 if column.name not in results:
                     results[column.name] = MetricsPlotData(column=column, values=[])
                 MetricsPlotData._add_plot_value(results[column.name], entry, date_field, choice_field, choice_ids)
-        return results.values()
+        return list(results.values())
 
     @classmethod
     def _add_plot_value(cls, plot_data, entry, date_field, choice_field, choice_ids=None):
@@ -275,7 +275,7 @@ class MetricsPlotData(object):
             return
 
         # Update the bounds for the y-axis
-        plot_data.min_y = min(plot_data.min_y or sys.maxint, entry_val)
+        plot_data.min_y = min(plot_data.min_y or sys.maxsize, entry_val)
         plot_data.max_y = max(plot_data.max_y or 0, entry_val)
 
         # Update the bounds for the x-axis
@@ -300,7 +300,7 @@ class MetricsPlotData(object):
         if plot_data.column.aggregate == 'sum':
             plot_value.value = plot_value.total
         elif plot_data.column.aggregate == 'min':
-            plot_value.value = min(plot_value.value or sys.maxint, entry_val)
+            plot_value.value = min(plot_value.value or sys.maxsize, entry_val)
         elif plot_data.column.aggregate == 'max':
             plot_value.value = max(plot_value.value or 0, entry_val)
         elif plot_data.column.aggregate == 'avg':
@@ -316,9 +316,8 @@ class MetricsTypeError(Exception):
     pass
 
 
-class MetricsTypeProvider(object):
+class MetricsTypeProvider(object, metaclass=abc.ABCMeta):
     """Base class used to handle requests for specific types of metrics."""
-    __metaclass__ = abc.ABCMeta
 
     def calculate(self, date):
         """Calculates and saves new metrics models grouped by the given date.
@@ -378,7 +377,7 @@ def get_providers():
     :returns: The current metrics provider list.
     :rtype: list[:class:`metrics.registry.MetricsTypeProvider`]
     """
-    return [provider for provider, _serializer in _PROVIDERS.values()]
+    return [provider for provider, _serializer in list(_PROVIDERS.values())]
 
 
 def get_provider(name):
@@ -403,7 +402,7 @@ def get_metrics_types():
     :returns: The metrics type list.
     :rtype: list[:class:`metrics.registry.MetricsType`]
     """
-    return [provider.get_metrics_type() for provider, _serializer in _PROVIDERS.values()]
+    return [provider.get_metrics_type() for provider, _serializer in list(_PROVIDERS.values())]
 
 
 def get_metrics_type(name, include_choices=False):

@@ -1,5 +1,5 @@
 """Defines functions for determining the media type of a file"""
-from __future__ import unicode_literals
+
 
 import mimetypes
 

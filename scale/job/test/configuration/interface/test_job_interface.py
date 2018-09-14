@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 
 import os
 
@@ -763,7 +763,7 @@ class TestJobInterfacePreSteps(TestCase):
 
         input_file_path = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'file1', 'foo.txt')
         mock_retrieve_call.side_effect = new_retrieve
-        mock_get_one_file.side_effect = lambda (arg1): input_file_path
+        mock_get_one_file.side_effect = lambda arg1: input_file_path
         job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
         job_interface_dict['command_arguments'] = '${file1}'
         job_interface_dict['input_data'] = [{

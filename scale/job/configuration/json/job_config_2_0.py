@@ -1,5 +1,5 @@
 """Defines the JSON schema for a job configuration"""
-from __future__ import unicode_literals
+
 
 import logging
 import os
@@ -78,7 +78,7 @@ def convert_config_to_v2_json(config):
     """
 
     mounts_dict = {}
-    for mount_config in config.mounts.values():
+    for mount_config in list(config.mounts.values()):
         if mount_config.mount_type == HOST_TYPE:
             mounts_dict[mount_config.name] = {'type': 'host', 'host_path': mount_config.host_path}
         elif mount_config.mount_type == VOLUME_TYPE:
@@ -284,14 +284,14 @@ class JobConfigurationV2(object):
         if interface.get_mounts() and 'mounts' in self._configuration:
             # Remove mounts not used in the interface
             interface_mount_names = [mount['name'] for mount in interface.get_mounts()]
-            for mount_name, _mount_value in self._configuration['mounts'].items():
+            for mount_name, _mount_value in list(self._configuration['mounts'].items()):
                 if mount_name not in interface_mount_names:
                     warning_str = 'Mount %s will be ignored due to no matching interface designation.' % mount_name
                     mounts_to_delete.append({'name': mount_name, 'warning': warning_str})
 
         elif 'mounts' in self._configuration:
             # Remove all mounts
-            for mount_name, _mount_value in self._configuration['mounts'].items():
+            for mount_name, _mount_value in list(self._configuration['mounts'].items()):
                 warning_str = 'Mount %s will be ignored due to no matching interface designation.' % mount_name
                 mounts_to_delete.append({'name': mount_name, 'warning': warning_str})
 
@@ -321,7 +321,7 @@ class JobConfigurationV2(object):
 
         if 'mounts' not in self._configuration:
             self._configuration['mounts'] = {}
-        for mount in self._configuration['mounts'].values():
+        for mount in list(self._configuration['mounts'].values()):
             if type == 'volume':
                 if 'driver_opts' not in mount:
                     mount['driver_opts'] = {}
@@ -334,7 +334,7 @@ class JobConfigurationV2(object):
         :raises :class:`job.configuration.exceptions.InvalidJobConfiguration`: If the mounts are invalid
         """
 
-        for name, mount in self._configuration['mounts'].iteritems():
+        for name, mount in self._configuration['mounts'].items():
             if mount['type'] == 'host':
                 if 'host_path' not in mount:
                     raise InvalidJobConfiguration('INVALID_CONFIGURATION', 'Host mount %s requires host_path' % name)
@@ -360,6 +360,6 @@ class JobConfigurationV2(object):
         :raises :class:`job.configuration.exceptions.InvalidJobConfiguration`: If the settings are invalid
         """
 
-        for setting_name, setting_value in self._configuration['settings'].iteritems():
+        for setting_name, setting_value in self._configuration['settings'].items():
             if not setting_value:
                 raise InvalidJobConfiguration('INVALID_CONFIGURATION', 'Setting %s has blank value' % setting_name)

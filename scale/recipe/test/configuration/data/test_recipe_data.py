@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 
 import django
 from django.test import TestCase
@@ -16,9 +16,9 @@ class DummyDataFileStore(AbstractDataFileStore):
     def get_workspaces(self, workspace_ids):
         results = {}
         if 1 in workspace_ids:
-            results[long(1)] = True
+            results[int(1)] = True
         if 3 in workspace_ids:
-            results[long(3)] = False
+            results[int(3)] = False
         return results
 
     def store_files(self, files, input_file_ids, job_exe):

@@ -1,5 +1,5 @@
 """Defines a broker that mounts a local host directory into the task container as its backend storage"""
-from __future__ import unicode_literals
+
 
 import logging
 import os
@@ -114,12 +114,12 @@ class HostBroker(Broker):
 
             if not os.path.exists(full_new_path_dir):
                 logger.info('Creating %s', full_new_path_dir)
-                os.makedirs(full_new_path_dir, mode=0755)
+                os.makedirs(full_new_path_dir, mode=0o755)
 
             logger.info('Moving %s to %s', full_old_path, full_new_path)
             shutil.move(full_old_path, full_new_path)
             logger.info('Setting file permissions for %s', full_new_path)
-            os.chmod(full_new_path, 0644)
+            os.chmod(full_new_path, 0o644)
 
             # Update model attributes
             file_move.file.file_path = file_move.new_path
@@ -135,12 +135,12 @@ class HostBroker(Broker):
 
             if not os.path.exists(path_to_upload_dir):
                 logger.info('Creating %s', path_to_upload_dir)
-                os.makedirs(path_to_upload_dir, mode=0755)
+                os.makedirs(path_to_upload_dir, mode=0o755)
 
             logger.info('Copying %s to %s', file_upload.local_path, path_to_upload)
             shutil.copy(file_upload.local_path, path_to_upload)
             logger.info('Setting file permissions for %s', path_to_upload)
-            os.chmod(path_to_upload, 0644)
+            os.chmod(path_to_upload, 0o644)
 
             # Create new model
             file_upload.file.save()

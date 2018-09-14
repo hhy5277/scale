@@ -1,5 +1,5 @@
 """Defines the class that represents a job configuration"""
-from __future__ import unicode_literals
+
 
 from job.configuration.exceptions import InvalidJobConfiguration
 from job.execution.configuration.volume import HOST_TYPE, VOLUME_TYPE, Volume
@@ -195,7 +195,7 @@ class JobConfiguration(object):
         warnings = []
         seed_mounts = {mount_dict['name'] for mount_dict in manifest.get_mounts()}
 
-        for mount_config in self.mounts.values():
+        for mount_config in list(self.mounts.values()):
             warnings.extend(mount_config.validate())
             if mount_config.name not in seed_mounts:
                 warnings.append(ValidationWarning('UNKNOWN_MOUNT', 'Unknown mount \'%s\' ignored' % mount_config.name))

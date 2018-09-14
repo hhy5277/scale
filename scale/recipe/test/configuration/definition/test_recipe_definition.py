@@ -1,5 +1,5 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import
+
+
 
 import django
 from django.test import TestCase
@@ -19,7 +19,7 @@ class DummyDataFileStore(AbstractDataFileStore):
     def get_workspaces(self, workspace_ids):
         results = {}
         if 1 in workspace_ids:
-            results[long(1)] = True
+            results[int(1)] = True
         return results
 
     def store_files(self, files, input_file_ids, job_exe):

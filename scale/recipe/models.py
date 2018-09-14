@@ -1,5 +1,5 @@
 """Defines the database models for recipes and recipe types"""
-from __future__ import unicode_literals
+
 
 import copy
 import math
@@ -415,8 +415,8 @@ class RecipeManager(models.Manager):
         recipe_dict = {recipe.id: recipe for recipe in recipes}
         handlers = []
 
-        recipe_jobs_dict = RecipeNode.objects.get_recipe_jobs(recipe_dict.keys())
-        for recipe_id in recipe_dict.keys():
+        recipe_jobs_dict = RecipeNode.objects.get_recipe_jobs(list(recipe_dict.keys()))
+        for recipe_id in list(recipe_dict.keys()):
             recipe = recipe_dict[recipe_id]
             recipe_jobs = recipe_jobs_dict[recipe_id] if recipe_id in recipe_jobs_dict else []
             handler = RecipeHandler(recipe, recipe_jobs)
@@ -446,7 +446,7 @@ class RecipeManager(models.Manager):
             return {}
 
         # Get handlers for all recipes and figure out dependent jobs to lock
-        recipe_ids = recipe_id_per_job_id.values()
+        recipe_ids = list(recipe_id_per_job_id.values())
         handlers = self._get_recipe_handlers(recipe_ids)
         job_ids_to_lock = set()
         for job_id in recipe_id_per_job_id:
@@ -457,13 +457,13 @@ class RecipeManager(models.Manager):
 
         if not job_ids_to_lock:
             # No dependent jobs, just return handlers
-            return handlers.values()
+            return list(handlers.values())
 
         # Lock dependent recipe jobs
         Job.objects.lock_jobs(job_ids_to_lock)
 
         # Return handlers with updated data after all dependent jobs have been locked
-        return self._get_recipe_handlers(recipe_ids).values()
+        return list(self._get_recipe_handlers(recipe_ids).values())
 
     def get_recipe_ids_for_jobs(self, job_ids):
         """Returns the IDs of all recipes that contain the jobs with the given IDs. This will include superseded
@@ -657,7 +657,7 @@ class RecipeManager(models.Manager):
         # Create RecipeInputFile models in batches
         all_file_ids = set()
         input_file_models = []
-        for file_value in recipe.get_input_data().values.values():
+        for file_value in list(recipe.get_input_data().values.values()):
             if file_value.param_type != FileParameter.PARAM_TYPE:
                 continue
             for file_id in file_value.file_ids:

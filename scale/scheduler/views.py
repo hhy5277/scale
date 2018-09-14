@@ -1,5 +1,5 @@
 """Scheduler Views"""
-from __future__ import unicode_literals
+
 
 import logging
 
@@ -129,7 +129,7 @@ class SchedulerView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        extra = filter(lambda x, y=self.update_fields: x not in y, request.data.keys())
+        extra = list(filter(lambda x, y=self.update_fields: x not in y, list(request.data.keys())))
         if len(extra) > 0:
             return Response('Unexpected fields: %s' % ', '.join(extra), status=status.HTTP_400_BAD_REQUEST)
         if len(request.data) == 0:
@@ -151,7 +151,7 @@ class SchedulerView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        extra = filter(lambda x, y=self.update_fields: x not in y, request.data.keys())
+        extra = list(filter(lambda x, y=self.update_fields: x not in y, list(request.data.keys())))
         if len(extra) > 0:
             return Response('Unexpected fields: %s' % ', '.join(extra), status=status.HTTP_400_BAD_REQUEST)
         if len(request.data) == 0:
@@ -173,7 +173,7 @@ class SchedulerView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        extra = filter(lambda x, y=self.update_fields: x not in y, request.data.keys())
+        extra = list(filter(lambda x, y=self.update_fields: x not in y, list(request.data.keys())))
         if len(extra) > 0:
             return Response('Unexpected fields: %s' % ', '.join(extra), status=status.HTTP_400_BAD_REQUEST)
         if len(request.data) == 0:

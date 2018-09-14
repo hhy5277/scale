@@ -1,5 +1,5 @@
 """Defines a command message that deletes files from ScaleFile"""
-from __future__ import unicode_literals
+
 
 import logging
 

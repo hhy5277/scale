@@ -1,14 +1,12 @@
 """Defines the node resource classes"""
-from __future__ import unicode_literals
+
 
 from abc import ABCMeta, abstractmethod
 
 
-class Resource(object):
+class Resource(object, metaclass=ABCMeta):
     """Abstract class for a node resource
     """
-
-    __metaclass__ = ABCMeta
 
     def __init__(self, name, resource_type):
         """Constructor

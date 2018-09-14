@@ -1,5 +1,5 @@
 """Defines the functions for generating Mesos tasks"""
-from __future__ import unicode_literals
+
 
 import logging
 from mesos.interface import mesos_pb2

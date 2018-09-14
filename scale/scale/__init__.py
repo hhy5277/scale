@@ -1,6 +1,6 @@
 """Django project root used for settings and deployment configuration."""
 
-from __future__ import absolute_import
+
 from collections import namedtuple
 
 version_info_t = namedtuple(

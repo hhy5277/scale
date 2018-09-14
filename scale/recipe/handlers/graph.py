@@ -1,5 +1,5 @@
 """Defines the class for handling recipe graphs"""
-from __future__ import unicode_literals
+
 
 from recipe.handlers.connection import DependencyInputConnection, RecipeInputConnection
 from recipe.handlers.node import RecipeNode

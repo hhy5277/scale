@@ -1,5 +1,5 @@
 """Defines the classes for representing nodes within a recipe definition"""
-from __future__ import unicode_literals
+
 
 from abc import ABCMeta
 
@@ -9,11 +9,9 @@ from data.interface.interface import Interface
 from recipe.definition.exceptions import InvalidDefinition
 
 
-class NodeDefinition(object):
+class NodeDefinition(object, metaclass=ABCMeta):
     """Represents a node within a recipe definition
     """
-
-    __metaclass__ = ABCMeta
 
     def __init__(self, name, node_type):
         """Constructor
@@ -74,7 +72,7 @@ class NodeDefinition(object):
 
         input_data = Data()
 
-        for connection in self.connections.values():
+        for connection in list(self.connections.values()):
             connection.add_value_to_data(input_data, recipe_input_data, node_outputs)
 
         return input_data
@@ -108,7 +106,7 @@ class NodeDefinition(object):
                 dependency_list.extend(list(dependency.parents.values()))
 
         try:
-            for connection in self.connections.values():
+            for connection in list(self.connections.values()):
                 # Validate each connection
                 warnings.extend(connection.validate(all_dependencies))
                 # Combine all connections into a connecting interface

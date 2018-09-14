@@ -1,5 +1,5 @@
 """Defines the database models for various system metrics."""
-from __future__ import unicode_literals
+
 
 import datetime
 import logging
@@ -91,7 +91,7 @@ class MetricsErrorManager(models.Manager):
             entry.total_count += 1
 
         # Save the new metrics to the database
-        self._replace_entries(date, entry_map.values())
+        self._replace_entries(date, list(entry_map.values()))
 
     def get_metrics_type(self, include_choices=False):
         """See :meth:`metrics.registry.MetricsTypeProvider.get_metrics_type`."""
@@ -207,7 +207,7 @@ class MetricsIngestManager(models.Manager):
             self._update_metrics(date, ingest, entry)
 
         # Save the new metrics to the database
-        self._replace_entries(date, entry_map.values())
+        self._replace_entries(date, list(entry_map.values()))
 
     def get_metrics_type(self, include_choices=False):
         """See :meth:`metrics.registry.MetricsTypeProvider.get_metrics_type`."""
@@ -270,7 +270,7 @@ class MetricsIngestManager(models.Manager):
         if ingest.file_size:
             entry._file_count = (entry._file_count if hasattr(entry, '_file_count') else 0) + 1
             entry.file_size_sum = (entry.file_size_sum or 0) + ingest.file_size
-            entry.file_size_min = min(entry.file_size_min or sys.maxint, ingest.file_size)
+            entry.file_size_min = min(entry.file_size_min or sys.maxsize, ingest.file_size)
             entry.file_size_max = max(entry.file_size_max or 0, ingest.file_size)
             entry.file_size_avg = entry.file_size_sum / entry._file_count
 
@@ -279,7 +279,7 @@ class MetricsIngestManager(models.Manager):
             transfer_secs = max((ingest.transfer_ended - ingest.transfer_started).total_seconds(), 0)
             entry._transfer_count = (entry._transfer_count if hasattr(entry, '_transfer_count') else 0) + 1
             entry.transfer_time_sum = (entry.transfer_time_sum or 0) + transfer_secs
-            entry.transfer_time_min = min(entry.transfer_time_min or sys.maxint, transfer_secs)
+            entry.transfer_time_min = min(entry.transfer_time_min or sys.maxsize, transfer_secs)
             entry.transfer_time_max = max(entry.transfer_time_max or 0, transfer_secs)
             entry.transfer_time_avg = entry.transfer_time_sum / entry._transfer_count
 
@@ -288,7 +288,7 @@ class MetricsIngestManager(models.Manager):
             ingest_secs = max((ingest.ingest_ended - ingest.ingest_started).total_seconds(), 0)
             entry._ingest_count = (entry._ingest_count if hasattr(entry, '_ingest_count') else 0) + 1
             entry.ingest_time_sum = (entry.ingest_time_sum or 0) + ingest_secs
-            entry.ingest_time_min = min(entry.ingest_time_min or sys.maxint, ingest_secs)
+            entry.ingest_time_min = min(entry.ingest_time_min or sys.maxsize, ingest_secs)
             entry.ingest_time_max = max(entry.ingest_time_max or 0, ingest_secs)
             entry.ingest_time_avg = entry.ingest_time_sum / entry._ingest_count
 
@@ -471,7 +471,7 @@ class MetricsJobTypeManager(models.Manager):
             self._update_times(date, job_exe_end, entry)
 
         # Save the new metrics to the database
-        self._replace_entries(date, entry_map.values())
+        self._replace_entries(date, list(entry_map.values()))
 
     def get_metrics_type(self, include_choices=False):
         """See :meth:`metrics.registry.MetricsTypeProvider.get_metrics_type`."""
@@ -551,7 +551,7 @@ class MetricsJobTypeManager(models.Manager):
         if job_exe_end.queued and job_exe_end.started:
             queue_secs = max((job_exe_end.started - job_exe_end.queued).total_seconds(), 0)
             entry.queue_time_sum = (entry.queue_time_sum or 0) + queue_secs
-            entry.queue_time_min = min(entry.queue_time_min or sys.maxint, queue_secs)
+            entry.queue_time_min = min(entry.queue_time_min or sys.maxsize, queue_secs)
             entry.queue_time_max = max(entry.queue_time_max or 0, queue_secs)
             entry.queue_time_avg = entry.queue_time_sum / entry.completed_count
 
@@ -568,7 +568,7 @@ class MetricsJobTypeManager(models.Manager):
         if pre_task_length:
             pre_secs = max(pre_task_length.total_seconds(), 0)
             entry.pre_time_sum = (entry.pre_time_sum or 0) + pre_secs
-            entry.pre_time_min = min(entry.pre_time_min or sys.maxint, pre_secs)
+            entry.pre_time_min = min(entry.pre_time_min or sys.maxsize, pre_secs)
             entry.pre_time_max = max(entry.pre_time_max or 0, pre_secs)
             entry.pre_time_avg = entry.pre_time_sum / entry.completed_count
 
@@ -578,7 +578,7 @@ class MetricsJobTypeManager(models.Manager):
         if job_task_length:
             job_secs = max(job_task_length.total_seconds(), 0)
             entry.job_time_sum = (entry.job_time_sum or 0) + job_secs
-            entry.job_time_min = min(entry.job_time_min or sys.maxint, job_secs)
+            entry.job_time_min = min(entry.job_time_min or sys.maxsize, job_secs)
             entry.job_time_max = max(entry.job_time_max or 0, job_secs)
             entry.job_time_avg = entry.job_time_sum / entry.completed_count
 
@@ -588,7 +588,7 @@ class MetricsJobTypeManager(models.Manager):
         if post_task_length:
             post_secs = max(post_task_length.total_seconds(), 0)
             entry.post_time_sum = (entry.post_time_sum or 0) + post_secs
-            entry.post_time_min = min(entry.post_time_min or sys.maxint, post_secs)
+            entry.post_time_min = min(entry.post_time_min or sys.maxsize, post_secs)
             entry.post_time_max = max(entry.post_time_max or 0, post_secs)
             entry.post_time_avg = entry.post_time_sum / entry.completed_count
 
@@ -596,13 +596,13 @@ class MetricsJobTypeManager(models.Manager):
         if job_exe_end.started and job_exe_end.ended:
             run_secs = max((job_exe_end.ended - job_exe_end.started).total_seconds(), 0)
             entry.run_time_sum = (entry.run_time_sum or 0) + run_secs
-            entry.run_time_min = min(entry.run_time_min or sys.maxint, run_secs)
+            entry.run_time_min = min(entry.run_time_min or sys.maxsize, run_secs)
             entry.run_time_max = max(entry.run_time_max or 0, run_secs)
             entry.run_time_avg = entry.run_time_sum / entry.completed_count
 
             stage_secs = max(run_secs - ((pull_secs or 0) + (pre_secs or 0) + (job_secs or 0) + (post_secs or 0)), 0)
             entry.stage_time_sum = (entry.stage_time_sum or 0) + stage_secs
-            entry.stage_time_min = min(entry.stage_time_min or sys.maxint, stage_secs)
+            entry.stage_time_min = min(entry.stage_time_min or sys.maxsize, stage_secs)
             entry.stage_time_max = max(entry.stage_time_max or 0, stage_secs)
             entry.stage_time_avg = entry.stage_time_sum / entry.completed_count
         return entry

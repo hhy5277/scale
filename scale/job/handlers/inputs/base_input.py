@@ -1,14 +1,12 @@
 """Defines the base class for handling inputs"""
-from __future__ import unicode_literals
+
 
 from abc import ABCMeta
 
 
-class Input(object):
+class Input(object, metaclass=ABCMeta):
     """Abstract base class that represents an input
     """
-
-    __metaclass__ = ABCMeta
 
     def __init__(self, input_name, input_type, required):
         """Constructor

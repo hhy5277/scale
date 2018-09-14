@@ -1,5 +1,5 @@
 """Defines exceptions that can occur when interacting with jobs and job types"""
-from __future__ import unicode_literals
+
 
 import logging
 from abc import ABCMeta, abstractmethod
@@ -61,12 +61,10 @@ def register_error(error):
         REGISTERED_WRAPPED_EX[error.wrapped_ex] = error
 
 
-class ScaleError(Exception):
+class ScaleError(Exception, metaclass=ABCMeta):
     """Abstract base class for exceptions that represent Scale errors. The exceptions contain exit code and error
     information.
     """
-
-    __metaclass__ = ABCMeta
 
     def __init__(self, exit_code, error_name, log_stacktrace=False, wrapped_ex=None):
         """Constructor

@@ -1,5 +1,5 @@
 """Defines the class for handling recipe graph deltas"""
-from __future__ import unicode_literals
+
 
 from collections import namedtuple
 
@@ -155,7 +155,7 @@ class RecipeGraphDelta(object):
                 return  # A and B have a non-matching input
             del a_inputs[b_input_name]
         if a_inputs:
-            changes.append(Change('REMOVED_INPUT', 'Previous input %s removed' % a_inputs.keys().pop()))
+            changes.append(Change('REMOVED_INPUT', 'Previous input %s removed' % list(a_inputs.keys()).pop()))
             return  # A input not defined for B
 
     def _is_node_identical(self, job_name_a, job_name_b):

@@ -1,5 +1,5 @@
 """Defines the database models related to ingesting files"""
-from __future__ import unicode_literals
+
 
 import datetime
 import logging
@@ -271,7 +271,7 @@ class IngestManager(models.Manager):
             ingests = ingests.order_by('data_started')
 
         groups = self._group_by_time(ingests, use_ingest_time)
-        return [self._fill_status(status, time_slots, started, ended) for status, time_slots in groups.iteritems()]
+        return [self._fill_status(status, time_slots, started, ended) for status, time_slots in groups.items()]
 
     @transaction.atomic
     def start_ingest_tasks(self, ingests, scan_id=None, strike_id=None):
@@ -941,7 +941,7 @@ class StrikeManager(models.Manager):
 
         strike_type = self.get_strike_job_type()
         job_data = JobData()
-        job_data.add_property_input('Strike ID', unicode(strike.id))
+        job_data.add_property_input('Strike ID', str(strike.id))
         event_description = {'strike_id': strike.id}
         event = TriggerEvent.objects.create_trigger_event('STRIKE_CREATED', None, event_description, now())
         strike.job = Queue.objects.queue_new_job(strike_type, job_data, event)

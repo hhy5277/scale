@@ -1,5 +1,5 @@
 """Defines the factory for creating brokers"""
-from __future__ import unicode_literals
+
 
 import logging
 
@@ -42,4 +42,4 @@ def get_broker_types():
     :rtype: [string]
     """
 
-    return _BROKERS.keys()
+    return list(_BROKERS.keys())

@@ -1,5 +1,5 @@
 """Defines the class that performs the Scale database update"""
-from __future__ import unicode_literals
+
 
 import logging
 
@@ -406,7 +406,7 @@ class DatabaseUpdater(object):
 
         # Update/create models in an atomic transaction
         with transaction.atomic():
-            for exe_num, job_exe_ids in exe_num_dict.items():
+            for exe_num, job_exe_ids in list(exe_num_dict.items()):
                 JobExecution.objects.filter(id__in=job_exe_ids).update(exe_num=exe_num, status=None, error_id=None,
                                                                        command_arguments=None, environment=None,
                                                                        cpus_scheduled=None, mem_scheduled=None,
@@ -425,4 +425,4 @@ class DatabaseUpdater(object):
         logger.info('Updated %d job executions', job_exe_count)
         self._updated_job_exe += job_exe_count
         percent = (float(self._updated_job_exe) / float(self._total_job_exe)) * 100.00
-        print 'Completed %s of %s job executions (%.1f%%)' % (self._updated_job_exe, self._total_job_exe, percent)
+        print('Completed %s of %s job executions (%.1f%%)' % (self._updated_job_exe, self._total_job_exe, percent))

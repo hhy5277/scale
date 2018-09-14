@@ -1,5 +1,5 @@
 """Defines the class that manages high-level scheduler configuration and metrics"""
-from __future__ import unicode_literals
+
 
 import logging
 import threading

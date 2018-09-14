@@ -1,5 +1,5 @@
 """Defines the class for handling a data interface"""
-from __future__ import unicode_literals
+
 
 from data.interface.exceptions import InvalidInterface, InvalidInterfaceConnection
 
@@ -65,7 +65,7 @@ class Interface(object):
 
         warnings = []
 
-        for parameter in self.parameters.values():
+        for parameter in list(self.parameters.values()):
             warnings.extend(parameter.validate())
 
         return warnings
@@ -83,7 +83,7 @@ class Interface(object):
 
         warnings = []
 
-        for parameter in self.parameters.values():
+        for parameter in list(self.parameters.values()):
             if parameter.name in connecting_interface.parameters:
                 connecting_parameter = connecting_interface.parameters[parameter.name]
                 warnings.extend(parameter.validate_connection(connecting_parameter))

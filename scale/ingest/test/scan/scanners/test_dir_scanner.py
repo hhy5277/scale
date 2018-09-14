@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 
 import django
 from django.test import TestCase
@@ -25,7 +25,7 @@ class TestDirScanner(TestCase):
 
         scanner.load_configuration(config)
 
-        self.assertEquals('_tmp', scanner._transfer_suffix)
+        self.assertEqual('_tmp', scanner._transfer_suffix)
 
     def test_validate_configuration_missing_transfer_suffix(self):
         """Tests calling DirScanner.validate_configuration() with missing transfer_suffix"""
@@ -81,7 +81,7 @@ class TestDirScanner(TestCase):
         ingest_file = scanner._ingest_file(file_name, 0)
 
         self.assertTrue(process_ingest.called)
-        self.assertEquals(ingest_file, file_name)
+        self.assertEqual(ingest_file, file_name)
 
     def test_ingest_file_in_transit(self):
         """Tests calling DirScanner._ingest_file() with dry_run off and transfer in-progress"""

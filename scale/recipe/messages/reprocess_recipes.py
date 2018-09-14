@@ -1,5 +1,5 @@
 """Defines a command message that reprocesses recipes"""
-from __future__ import unicode_literals
+
 
 import logging
 
@@ -157,7 +157,7 @@ class ReprocessRecipes(CommandMessage):
 
             # Get revisions and filter out invalid recipes (wrong recipe type)
             revisions = RecipeTypeRevision.objects.get_revisions_for_reprocess(superseded_recipes, self.revision_id)
-            recipe_type = revisions.values()[0].recipe_type
+            recipe_type = list(revisions.values())[0].recipe_type
             superseded_recipes = [recipe for recipe in superseded_recipes if recipe.recipe_type_id == recipe_type.id]
             if len(superseded_recipes) < len(self._root_recipe_ids):
                 diff = len(self._root_recipe_ids) - len(superseded_recipes)

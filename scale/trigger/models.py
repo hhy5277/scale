@@ -1,5 +1,5 @@
 """Defines the models for trigger rules and events"""
-from __future__ import unicode_literals
+
 
 import django.contrib.postgres.fields
 from django.db import models, transaction

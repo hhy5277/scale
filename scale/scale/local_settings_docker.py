@@ -1,7 +1,7 @@
 # This is the local_settings.py file to be packaged within Scale's Docker image
 
 # Include all the default settings.
-from settings import *
+from .settings import *
 import elasticsearch
 
 # SECURITY WARNING: keep the secret key used in production secret!

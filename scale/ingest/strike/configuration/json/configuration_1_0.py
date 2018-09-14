@@ -1,5 +1,5 @@
 """Defines the configuration for running an instance of Strike"""
-from __future__ import unicode_literals
+
 
 import os
 import re
@@ -82,7 +82,7 @@ class StrikeConfigurationV1(object):
         try:
             validate(configuration, STRIKE_CONFIGURATION_SCHEMA)
         except ValidationError as ex:
-            raise InvalidStrikeConfiguration('Invalid Strike configuration: %s' % unicode(ex))
+            raise InvalidStrikeConfiguration('Invalid Strike configuration: %s' % str(ex))
 
         self._populate_default_values()
         if not self._configuration['version'] == '1.0':
@@ -149,13 +149,13 @@ class StrikeConfigurationV1(object):
 
         # Build a mapping of required workspaces
         results = {file_dict['workspace_name']: None for file_dict in configuration}
-        for workspace in Workspace.objects.filter(name__in=results.keys()):
+        for workspace in Workspace.objects.filter(name__in=list(results.keys())):
             if not workspace.is_active:
                 raise InvalidStrikeConfiguration('Workspace is not active: %s' % workspace.name)
             results[workspace.name] = workspace
 
         # Check for any missing workspace model declarations
-        for name, workspace in results.iteritems():
+        for name, workspace in results.items():
             if not workspace:
                 raise InvalidStrikeConfiguration('Unknown workspace reference: %s' % name)
         return results

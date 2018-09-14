@@ -5,9 +5,7 @@ from django.conf import settings
 from util.broker import BrokerDetails
 
 
-class MessagingBackend(object):
-    __metaclass__ = ABCMeta
-
+class MessagingBackend(object, metaclass=ABCMeta):
     def __init__(self, backend_type):
         """Instantiates backend specific settings
         """

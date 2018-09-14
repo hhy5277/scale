@@ -1,5 +1,5 @@
 """Defines the class that holds a node's current conditions"""
-from __future__ import unicode_literals
+
 
 import logging
 from collections import namedtuple
@@ -104,13 +104,13 @@ class NodeConditions(object):
         """
 
         error_list = []
-        for active_error in self._active_errors.values():
+        for active_error in list(self._active_errors.values()):
             error = {'name': active_error.error.name, 'title': active_error.error.title,
                      'description': active_error.error.description, 'started': datetime_to_string(active_error.started),
                      'last_updated': datetime_to_string(active_error.last_updated)}
             error_list.append(error)
         warning_list = []
-        for active_warning in self._active_warnings.values():
+        for active_warning in list(self._active_warnings.values()):
             warning = {'name': active_warning.warning.name, 'title': active_warning.warning.title,
                        'description': active_warning.description, 'started': datetime_to_string(active_warning.started),
                        'last_updated': datetime_to_string(active_warning.last_updated)}
@@ -284,7 +284,7 @@ class NodeConditions(object):
 
         self.is_daemon_bad = False
         self.is_pull_bad = False
-        for active_error in self._active_errors.values():
+        for active_error in list(self._active_errors.values()):
             self.is_daemon_bad = self.is_daemon_bad or active_error.error.daemon_bad
             self.is_pull_bad = self.is_pull_bad or active_error.error.pull_bad
 

@@ -1,5 +1,5 @@
 """Defines the classes that manages job execution metrics"""
-from __future__ import unicode_literals
+
 
 import datetime
 import logging
@@ -90,7 +90,7 @@ class JobExeMetricsByType(object):
 
         json_dict['total'] = self.total_count
         job_type_list = []
-        for job_type_id in self.job_type_metrics.keys():
+        for job_type_id in list(self.job_type_metrics.keys()):
             job_type_dict = {'job_type_id': job_type_id}
             self.job_type_metrics[job_type_id].generate_status_json(job_type_dict)
             job_type_list.append(job_type_dict)
@@ -116,7 +116,7 @@ class JobExeMetricsByType(object):
         """
 
         self.total_count -= metrics.total_count
-        for job_type_id in self.job_type_metrics.keys():
+        for job_type_id in list(self.job_type_metrics.keys()):
             if job_type_id in metrics.job_type_metrics:
                 self.job_type_metrics[job_type_id].subtract_metrics(metrics.job_type_metrics[job_type_id])
                 if self.job_type_metrics[job_type_id].count == 0:
@@ -180,7 +180,7 @@ class RunningJobExeMetricsByNode(object):
         :type metrics: :class:`job.execution.manager.RunningJobExeMetricsByNode`
         """
 
-        for node_id in self.metrics_by_node.keys():
+        for node_id in list(self.metrics_by_node.keys()):
             if node_id in metrics.metrics_by_node:
                 self.metrics_by_node[node_id].subtract_metrics(metrics.metrics_by_node[node_id])
                 if self.metrics_by_node[node_id].total_count == 0:
@@ -310,7 +310,7 @@ class FinishedJobExeMetricsByNode(object):
         :type metrics: :class:`job.execution.manager.FinishedJobExeMetricsByNode`
         """
 
-        for node_id in self.metrics_by_node.keys():
+        for node_id in list(self.metrics_by_node.keys()):
             if node_id in metrics.metrics_by_node:
                 self.metrics_by_node[node_id].subtract_metrics(metrics.metrics_by_node[node_id])
                 if self.metrics_by_node[node_id].count == 0:

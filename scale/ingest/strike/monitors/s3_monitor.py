@@ -1,5 +1,5 @@
 """Defines a monitor that watches an AWS SQS queue for S3 file notifications"""
-from __future__ import unicode_literals
+
 
 import json
 import logging
@@ -113,7 +113,7 @@ class S3Monitor(Monitor):
         warnings = []
         if 'sqs_name' not in configuration:
             raise InvalidMonitorConfiguration('sqs_name is required for s3 monitor')
-        if not isinstance(configuration['sqs_name'], basestring):
+        if not isinstance(configuration['sqs_name'], str):
             raise InvalidMonitorConfiguration('sqs_name must be a string')
         if not configuration['sqs_name']:
             raise InvalidMonitorConfiguration('sqs_name must be a non-empty string')

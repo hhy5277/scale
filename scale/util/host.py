@@ -1,5 +1,5 @@
 """Defines the named tuple for host locations"""
-from __future__ import unicode_literals
+
 
 from collections import namedtuple
 

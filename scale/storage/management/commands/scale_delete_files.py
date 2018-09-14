@@ -1,5 +1,5 @@
 """Defines the command line method for running a delete files task"""
-from __future__ import unicode_literals
+
 
 import json
 import logging
@@ -47,7 +47,7 @@ class Command(BaseCommand):
         logger.info('Command starting: scale_delete_files')
         logger.info('File IDs: %s', [x.id for x in files])
 
-        for wrkspc_name, wrkspc in workspaces.iteritems():
+        for wrkspc_name, wrkspc in workspaces.items():
             delete_files_job.delete_files(files=[f for f in files if f.workspace == wrkspc_name],
                                           broker=wrkspc['broker'], volume_path=wrkspc['volume_path'])
 
@@ -92,7 +92,7 @@ class Command(BaseCommand):
 
         workspaces = {}
         for workspace in workspace_list:
-            name = workspace.keys()[0]
+            name = list(workspace.keys())[0]
             wrkspc = WorkspaceConfiguration(workspace[name])
             wrkspc.validate_broker()
             valid_wrkspc = wrkspc.get_dict()

@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 import logging
 
 import rest_framework.status as status

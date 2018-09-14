@@ -1,5 +1,5 @@
 """Defines the class for a database update task"""
-from __future__ import unicode_literals
+
 
 from job.tasks.base_task import AtomicCounter
 from node.resources.node_resources import NodeResources

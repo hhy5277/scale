@@ -1,5 +1,5 @@
 """Defines the class that represents resource offers"""
-from __future__ import unicode_literals
+
 
 
 class ResourceOffer(object):

@@ -1,5 +1,5 @@
 """Defines the base scanner class"""
-from __future__ import unicode_literals
+
 
 import logging
 import os
@@ -14,13 +14,11 @@ from storage.models import Workspace
 logger = logging.getLogger(__name__)
 
 
-class Scanner(object):
+class Scanner(object, metaclass=ABCMeta):
     """Abstract class for a scanner that processes existing files to ingest. Sub-classes must have a no-argument
     constructor that passes in the correct scanner type and supported broker types and should override the
     load_configuration(), run(), stop(), and validate_configuration() methods.
     """
-
-    __metaclass__ = ABCMeta
 
     def __init__(self, scanner_type, supported_broker_types):
         """Constructor

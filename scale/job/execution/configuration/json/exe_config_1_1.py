@@ -1,5 +1,5 @@
 """Defines the JSON schema for describing the job configuration"""
-from __future__ import unicode_literals
+
 
 import logging
 

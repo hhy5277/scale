@@ -1,5 +1,5 @@
 """Defines the data needed for executing a job"""
-from __future__ import unicode_literals
+
 
 import logging
 from copy import deepcopy
@@ -107,7 +107,7 @@ class JobData(object):
         properties = []
 
         names = []
-        for input_value in self._new_data.values.values():
+        for input_value in list(self._new_data.values.values()):
             if isinstance(input_value, JsonValue):
                 names.append(input_value.name)
         names = sorted(names)
@@ -133,7 +133,7 @@ class JobData(object):
         """
 
         file_ids = set()
-        for input_value in self._new_data.values.values():
+        for input_value in list(self._new_data.values.values()):
             if isinstance(input_value, FileValue):
                 for file_id in input_value.file_ids:
                     file_ids.add(file_id)
@@ -147,7 +147,7 @@ class JobData(object):
         """
 
         file_ids = {}
-        for input_value in self._new_data.values.values():
+        for input_value in list(self._new_data.values.values()):
             if isinstance(input_value, FileValue):
                 file_ids[input_value.name] = input_value.file_ids
         return file_ids
@@ -161,7 +161,7 @@ class JobData(object):
 
         file_info = set()
 
-        for input_value in self._new_data.values.values():
+        for input_value in list(self._new_data.values.values()):
             if isinstance(input_value, FileValue):
                 for file_id in input_value.file_ids:
                     file_info.add((file_id, input_value.name))
@@ -231,7 +231,7 @@ class JobData(object):
                 raise Exception(
                     'Multiple inputs detected for input %s that does not support.' % (data_file.name,))
             for file_id in file_input.file_ids:
-                file_id = long(file_id)
+                file_id = int(file_id)
                 file_ids.append(file_id)
                 files_to_retrieve[file_id] = (dir_path, partial)
             param_file_ids[data_file.name] = file_ids
@@ -241,7 +241,7 @@ class JobData(object):
         for file_id in retrieved_files:
             del files_to_retrieve[file_id]
         if files_to_retrieve:
-            msg = 'Failed to retrieve file with ID %i' % files_to_retrieve.keys()[0]
+            msg = 'Failed to retrieve file with ID %i' % list(files_to_retrieve.keys())[0]
             raise Exception(msg)
 
         # Organize the results
@@ -358,7 +358,7 @@ class JobData(object):
         :rtype: {str, str}
         """
         env_vars = {}
-        for file_input in self._new_data.values.values():
+        for file_input in list(self._new_data.values.values()):
             if isinstance(file_input, FileValue):
                 env_var_name = normalize_env_var_name(file_input.name)
                 if len(file_input.file_ids) > 1:
@@ -370,7 +370,7 @@ class JobData(object):
                     if input_file.local_file_name:
                         file_name = input_file.local_file_name
                     env_vars[env_var_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, file_input.name, file_name)
-        for json_input in self._new_data.values.values():
+        for json_input in list(self._new_data.values.values()):
             if isinstance(file_input, JsonValue):
                 env_vars[normalize_env_var_name(json_input.name)] = json_input.value
 
@@ -422,7 +422,7 @@ class JobData(object):
                             msg = ('Invalid job data: Data input %s must have a list of integers in its "file_ids" '
                                    'field')
                             raise InvalidData(msg % name)
-                        file_ids.append(long(file_id))
+                        file_ids.append(int(file_id))
 
                     warnings.extend(self._validate_file_ids(file_ids, file_desc))
             else:
@@ -488,7 +488,7 @@ class JobData(object):
         :raises DeletedFile: If any of the files has been deleted
         """
 
-        file_ids = data_files.keys()
+        file_ids = list(data_files.keys())
         files = ScaleFile.objects.filter(id__in=file_ids)
 
         file_downloads = []

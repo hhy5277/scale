@@ -1,5 +1,5 @@
 """Defines the configuration for a storage Workspace"""
-from __future__ import unicode_literals
+
 
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
@@ -74,7 +74,7 @@ class WorkspaceConfiguration(object):
         try:
             validate(configuration, WORKSPACE_CONFIGURATION_SCHEMA)
         except ValidationError as ex:
-            raise InvalidWorkspaceConfiguration('Invalid Workspace configuration: %s' % unicode(ex))
+            raise InvalidWorkspaceConfiguration('Invalid Workspace configuration: %s' % str(ex))
 
         self._populate_default_values()
         if not self._configuration['version'] == '1.0':

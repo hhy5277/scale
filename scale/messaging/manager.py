@@ -1,7 +1,7 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
+
+
+
+
 
 import logging
 
@@ -63,7 +63,7 @@ class CommandMessageManager(object):
         # Manually control iteration, so we can pass back success/failure to co-routine
         try:
             # Seed message to start processing
-            message = message_generator.next()
+            message = next(message_generator)
             while True:
                 success = False
                 try:

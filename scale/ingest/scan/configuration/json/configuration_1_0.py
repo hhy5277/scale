@@ -1,5 +1,5 @@
 """Manages the v6 batch configuration schema"""
-from __future__ import unicode_literals
+
 
 import logging
 import os
@@ -115,7 +115,7 @@ class ScanConfigurationV1(object):
             if do_validate:
                 validate(self._configuration, SCAN_CONFIGURATION_SCHEMA)
         except ValidationError as ex:
-            raise InvalidScanConfiguration('Invalid Scan configuration: %s' % unicode(ex))
+            raise InvalidScanConfiguration('Invalid Scan configuration: %s' % str(ex))
 
         self._populate_default_values()
         if self._configuration['version'] != SCHEMA_VERSION:

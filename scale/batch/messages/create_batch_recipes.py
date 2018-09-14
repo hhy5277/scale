@@ -1,5 +1,5 @@
 """Defines a command message that creates batch recipes"""
-from __future__ import unicode_literals
+
 
 import logging
 

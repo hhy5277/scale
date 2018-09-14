@@ -1,5 +1,5 @@
 """Defines a command message that resets models due to the scheduler restarting"""
-from __future__ import unicode_literals
+
 
 import logging
 

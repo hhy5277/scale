@@ -1,5 +1,5 @@
 """Defines the class for handling recipe nodes"""
-from __future__ import unicode_literals
+
 
 from job.configuration.data.job_data import JobData
 from job.deprecation import JobDataSunset
@@ -77,7 +77,7 @@ class RecipeNode(object):
 
         job_data = JobDataSunset.create(job_interface, {})
 
-        for input_connection in self.inputs.values():
+        for input_connection in list(self.inputs.values()):
             input_connection.add_input_to_job_data(job_data, recipe_data, parent_results)
 
         # Add workspace for file outputs if needed

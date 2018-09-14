@@ -1,5 +1,5 @@
 """Defines the classes for handling a data parameter for an interface"""
-from __future__ import unicode_literals
+
 
 from abc import ABCMeta
 from copy import copy
@@ -8,11 +8,9 @@ from data.interface.exceptions import InvalidInterface, InvalidInterfaceConnecti
 from util.validation import ValidationWarning
 
 
-class Parameter(object):
+class Parameter(object, metaclass=ABCMeta):
     """Represents an interface parameter
     """
-
-    __metaclass__ = ABCMeta
 
     def __init__(self, name, param_type, required=True):
         """Constructor

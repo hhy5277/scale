@@ -1,9 +1,9 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
 
-import Queue
+
+
+
+
+import queue
 import json
 
 import django
@@ -52,7 +52,7 @@ class TestAMQPBackend(TestCase):
         # Deep diving through context managers to assert put call
         put = connection.return_value.__enter__.return_value.SimpleQueue.return_value.put
         put.assert_called_with(messages[0])
-        self.assertEquals(put.call_count, 1)
+        self.assertEqual(put.call_count, 1)
 
     @patch('messaging.backends.amqp.Connection')
     def test_valid_send_messages(self, connection):
@@ -69,7 +69,7 @@ class TestAMQPBackend(TestCase):
         # Deep diving through context managers to assert put call
         put = connection.return_value.__enter__.return_value.SimpleQueue.return_value.put
         put.assert_has_calls([call(x) for x in messages])
-        self.assertEquals(put.call_count, 2)
+        self.assertEqual(put.call_count, 2)
 
     @patch('messaging.backends.amqp.Connection')
     def test_valid_receive_messages(self, connection):
@@ -77,7 +77,7 @@ class TestAMQPBackend(TestCase):
 
         message1 = MagicMock(payload={'type': 'echo', 'body': '1'})
         message2 = MagicMock(payload={'type': 'echo', 'body': '2'})
-        get_func = MagicMock(side_effect=[message1, message2, Queue.Empty])
+        get_func = MagicMock(side_effect=[message1, message2, queue.Empty])
 
         # Deep diving through context managers to patch get call
         connection.return_value.__enter__.return_value.SimpleQueue.return_value.get = get_func
@@ -86,7 +86,7 @@ class TestAMQPBackend(TestCase):
         generator = backend.receive_messages(5)
         results = []
         try:
-            results = [generator.next()]
+            results = [next(generator)]
             while True:
                 results.append(generator.send(True))
         except StopIteration:
@@ -103,7 +103,7 @@ class TestAMQPBackend(TestCase):
         message1 = MagicMock(payload={'type': 'echo', 'body': '1'})
         message2 = MagicMock(payload={'type': 'echo', 'body': '2'})
         message3 = MagicMock(payload={'type': 'echo', 'body': '3'})
-        get_func = MagicMock(side_effect=[message1, message2, Queue.Empty])
+        get_func = MagicMock(side_effect=[message1, message2, queue.Empty])
 
         # Deep diving through context managers to patch get call
         connection.return_value.__enter__.return_value.SimpleQueue.return_value.get = get_func
@@ -112,7 +112,7 @@ class TestAMQPBackend(TestCase):
         generator = backend.receive_messages(2)
         result = []
         try:
-            results = [generator.next()]
+            results = [next(generator)]
             while True:
                 results.append(generator.send(True))
         except StopIteration:
@@ -159,7 +159,7 @@ class TestBackendsFactory(TestCase):
         backend_factory.add_message_backend(backend)
         # Yeah, not a typo... coverage
         backend_factory.add_message_backend(backend)
-        self.assertEqual(backend_factory._MESSAGE_BACKENDS.keys(), ['dummy'])
+        self.assertEqual(list(backend_factory._MESSAGE_BACKENDS.keys()), ['dummy'])
 
     def test_successfully_get_message_backend(self):
         """Validate successful retrieval of message backend from factory"""
@@ -178,7 +178,7 @@ class TestBackendsFactory(TestCase):
         """Validate listing behavior of backends from factory"""
         backend_factory._MESSAGE_BACKENDS = {'key1': 'value', 'key2': 'value'}
 
-        self.assertEqual(backend_factory.get_message_backends(), backend_factory._MESSAGE_BACKENDS.keys())
+        self.assertEqual(backend_factory.get_message_backends(), list(backend_factory._MESSAGE_BACKENDS.keys()))
 
 
 class TestMessagingBackend(TestCase):
@@ -193,7 +193,7 @@ class TestMessagingBackend(TestCase):
         broker_details.from_broker_url = from_broker_url
 
         backend = DummyBackend()
-        self.assertEquals(backend.type, 'dummy')
+        self.assertEqual(backend.type, 'dummy')
         self.assertEqual(backend._broker_url, settings.BROKER_URL)
         self.assertEqual(backend._broker, 'unreal')
         self.assertEqual(backend._queue_name, settings.QUEUE_NAME)
@@ -232,7 +232,7 @@ class TestSQSBackend(TestCase):
 
         put = client.return_value.__enter__.return_value.send_messages
         self.assertIn(json.dumps(messages[0]), str(put.mock_calls[0]))
-        self.assertEquals(put.call_count, 1)
+        self.assertEqual(put.call_count, 1)
 
     @patch('messaging.backends.sqs.SQSClient')
     def test_valid_multiple_send_messages(self, client):
@@ -249,7 +249,7 @@ class TestSQSBackend(TestCase):
         put = client.return_value.__enter__.return_value.send_messages
         for message in messages:
             self.assertIn(json.dumps(message), str(put.mock_calls[0]))
-        self.assertEquals(put.call_count, 1)
+        self.assertEqual(put.call_count, 1)
 
     @patch('messaging.backends.sqs.SQSClient')
     def test_valid_receive_messages(self, client):
@@ -265,7 +265,7 @@ class TestSQSBackend(TestCase):
         generator = backend.receive_messages(5)
         results = []
         try:
-            results = [generator.next()]
+            results = [next(generator)]
             while True:
                 results.append(generator.send(True))
         except StopIteration:
@@ -292,11 +292,11 @@ class TestSQSBackend(TestCase):
         generator = backend.receive_messages(10)
         results = []
         try:
-            results = [generator.next()]
+            results = [next(generator)]
             while True:
                 results.append(generator.send(False))
         except StopIteration:
             pass
 
-        self.assertEquals(results, [value])
+        self.assertEqual(results, [value])
         message.delete.assert_not_called()

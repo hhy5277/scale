@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
 
 from django.db import models, migrations
 
@@ -16,12 +16,12 @@ class Migration(migrations.Migration):
         RecipeJobOld = apps.get_model('recipe', 'RecipeJobOld')
         recipe_jobs_to_create = []
         total_count = RecipeJobOld.objects.all().count()
-        print 'Populating new recipe_job table: %s rows' % str(total_count)
+        print('Populating new recipe_job table: %s rows' % str(total_count))
         done_count = 0
         batch_size = 500
         while done_count < total_count:
             percent = (float(done_count) / float(total_count)) * 100.00
-            print 'Completed %s of %s recipe jobs (%f%%)' % (done_count, total_count, percent)
+            print('Completed %s of %s recipe jobs (%f%%)' % (done_count, total_count, percent))
             batch_end = done_count + batch_size
             for recipe_job_old in RecipeJobOld.objects.all().order_by('job_id')[done_count:batch_end]:
                 recipe_job = RecipeJob()
@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
             RecipeJob.objects.bulk_create(recipe_jobs_to_create)
             recipe_jobs_to_create = []
             done_count += batch_size
-        print 'All %s recipe jobs completed' % str(total_count)
+        print('All %s recipe jobs completed' % str(total_count))
         old_count = RecipeJobOld.objects.all().count()
         new_count = RecipeJob.objects.all().count()
         if old_count != new_count:

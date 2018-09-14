@@ -1,5 +1,5 @@
 """Defines the class that represents a set of resources on a node"""
-from __future__ import unicode_literals
+
 
 from util.exceptions import ScaleLogicBug
 
@@ -41,7 +41,7 @@ class NodeResources(object):
         :rtype: string
         """
 
-        logging_str = ', '.join(['%.2f %s' % (resource.value, resource.name) for resource in self._resources.values()])
+        logging_str = ', '.join(['%.2f %s' % (resource.value, resource.name) for resource in list(self._resources.values())])
         return '[%s]' % logging_str
 
     @property
@@ -92,7 +92,7 @@ class NodeResources(object):
         :rtype: list
         """
 
-        return self._resources.values()
+        return list(self._resources.values())
 
     def add(self, node_resources):
         """Adds the given resources
@@ -127,7 +127,7 @@ class NodeResources(object):
         :type key_name: string
         """
 
-        for resource in self._resources.values():
+        for resource in list(self._resources.values()):
             if resource.name in resources_dict:
                 resource_dict = resources_dict[resource.name]
             else:
@@ -146,7 +146,7 @@ class NodeResources(object):
 
         from node.resources.json.resources import Resources
         resources_dict = {}
-        for resource in self._resources.values():
+        for resource in list(self._resources.values()):
             resources_dict[resource.name] = resource.value  # Assumes SCALAR type
         return Resources({'resources': resources_dict}, do_validate=False)
 
@@ -213,7 +213,7 @@ class NodeResources(object):
         :type node_resources: :class:`node.resources.NodeResources`
         """
 
-        for resource in self._resources.values():
+        for resource in list(self._resources.values()):
             if resource.name in node_resources._resources:
                 if resource.value > node_resources._resources[resource.name].value:  # Assumes SCALAR type
                     resource.value = node_resources._resources[resource.name].value
@@ -237,7 +237,7 @@ class NodeResources(object):
         """Rounds all of the resource values
         """
 
-        for resource in self._resources.values():
+        for resource in list(self._resources.values()):
             resource.value = round(resource.value, 2)  # Assumes SCALAR type
 
     def subtract(self, node_resources):

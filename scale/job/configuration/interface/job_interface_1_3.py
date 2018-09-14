@@ -1,5 +1,5 @@
 """Defines the interface for executing a job"""
-from __future__ import unicode_literals
+
 
 import json
 import logging
@@ -669,7 +669,7 @@ class JobInterface(object):
                 artifacts_found[artifact_name]['paths'] = paths
             else:
                 artifacts_found[artifact_name] = {'name': artifact_name, 'path': artifact_path}
-        return artifacts_found.values()
+        return list(artifacts_found.values())
 
     @staticmethod
     def _get_one_file_from_directory(dir_path):
@@ -727,7 +727,7 @@ class JobInterface(object):
                 if not secret_settings:
                     secret_settings = secrets_mgr.retrieve_job_type_secrets(job_index)
                 
-                if setting_name in secret_settings.keys():
+                if setting_name in list(secret_settings.keys()):
                     settings_value = secret_settings[setting_name]
                     job_configuration.add_job_task_setting(setting_name, '*****')
                     param_replacements[setting_name] = settings_value
@@ -853,7 +853,7 @@ class JobInterface(object):
         """
         ret_str = command_arguments
 
-        for param_name, param_value in param_replacements.iteritems():
+        for param_name, param_value in param_replacements.items():
             param_pattern = '\$\{([^\}]*\:)?' + re.escape(param_name) + '\}'
             pattern_prog = re.compile(param_pattern)
 
@@ -888,7 +888,7 @@ class JobInterface(object):
 
         for env_var in env_vars:
             ret_str = env_var['value']
-            for param_name, param_value in param_replacements.iteritems():
+            for param_name, param_value in param_replacements.items():
                 param_pattern = '\$\{([^\}]*\:)?' + re.escape(param_name) + '\}'
                 pattern_prog = re.compile(param_pattern)
 

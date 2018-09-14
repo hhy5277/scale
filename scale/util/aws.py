@@ -138,7 +138,7 @@ class SQSClient(AWSClient):
 
         queue = self.get_queue_by_name(queue_name)
 
-        batches = [messages[i:i + 10] for i in xrange(0, len(messages), 10)]
+        batches = [messages[i:i + 10] for i in range(0, len(messages), 10)]
 
         for batch in batches:
             queue.send_messages(Entries=batch)

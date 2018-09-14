@@ -1,5 +1,5 @@
 """Defines the configuration for running an instance of Strike"""
-from __future__ import unicode_literals
+
 
 import logging
 import os
@@ -103,7 +103,7 @@ class StrikeConfigurationV2(object):
             if do_validate:
                 validate(configuration, STRIKE_CONFIGURATION_SCHEMA)
         except ValidationError as ex:
-            raise InvalidStrikeConfiguration('Invalid Strike configuration: %s' % unicode(ex))
+            raise InvalidStrikeConfiguration('Invalid Strike configuration: %s' % str(ex))
 
         self._populate_default_values()
         if self._configuration['version'] != CURRENT_VERSION:

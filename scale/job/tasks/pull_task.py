@@ -1,5 +1,5 @@
 """Defines the class for a Docker pull task"""
-from __future__ import unicode_literals
+
 
 import datetime
 

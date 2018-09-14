@@ -1,5 +1,5 @@
 """Manages the v6 batch definition schema"""
-from __future__ import unicode_literals
+
 
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
@@ -96,7 +96,7 @@ class BatchDefinitionV6(object):
             if do_validate:
                 validate(self._definition, BATCH_DEFINITION_SCHEMA)
         except ValidationError as ex:
-            raise InvalidDefinition('INVALID_BATCH_DEFINITION', 'Invalid batch definition: %s' % unicode(ex))
+            raise InvalidDefinition('INVALID_BATCH_DEFINITION', 'Invalid batch definition: %s' % str(ex))
 
     def get_definition(self):
         """Returns the batch definition represented by this JSON

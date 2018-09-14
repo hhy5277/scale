@@ -1,5 +1,5 @@
 """Manages the v6 interface schema"""
-from __future__ import unicode_literals
+
 
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
@@ -94,7 +94,7 @@ def convert_interface_to_v6_json(interface):
     files = []
     json = []
 
-    for parameter in interface.parameters.values():
+    for parameter in list(interface.parameters.values()):
         if isinstance(parameter, FileParameter):
             file_dict = {'name': parameter.name, 'media_types': parameter.media_types, 'required': parameter.required,
                          'multiple': parameter.multiple}
@@ -139,7 +139,7 @@ class InterfaceV6(object):
             if do_validate:
                 validate(self._interface, INTERFACE_SCHEMA)
         except ValidationError as ex:
-            raise InvalidInterface('INVALID_INTERFACE', 'Invalid interface: %s' % unicode(ex))
+            raise InvalidInterface('INVALID_INTERFACE', 'Invalid interface: %s' % str(ex))
 
     def get_dict(self):
         """Returns the internal dictionary

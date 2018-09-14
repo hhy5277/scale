@@ -1,5 +1,5 @@
 """Defines the views for the RESTful storage services"""
-from __future__ import unicode_literals
+
 
 import logging
 
@@ -242,7 +242,7 @@ class WorkspacesView(ListCreateAPIView):
             workspace = Workspace.objects.create_workspace(name, title, description, json_config, base_url, is_active)
         except InvalidWorkspaceConfiguration as ex:
             logger.exception('Unable to create new workspace: %s', name)
-            raise BadParameter(unicode(ex))
+            raise BadParameter(str(ex))
 
         # Fetch the full workspace with details
         try:
@@ -303,7 +303,7 @@ class WorkspaceDetailsView(GenericAPIView):
             raise Http404
         except InvalidWorkspaceConfiguration as ex:
             logger.exception('Unable to edit workspace: %s', workspace_id)
-            raise BadParameter(unicode(ex))
+            raise BadParameter(str(ex))
 
         serializer = self.get_serializer(workspace)
         return Response(serializer.data)
@@ -335,7 +335,7 @@ class WorkspacesValidationView(APIView):
             warnings = Workspace.objects.validate_workspace(name, json_config)
         except InvalidWorkspaceConfiguration as ex:
             logger.exception('Unable to validate new workspace: %s', name)
-            raise BadParameter(unicode(ex))
+            raise BadParameter(str(ex))
 
         results = [{'id': w.key, 'details': w.details} for w in warnings]
         return Response({'warnings': results})

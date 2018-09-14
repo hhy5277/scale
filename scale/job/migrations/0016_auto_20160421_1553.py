@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
 
 from django.db import migrations
 
@@ -22,12 +22,12 @@ class Migration(migrations.Migration):
         workspaces = {}
         for workspace in Workspace.objects.all().iterator():
             workspaces[workspace.id] = workspace
-        print 'Populating new configuration field for %s jobs' % str(total_count)
+        print('Populating new configuration field for %s jobs' % str(total_count))
         done_count = 0
         batch_size = 1000
         while done_count < total_count:
             percent = (float(done_count) / float(total_count)) * 100.00
-            print 'Completed %s of %s jobs (%f%%)' % (done_count, total_count, percent)
+            print('Completed %s of %s jobs (%f%%)' % (done_count, total_count, percent))
             batch_end = done_count + batch_size
             for job in Job.objects.select_related('job_type').order_by('id')[done_count:batch_end]:
 
@@ -64,7 +64,7 @@ class Migration(migrations.Migration):
                 job.configuration = configuration.get_dict()
                 job.save()
             done_count += batch_size
-        print 'All %s jobs completed' % str(total_count)
+        print('All %s jobs completed' % str(total_count))
 
     operations = [
         migrations.RunPython(populate_job_configuration),

@@ -1,5 +1,5 @@
 """Defines the class for managing a recipe definition"""
-from __future__ import unicode_literals
+
 
 import json
 import os
@@ -52,7 +52,7 @@ class RecipeDefinition(object):
         try:
             validate(definition, RECIPE_DEFINITION_SCHEMA)
         except ValidationError as ex:
-            raise InvalidDefinition('Invalid recipe definition: %s' % unicode(ex))
+            raise InvalidDefinition('Invalid recipe definition: %s' % str(ex))
 
         self._populate_default_values()
         if not self._definition['version'] == DEFAULT_VERSION:
@@ -184,7 +184,7 @@ class RecipeDefinition(object):
         :rtype: set[(str, str)]
         """
         job_type_keys = set()
-        for job_dict in self._jobs_by_name.itervalues():
+        for job_dict in self._jobs_by_name.values():
             if 'job_type' in job_dict:
                 job_type = job_dict['job_type']
                 if 'name' in job_type and 'version' in job_type:
@@ -200,7 +200,7 @@ class RecipeDefinition(object):
         results = {}
         job_types = self.get_job_types()
         job_type_map = {(job_type.name, job_type.version): job_type for job_type in job_types}
-        for job_name, job_dict in self._jobs_by_name.iteritems():
+        for job_name, job_dict in self._jobs_by_name.items():
             if 'job_type' in job_dict:
                 job_type = job_dict['job_type']
                 if 'name' in job_type and 'version' in job_type:
@@ -295,7 +295,7 @@ class RecipeDefinition(object):
 
         # Query for job types
         job_types_by_name = self.get_job_type_map()  # Job name in recipe -> job type model
-        for job_name, job_data in self._jobs_by_name.iteritems():
+        for job_name, job_data in self._jobs_by_name.items():
             if job_name not in job_types_by_name:
                 if 'job_type' in job_data:
                     job_type = job_data['job_type']
@@ -411,7 +411,7 @@ class RecipeDefinition(object):
         try:
             warnings.extend(job_type.get_job_interface().validate_connection(job_conn))
         except InvalidConnection as ex:
-            raise InvalidDefinition(unicode(ex))
+            raise InvalidDefinition(str(ex))
 
         return warnings
 

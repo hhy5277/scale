@@ -1,5 +1,5 @@
 """Defines the abstract base class for all tasks"""
-from __future__ import unicode_literals
+
 
 import datetime
 import logging
@@ -45,11 +45,9 @@ class AtomicCounter(object):
             return self._counter
 
 
-class Task(object):
+class Task(object, metaclass=ABCMeta):
     """Abstract base class for a task
     """
-
-    __metaclass__ = ABCMeta
 
     def __init__(self, task_id, task_name, agent_id):
         """Constructor

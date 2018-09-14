@@ -1,5 +1,5 @@
 """Defines the class for a node health check task"""
-from __future__ import unicode_literals
+
 
 import datetime
 

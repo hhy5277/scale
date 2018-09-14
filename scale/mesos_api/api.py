@@ -1,10 +1,10 @@
-from __future__ import unicode_literals
+
 
 import json
 import logging
 import re
-import urllib
-import urllib2
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
 
 logger = logging.getLogger(__name__)
 
@@ -140,7 +140,7 @@ def get_scheduler(hostname, port):
     # Fetch raw status information from the Mesos API
     try:
         url = 'http://%s:%i/master/state.json' % (hostname, port)
-        response = urllib2.urlopen(url)
+        response = urllib.request.urlopen(url)
         if response.code != 200:
             raise MesosError('Failed to read response from master: %s:%i' % (hostname, port))
         state_dict = json.load(response)
@@ -231,7 +231,7 @@ def get_slave_task_run_id(hostname, port, task_id):
     :raises MesosError: If the task cannot be found
     """
     url = 'http://%s:%i/state.json' % (hostname, port)
-    response = urllib2.urlopen(url)
+    response = urllib.request.urlopen(url)
     state_dict = json.load(response)
     for framework in state_dict['frameworks']:
         for executor in framework['executors']:
@@ -259,7 +259,7 @@ def get_slave_task_file(hostname, port, task_dir, file_name):
     :rtype: str
     """
     url = get_slave_task_url(hostname, port, task_dir, file_name)
-    response = urllib2.urlopen(url)
+    response = urllib.request.urlopen(url)
     return response.read()
 
 
@@ -278,7 +278,7 @@ def get_slave_task_url(hostname, port, task_dir, file_name):
     :rtype: str
     """
     base_url = 'http://%s:%i/files/download.json?' % (hostname, port)
-    query_args = urllib.urlencode({'path':   '%s/%s' % (task_dir, file_name)})
+    query_args = urllib.parse.urlencode({'path':   '%s/%s' % (task_dir, file_name)})
     return base_url + query_args
 
 
@@ -311,7 +311,7 @@ def _get_slaves_dict(hostname, port):
     :rtype: dict
     """
     url = 'http://%s:%i/master/state.json' % (hostname, port)
-    response = urllib2.urlopen(url)
+    response = urllib.request.urlopen(url)
     state_dict = json.load(response)
     return state_dict['slaves']
 
@@ -340,7 +340,7 @@ def _parse_slave_info(slave_dict):
 
 def _parse_slave_resources(hostname, port):
     url = 'http://%s:%i/state.json' % (hostname, port)
-    response = urllib2.urlopen(url)
+    response = urllib.request.urlopen(url)
     state_dict = json.load(response)
 
     # Extract the total resource usage metrics

@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 
 import os
 import django
@@ -24,7 +24,7 @@ class TestProductDataFileStoreGetWorkspaces(TestCase):
 
         self.workspace_1 = Workspace.objects.create(name='Test workspace 1')
         self.workspace_2 = Workspace.objects.create(name='Test workspace 2', is_active=False)
-        self.invalid_workspace_id = long(999)
+        self.invalid_workspace_id = int(999)
 
     def test_successful(self):
         """Tests calling ProductDataFileStore.get_workspaces() successfully"""
@@ -114,8 +114,8 @@ class TestProductDataFileStoreStoreFiles(TransactionTestCase):
 
         results = ProductDataFileStore().store_files(data_files, parent_ids, self.job_exe)
 
-        self.assertDictEqual(results, {local_path_1: long(1), local_path_2: long(2), local_path_3: long(3),
-                                       local_path_4: long(4)})
+        self.assertDictEqual(results, {local_path_1: int(1), local_path_2: int(2), local_path_3: int(3),
+                                       local_path_4: int(4)})
         mock_create_file_ancestry_links.assert_called_once_with(parent_ids, {1, 2, 3, 4}, self.job_exe.job,
                                                                 self.job_exe.id)
 

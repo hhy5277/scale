@@ -1,5 +1,5 @@
 """Defines the class for handling property inputs"""
-from __future__ import unicode_literals
+
 
 from job.handlers.inputs.base_input import Input
 

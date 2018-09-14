@@ -1,5 +1,5 @@
 """Defines the views for the RESTful batch services"""
-from __future__ import unicode_literals
+
 
 import logging
 
@@ -162,7 +162,7 @@ class BatchesView(ListCreateAPIView):
                 definition = OldBatchDefinition(definition_dict)
                 definition.validate(recipe_type)
         except InvalidDefinition as ex:
-            raise BadParameter('Batch definition invalid: %s' % unicode(ex))
+            raise BadParameter('Batch definition invalid: %s' % str(ex))
 
         # Create the batch
         batch = Batch.objects.create_batch_old(recipe_type, definition, title=title, description=description)
@@ -208,9 +208,9 @@ class BatchesView(ListCreateAPIView):
                                                       configuration=configuration)
                 CommandMessageManager().send_messages([create_batch_recipes_message(batch.id)])
         except InvalidDefinition as ex:
-            raise BadParameter(unicode(ex))
+            raise BadParameter(str(ex))
         except InvalidConfiguration as ex:
-            raise BadParameter(unicode(ex))
+            raise BadParameter(str(ex))
 
         # Fetch the full batch with details
         batch = Batch.objects.get_details_v6(batch.id)
@@ -338,7 +338,7 @@ class BatchDetailsView(RetrieveUpdateAPIView):
                 configuration = configuration_json.get_configuration()
             Batch.objects.edit_batch_v6(batch, title=title, description=description, configuration=configuration)
         except InvalidConfiguration as ex:
-            raise BadParameter('Batch configuration invalid: %s' % unicode(ex))
+            raise BadParameter('Batch configuration invalid: %s' % str(ex))
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -424,7 +424,7 @@ class BatchesValidationView(APIView):
                 definition = OldBatchDefinition(definition_dict)
                 warnings = definition.validate(recipe_type)
         except InvalidDefinition as ex:
-            raise BadParameter('Batch definition invalid: %s' % unicode(ex))
+            raise BadParameter('Batch definition invalid: %s' % str(ex))
 
         # Get a rough estimate of how many recipes/files will be affected
         old_recipes = Batch.objects.get_matched_recipes(recipe_type, definition)
@@ -459,9 +459,9 @@ class BatchesValidationView(APIView):
             definition = BatchDefinitionV6(definition=definition_dict, do_validate=True).get_definition()
             configuration = BatchConfigurationV6(configuration=configuration_dict, do_validate=True).get_configuration()
         except InvalidDefinition as ex:
-            raise BadParameter(unicode(ex))
+            raise BadParameter(str(ex))
         except InvalidConfiguration as ex:
-            raise BadParameter(unicode(ex))
+            raise BadParameter(str(ex))
 
         # Validate the batch
         validation = Batch.objects.validate_batch_v6(recipe_type, definition, configuration=configuration)

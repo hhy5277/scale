@@ -1,7 +1,7 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
+
+
+
+
 
 import django
 from django.test import TestCase
@@ -93,7 +93,7 @@ class TestCommandMessageManager(TestCase):
 
         calls = [call(x) for x in mocks]
         process_message.assert_has_calls(calls)
-        self.assertEquals(process_message.call_count, 10)
+        self.assertEqual(process_message.call_count, 10)
 
     @patch('messaging.manager.CommandMessageManager._extract_command')
     @patch('messaging.manager.CommandMessageManager._send_downstream')

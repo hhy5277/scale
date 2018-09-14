@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 
 import django
 from django.test import TestCase
@@ -60,7 +60,7 @@ class TestRecipeDiff(TestCase):
         # Every node should be unchanged and all should be copied during a reprocess
         nodes_to_copy = diff.get_nodes_to_copy()
         self.assertSetEqual(set(nodes_to_copy.keys()), {'A', 'B', 'C', 'D'})
-        for node_diff in nodes_to_copy.values():
+        for node_diff in list(nodes_to_copy.values()):
             self.assertEqual(node_diff.status, NodeDiff.UNCHANGED)
             self.assertFalse(node_diff.reprocess_new_node)
             self.assertListEqual(node_diff.changes, [])
@@ -116,7 +116,7 @@ class TestRecipeDiff(TestCase):
         self.assertDictEqual(diff.get_nodes_to_supersede(), {})
         self.assertDictEqual(diff.get_nodes_to_unpublish(), {})
         # Ensure no nodes have reprocess_new_node set to true
-        for node_diff in diff.graph.values():
+        for node_diff in list(diff.graph.values()):
             self.assertFalse(node_diff.reprocess_new_node)
 
     def test_init_changes(self):

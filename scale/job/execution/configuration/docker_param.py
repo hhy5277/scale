@@ -1,5 +1,5 @@
 """Defines a Docker parameter that is set for a task"""
-from __future__ import unicode_literals
+
 
 
 class DockerParameter(object):

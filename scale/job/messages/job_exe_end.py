@@ -1,5 +1,5 @@
 """Defines a command message that creates job_exe_end models"""
-from __future__ import unicode_literals
+
 
 import logging
 

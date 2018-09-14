@@ -1,5 +1,5 @@
 """Defines the class for handling recipes"""
-from __future__ import unicode_literals
+
 
 import logging
 
@@ -252,7 +252,7 @@ class RecipeHandler(object):
         :rtype: bool
         """
 
-        for recipe_job in self._jobs_by_name.values():
+        for recipe_job in list(self._jobs_by_name.values()):
             if recipe_job.job.status != 'COMPLETED':
                 return False
         return True

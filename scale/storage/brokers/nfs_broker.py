@@ -1,5 +1,5 @@
 """Defines an NFS broker that utilizes a network file system as its backend storage"""
-from __future__ import unicode_literals
+
 
 import logging
 import os
@@ -84,12 +84,12 @@ class NfsBroker(Broker):
 
             if not os.path.exists(full_new_path_dir):
                 logger.info('Creating %s', full_new_path_dir)
-                os.makedirs(full_new_path_dir, mode=0755)
+                os.makedirs(full_new_path_dir, mode=0o755)
 
             logger.info('Moving %s to %s', full_old_path, full_new_path)
             shutil.move(full_old_path, full_new_path)
             logger.info('Setting file permissions for %s', full_new_path)
-            os.chmod(full_new_path, 0644)
+            os.chmod(full_new_path, 0o644)
 
             # Update model attributes
             file_move.file.file_path = file_move.new_path
@@ -105,12 +105,12 @@ class NfsBroker(Broker):
 
             if not os.path.exists(path_to_upload_dir):
                 logger.info('Creating %s', path_to_upload_dir)
-                os.makedirs(path_to_upload_dir, mode=0755)
+                os.makedirs(path_to_upload_dir, mode=0o755)
 
             logger.info('Copying %s to %s', file_upload.local_path, path_to_upload)
             self._copy_file(file_upload.local_path, path_to_upload)
             logger.info('Setting file permissions for %s', path_to_upload)
-            os.chmod(path_to_upload, 0644)
+            os.chmod(path_to_upload, 0o644)
 
             # Create new model
             file_upload.file.save()
@@ -145,8 +145,8 @@ class NfsBroker(Broker):
             srv_src_path, srv_dest_path = self._get_mount_info(src_path, dest_path)
             cmd_list = ['/usr/local/bin/bbcp',
                         '-s', '8', '-w', '64M', '-E', 'md5', '-o', '-y', 'd',
-                        apply(os.path.join, srv_src_path) if srv_src_path[0] is not None else srv_src_path[1],
-                        apply(os.path.join, srv_dest_path) if srv_dest_path[0] is not None else srv_dest_path[1]]
+                        os.path.join(*srv_src_path) if srv_src_path[0] is not None else srv_src_path[1],
+                        os.path.join(*srv_dest_path) if srv_dest_path[0] is not None else srv_dest_path[1]]
             execute_command_line(cmd_list)
             return
         except OSError as e:

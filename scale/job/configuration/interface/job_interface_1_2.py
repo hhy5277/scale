@@ -1,5 +1,5 @@
 """Defines the interface for executing a job"""
-from __future__ import unicode_literals
+
 
 import logging
 import re
@@ -330,7 +330,7 @@ class JobInterface(previous_interface.JobInterface):
 
         for env_var in env_vars:
             ret_str = env_var['value']
-            for param_name, param_value in param_replacements.iteritems():
+            for param_name, param_value in param_replacements.items():
                 param_pattern = '\$\{([^\}]*\:)?' + re.escape(param_name) + '\}'
                 pattern_prog = re.compile(param_pattern)
 

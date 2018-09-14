@@ -1,5 +1,5 @@
 """Defines a command message that processes the input for a recipe"""
-from __future__ import unicode_literals
+
 
 import logging
 
@@ -105,7 +105,7 @@ class ProcessRecipeInput(CommandMessage):
         # Get sub-recipe input from dependencies in the recipe
         recipe_input_data = sub_recipe.recipe.get_input_data()
         node_outputs = RecipeNode.objects.get_recipe_node_outputs(sub_recipe.recipe_id)
-        for node_output in node_outputs.values():
+        for node_output in list(node_outputs.values()):
             if node_output.node_type == 'recipe' and node_output.id == sub_recipe.id:
                 node_name = node_output.node_name
                 break

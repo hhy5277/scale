@@ -1,5 +1,5 @@
 """Defines the database models for file information and workspaces"""
-from __future__ import unicode_literals
+
 
 import hashlib
 import logging
@@ -743,7 +743,7 @@ class ScaleFile(models.Model):
             target_date = self.data_started
         elif self.data_ended is not None:
             target_date = self.data_ended
-        apply(self.countries.add, CountryData.objects.get_intersects(self.geometry, target_date).values())
+        self.countries.add(*list(CountryData.objects.get_intersects(self.geometry, target_date).values()))
 
     def set_deleted(self):
         """Marks the current file as deleted and updates the corresponding fields."""
@@ -1070,7 +1070,7 @@ class Workspace(models.Model):
             file_download_dir = os.path.dirname(file_download.local_path)
             if not os.path.exists(file_download_dir):
                 logger.info('Creating %s', file_download_dir)
-                os.makedirs(file_download_dir, mode=0755)
+                os.makedirs(file_download_dir, mode=0o755)
 
         self.get_broker().download_files(volume_path, file_downloads)
 

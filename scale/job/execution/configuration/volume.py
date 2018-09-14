@@ -1,5 +1,5 @@
 """Defines a Docker volume that will be mounted into a container"""
-from __future__ import unicode_literals
+
 
 from job.execution.configuration.docker_param import DockerParameter
 
@@ -69,7 +69,7 @@ class Volume(object):
                 if self.driver:
                     driver_params.append('--driver %s' % self.driver)
                 if self.driver_opts:
-                    for name, value in self.driver_opts.iteritems():
+                    for name, value in self.driver_opts.items():
                         driver_params.append('--opt %s=%s' % (name, value))
                 if driver_params:
                     volume_name = '$(docker volume create --name %s %s)' % (self.name, ' '.join(driver_params))

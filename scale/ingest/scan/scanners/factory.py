@@ -1,5 +1,5 @@
 """Defines the factory for creating monitors"""
-from __future__ import unicode_literals
+
 
 import logging
 logger = logging.getLogger(__name__)
@@ -42,4 +42,4 @@ def get_scanner_types():
     :rtype: [string]
     """
 
-    return _SCANNERS.keys()
+    return list(_SCANNERS.keys())

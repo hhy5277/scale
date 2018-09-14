@@ -1,5 +1,5 @@
 """Defines the class for managing a batch configuration"""
-from __future__ import unicode_literals
+
 
 
 class BatchConfiguration(object):

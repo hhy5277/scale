@@ -1,5 +1,5 @@
 """Defines the class that represents a parse trigger rule condition"""
-from __future__ import unicode_literals
+
 
 import logging
 

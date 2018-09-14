@@ -1,5 +1,5 @@
 """Defines the class for managing a batch definition"""
-from __future__ import unicode_literals
+
 
 from batch.definition.exceptions import InvalidDefinition
 from recipe.handlers.graph_delta import RecipeGraphDelta

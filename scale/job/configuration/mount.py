@@ -1,5 +1,5 @@
 """Defines the configuration for a mount that will be mounted into a job's container"""
-from __future__ import unicode_literals
+
 
 import os
 from abc import ABCMeta
@@ -8,11 +8,9 @@ from job.configuration.exceptions import InvalidJobConfiguration
 from job.execution.configuration.volume import HOST_TYPE, VOLUME_TYPE
 
 
-class MountConfig(object):
+class MountConfig(object, metaclass=ABCMeta):
     """Defines the configuration for a job's mount
     """
-
-    __metaclass__ = ABCMeta
 
     def __init__(self, name, mount_type):
         """Creates a mount configuration

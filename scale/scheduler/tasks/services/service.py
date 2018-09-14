@@ -1,5 +1,5 @@
 """Defines the abstract base class for all system services"""
-from __future__ import unicode_literals
+
 
 import logging
 from abc import ABCMeta, abstractmethod
@@ -10,10 +10,8 @@ from job.tasks.update import TaskStatusUpdate
 logger = logging.getLogger(__name__)
 
 
-class Service(object):
+class Service(object, metaclass=ABCMeta):
     """Abstract base class for a system service"""
-
-    __metaclass__ = ABCMeta
 
     def __init__(self):
         """Constructor
@@ -46,7 +44,7 @@ class Service(object):
         :rtype: int
         """
 
-        return len(self._tasks.values())
+        return len(list(self._tasks.values()))
 
     @abstractmethod
     def get_desired_task_count(self):
@@ -67,7 +65,7 @@ class Service(object):
         num_tasks_to_kill = max(self.get_actual_task_count() - self.get_desired_task_count(), 0)
         if num_tasks_to_kill > 0:
             logger.info('%s service is over-scheduled, killing %d task(s)', self._title, num_tasks_to_kill)
-            for task in self._tasks.values()[:num_tasks_to_kill]:
+            for task in list(self._tasks.values())[:num_tasks_to_kill]:
                 tasks_to_kill.append(task)
         return tasks_to_kill
 
@@ -87,7 +85,7 @@ class Service(object):
                 new_task = self._create_service_task()
                 self._tasks[new_task.id] = new_task
 
-        for task in self._tasks.values():
+        for task in list(self._tasks.values()):
             if not task.has_been_launched:
                 tasks.append(task)
 

@@ -1,5 +1,5 @@
 """Defines the class for a job execution pre-task"""
-from __future__ import unicode_literals
+
 
 import datetime
 

@@ -1,5 +1,5 @@
 """Defines the methods for handling file systems in the container's local volume"""
-from __future__ import unicode_literals
+
 
 import os
 

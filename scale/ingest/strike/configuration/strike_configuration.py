@@ -1,5 +1,5 @@
 """Defines the configuration for running an instance of Strike"""
-from __future__ import unicode_literals
+
 
 import logging
 import os

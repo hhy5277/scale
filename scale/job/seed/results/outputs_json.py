@@ -61,7 +61,7 @@ class SeedOutputsJson(object):
         remap = {x.json_key: x.name for x in interface_outputs}
 
         values = {}
-        for key, value in self._dict.iteritems():
+        for key, value in self._dict.items():
             if key in remap:
                 values[remap[key]] = value
 

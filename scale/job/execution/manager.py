@@ -1,5 +1,5 @@
 """Defines the class that manages job executions"""
-from __future__ import unicode_literals
+
 
 import logging
 import threading
@@ -56,7 +56,7 @@ class JobExecutionManager(object):
 
         finished_job_exes = []
         with self._lock:
-            for job_exe in self._running_job_exes.values():
+            for job_exe in list(self._running_job_exes.values()):
                 if job_exe.check_for_starvation(when):
                     if job_exe.is_finished():
                         self._handle_finished_job_exe(job_exe)
@@ -198,7 +198,7 @@ class JobExecutionManager(object):
 
         finished_job_exes = []
         with self._lock:
-            for job_exe in self._running_job_exes.values():
+            for job_exe in list(self._running_job_exes.values()):
                 if job_exe.id in lost_job_exe_ids:
                     job_exe.execution_lost(when)
                     task = job_exe.current_task
@@ -224,7 +224,7 @@ class JobExecutionManager(object):
 
         finished_job_exes = []
         with self._lock:
-            for job_exe in self._running_job_exes.values():
+            for job_exe in list(self._running_job_exes.values()):
                 if job_exe.node_id == node_id:
                     job_exe.execution_lost(when)
                     if job_exe.is_finished():
@@ -259,7 +259,7 @@ class JobExecutionManager(object):
         job_ids = []
         running_job_exes = []
         with self._lock:
-            for running_job_exe in self._running_job_exes.values():
+            for running_job_exe in list(self._running_job_exes.values()):
                 job_ids.append(running_job_exe.job_id)
                 running_job_exes.append(running_job_exe)
 

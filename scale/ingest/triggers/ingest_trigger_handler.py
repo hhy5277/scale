@@ -1,5 +1,5 @@
 """Defines the class that handles ingest trigger rules"""
-from __future__ import unicode_literals
+
 
 import logging
 

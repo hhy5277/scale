@@ -1,5 +1,5 @@
 """Defines the data needed for executing a recipe"""
-from __future__ import unicode_literals
+
 
 from numbers import Integral
 
@@ -210,7 +210,7 @@ class LegacyRecipeData(object):
                             msg = 'Invalid recipe data: Data input %s must have a list of integers in its "file_ids"' \
                             'field'
                             raise InvalidRecipeData(msg % name)
-                        file_ids.append(long(file_id))
+                        file_ids.append(int(file_id))
                 else:
                     if not 'file_id' in file_input:
                         msg = 'Invalid recipe data: Data input %s is a file and must have a "file_id" field' % name
@@ -221,7 +221,7 @@ class LegacyRecipeData(object):
                     if not isinstance(file_id, Integral):
                         msg = 'Invalid recipe data: Data input %s must have an integer in its "file_id" field' % name
                         raise InvalidRecipeData(msg)
-                    file_ids.append(long(file_id))
+                    file_ids.append(int(file_id))
                 warnings.extend(self._validate_file_ids(file_ids, file_desc))
             else:
                 # Don't have this input, check if it is required
@@ -250,7 +250,7 @@ class LegacyRecipeData(object):
                     msg = 'Invalid recipe data: Data input %s is a property and must have a "value" field' % name
                     raise InvalidRecipeData(msg)
                 value = property_input['value']
-                if not isinstance(value, basestring):
+                if not isinstance(value, str):
                     msg = 'Invalid recipe data: Data input %s must have a string in its "value" field' % name
                     raise InvalidRecipeData(msg)
             else:

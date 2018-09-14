@@ -1,5 +1,5 @@
 """Defines the class that manages reconciling tasks"""
-from __future__ import unicode_literals
+
 
 import datetime
 import logging
@@ -72,11 +72,11 @@ class ReconciliationManager(object):
             # Reconcile all tasks if time threshold has been reached
             if when > self._last_full_reconciliation + FULL_RECON_THRESHOLD:
                 self._last_full_reconciliation = when
-                for task in self._tasks.values():
+                for task in list(self._tasks.values()):
                     tasks_to_reconcile[task.id] = task
             # Always reconcile rookie tasks and move them to self._tasks
             # This enables tasks to be quickly reconciled the first time
-            for task in self._rookie_tasks.values():
+            for task in list(self._rookie_tasks.values()):
                 tasks_to_reconcile[task.id] = task
                 self._tasks[task.id] = task
             self._rookie_tasks = {}
@@ -86,7 +86,7 @@ class ReconciliationManager(object):
 
         logger.info('Reconciling %d task(s)', len(tasks_to_reconcile))
         task_statuses = []
-        for task in tasks_to_reconcile.values():
+        for task in list(tasks_to_reconcile.values()):
             task_status = mesos_pb2.TaskStatus()
             task_status.task_id.value = task.id
             task_status.state = mesos_pb2.TASK_LOST

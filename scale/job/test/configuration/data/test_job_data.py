@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 import os
 
 import django
@@ -18,9 +18,9 @@ class DummyDataFileStore(AbstractDataFileStore):
     def get_workspaces(self, workspace_ids):
         results = {}
         if 1 in workspace_ids:
-            results[long(1)] = True
+            results[int(1)] = True
         if 3 in workspace_ids:
-            results[long(3)] = False
+            results[int(3)] = False
         return results
 
     def store_files(self, files, input_file_ids, job_exe):
@@ -238,7 +238,7 @@ class TestJobDataRetrieveFiles(TestCase):
         self.product_file_2 = storage_utils.create_file(file_name=self.file_name_2, media_type=self.media_type_2,
                                                         workspace=self.workspace)
 
-        self.invalid_product_file_id = long(999)
+        self.invalid_product_file_id = int(999)
 
     @patch('storage.models.ScaleFile.objects.download_files')
     def test_successful(self, mock_download_files):
@@ -342,9 +342,9 @@ class TestJobDataStoreOutputDataFiles(TestCase):
                       }
 
         JobData(data).store_output_data_files(data_files, job_exe)
-        mock_file_call.assert_called_once_with('Param1', long(1))
+        mock_file_call.assert_called_once_with('Param1', int(1))
         self.assertEqual('Param2', mock_file_list_call.call_args[0][0])
-        self.assertSetEqual(set([long(3), long(2)]), set(mock_file_list_call.call_args[0][1]))
+        self.assertSetEqual(set([int(3), int(2)]), set(mock_file_list_call.call_args[0][1]))
 
 
 class TestJobDataValidateInputFiles(TestCase):

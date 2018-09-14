@@ -1,5 +1,5 @@
 """Defines a lock that logs activity for deadlock debugging"""
-from __future__ import unicode_literals
+
 
 import logging
 import threading

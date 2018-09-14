@@ -1,5 +1,5 @@
 """Defines the class that handles a node's cleanup"""
-from __future__ import unicode_literals
+
 
 import logging
 
@@ -56,7 +56,7 @@ class NodeCleanup(object):
         :rtype: :class:`job.tasks.base_task.Task`
         """
 
-        total_job_exes = self._job_exes.values()
+        total_job_exes = list(self._job_exes.values())
         count = len(total_job_exes)
         if count > JOB_EXES_WARNING_THRESHOLD:
             logger.warning('Node %s has %d job executions waiting to be cleaned up', hostname, count)
@@ -80,4 +80,4 @@ class NodeCleanup(object):
         :rtype: int
         """
 
-        return len(self._job_exes.values())
+        return len(list(self._job_exes.values()))

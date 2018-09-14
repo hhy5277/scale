@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 
 import logging
 
@@ -90,7 +90,7 @@ class RecipeTypesView(GenericAPIView):
                 rule_handler = trigger_handler.get_trigger_rule_handler(trigger_rule_dict['type'])
             except InvalidTriggerType as ex:
                 logger.exception('Invalid trigger type for new recipe type: %s', name)
-                raise BadParameter(unicode(ex))
+                raise BadParameter(str(ex))
 
         try:
             with transaction.atomic():
@@ -108,7 +108,7 @@ class RecipeTypesView(GenericAPIView):
                                                                     trigger_rule)
         except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
             logger.exception('Unable to create new recipe type: %s', name)
-            raise BadParameter(unicode(ex))
+            raise BadParameter(str(ex))
 
         # Fetch the full recipe type with details
         try:
@@ -189,7 +189,7 @@ class RecipeTypeDetailsView(GenericAPIView):
                 rule_handler = trigger_handler.get_trigger_rule_handler(trigger_rule_dict['type'])
             except InvalidTriggerType as ex:
                 logger.exception('Invalid trigger type for recipe type: %i', recipe_type_id)
-                raise BadParameter(unicode(ex))
+                raise BadParameter(str(ex))
 
         try:
             with transaction.atomic():
@@ -214,7 +214,7 @@ class RecipeTypeDetailsView(GenericAPIView):
                                                     remove_trigger_rule)
         except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
             logger.exception('Unable to update recipe type: %i', recipe_type_id)
-            raise BadParameter(unicode(ex))
+            raise BadParameter(str(ex))
 
         # Fetch the full recipe type with details
         try:
@@ -257,7 +257,7 @@ class RecipeTypesValidationView(APIView):
                 rule_handler = trigger_handler.get_trigger_rule_handler(trigger_rule_dict['type'])
             except InvalidTriggerType as ex:
                 logger.exception('Invalid trigger type for recipe validation: %s', name)
-                raise BadParameter(unicode(ex))
+                raise BadParameter(str(ex))
 
         # Attempt to look up the trigger rule configuration
         trigger_config = None
@@ -266,7 +266,7 @@ class RecipeTypesValidationView(APIView):
                 trigger_config = rule_handler.create_configuration(trigger_rule_dict['configuration'])
             except InvalidTriggerRule as ex:
                 logger.exception('Invalid trigger rule configuration for recipe validation: %s', name)
-                raise BadParameter(unicode(ex))
+                raise BadParameter(str(ex))
 
         # Validate the recipe definition
         try:
@@ -275,7 +275,7 @@ class RecipeTypesValidationView(APIView):
                                                                trigger_config)
         except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
             logger.exception('Unable to validate new recipe type: %s', name)
-            raise BadParameter(unicode(ex))
+            raise BadParameter(str(ex))
 
         results = [{'id': w.key, 'details': w.details} for w in warnings]
         return Response({'warnings': results})
@@ -463,7 +463,7 @@ class RecipeReprocessView(GenericAPIView):
         except Recipe.DoesNotExist:
             raise Http404
         except ReprocessError as err:
-            raise BadParameter(unicode(err))
+            raise BadParameter(str(err))
 
         try:
             # TODO: remove this check when REST API v5 is removed

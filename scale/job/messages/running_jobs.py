@@ -1,5 +1,5 @@
 """Defines a command message that sets RUNNING status for job models"""
-from __future__ import unicode_literals
+
 
 import logging
 
@@ -98,7 +98,7 @@ class RunningJobs(CommandMessage):
         """
 
         node_list = []
-        for node_id, job_list in self._running_jobs.items():
+        for node_id, job_list in list(self._running_jobs.items()):
             jobs_list = []
             for job_tuple in job_list:
                 jobs_list.append({'id': job_tuple[0], 'exe_num': job_tuple[1]})
@@ -128,7 +128,7 @@ class RunningJobs(CommandMessage):
         """
 
         job_ids = []
-        for job_list in self._running_jobs.values():
+        for job_list in list(self._running_jobs.values()):
             for job_tuple in job_list:
                 job_ids.append(job_tuple[0])
 
@@ -139,7 +139,7 @@ class RunningJobs(CommandMessage):
                 job_models[job.id] = job
 
             jobs_to_running = []
-            for node_id, job_list in self._running_jobs.items():
+            for node_id, job_list in list(self._running_jobs.items()):
                 job_ids_for_node_update = []
                 for job_tuple in job_list:
                     job_id = job_tuple[0]

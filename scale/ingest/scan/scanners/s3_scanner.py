@@ -1,5 +1,5 @@
 """Defines a scanner that scans an S3 bucket backed workspace for files"""
-from __future__ import unicode_literals
+
 
 import logging
 

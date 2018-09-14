@@ -1,16 +1,14 @@
 """Defines the base configuration class for a trigger rule that triggers job creation"""
-from __future__ import unicode_literals
+
 
 from abc import ABCMeta, abstractmethod
 
 from trigger.configuration.trigger_rule import TriggerRuleConfiguration
 
 
-class JobTriggerRuleConfiguration(TriggerRuleConfiguration):
+class JobTriggerRuleConfiguration(TriggerRuleConfiguration, metaclass=ABCMeta):
     """The base class that represents trigger rule configurations that can create jobs when triggered
     """
-
-    __metaclass__ = ABCMeta
 
     @abstractmethod
     def validate_trigger_for_job(self, job_interface):

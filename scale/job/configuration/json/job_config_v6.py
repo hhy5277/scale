@@ -1,5 +1,5 @@
 """Manages the v6 job configuration schema"""
-from __future__ import unicode_literals
+
 
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
@@ -112,7 +112,7 @@ def convert_config_to_v6_json(config):
     """
 
     mounts_dict = {}
-    for mount_config in config.mounts.values():
+    for mount_config in list(config.mounts.values()):
         if mount_config.mount_type == HOST_TYPE:
             mounts_dict[mount_config.name] = {'type': 'host', 'host_path': mount_config.host_path}
         elif mount_config.mount_type == VOLUME_TYPE:
@@ -161,7 +161,7 @@ class JobConfigurationV6(object):
             if do_validate:
                 validate(self._config, JOB_CONFIG_SCHEMA)
         except ValidationError as ex:
-            raise InvalidJobConfiguration('INVALID_CONFIGURATION', 'Invalid configuration: %s' % unicode(ex))
+            raise InvalidJobConfiguration('INVALID_CONFIGURATION', 'Invalid configuration: %s' % str(ex))
 
     def get_configuration(self):
         """Returns the job configuration represented by this JSON
@@ -172,7 +172,7 @@ class JobConfigurationV6(object):
 
         config = JobConfiguration()
 
-        for name, mount_dict in self._config['mounts'].items():
+        for name, mount_dict in list(self._config['mounts'].items()):
             if mount_dict['type'] == 'host':
                 config.add_mount(HostMountConfig(name, mount_dict['host_path']))
             elif mount_dict['type'] == 'volume':
@@ -181,12 +181,12 @@ class JobConfigurationV6(object):
         default_workspace = self._config['output_workspaces']['default']
         if default_workspace:
             config.default_output_workspace = default_workspace
-        for output, workspace in self._config['output_workspaces']['outputs'].items():
+        for output, workspace in list(self._config['output_workspaces']['outputs'].items()):
             config.add_output_workspace(output, workspace)
 
         config.priority = self._config['priority']
 
-        for name, value in self._config['settings'].items():
+        for name, value in list(self._config['settings'].items()):
             config.add_setting(name, value)
 
         return config
@@ -224,7 +224,7 @@ class JobConfigurationV6(object):
 
         if 'mounts' not in self._config:
             self._config['mounts'] = {}
-        for mount_dict in self._config['mounts'].values():
+        for mount_dict in list(self._config['mounts'].values()):
             if mount_dict['type'] == 'volume':
                 if 'driver' not in mount_dict:
                     mount_dict['driver'] = ''

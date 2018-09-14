@@ -1,5 +1,5 @@
 """Defines the class that represents an agent in the scheduler"""
-from __future__ import unicode_literals
+
 
 
 class Agent(object):

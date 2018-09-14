@@ -1,5 +1,5 @@
 """Defines the functions necessary to delete a file from a workspace"""
-from __future__ import unicode_literals
+
 
 import logging
 import os

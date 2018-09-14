@@ -1,5 +1,5 @@
 """Defines the database model for a node"""
-from __future__ import unicode_literals
+
 
 import logging
 
@@ -239,7 +239,7 @@ class NodeManager(models.Manager):
         # Build results for each registered node and add the extra status fields
         results = []
         for node in nodes:
-            job_exe_counts = job_exes_dict[node.id].values() if node.id in job_exes_dict else []
+            job_exe_counts = list(job_exes_dict[node.id].values()) if node.id in job_exes_dict else []
             job_exes_running = running_dict[node.id] if node.id in running_dict else []
 
             node_status = NodeStatus(node, job_exe_counts, job_exes_running)

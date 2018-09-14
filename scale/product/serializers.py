@@ -1,5 +1,5 @@
 """Defines the serializers for products"""
-from __future__ import unicode_literals
+
 
 import rest_framework.fields as fields
 import rest_framework.serializers as serializers

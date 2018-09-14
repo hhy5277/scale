@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
 
 from django.db import migrations
 
@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
         if not total_count:
             return
 
-        print('\nCreating new recipe_file table rows: %i' % total_count)
+        print(('\nCreating new recipe_file table rows: %i' % total_count))
         done_count = 0
         fail_count = 0
         batch_size = 500
@@ -50,14 +50,14 @@ class Migration(migrations.Migration):
                         recipe_files.append(recipe_file)
                     else:
                         fail_count += 1
-                        print('Failed recipe: %i -> file: %i' % (recipe.id, input_file_id))
+                        print(('Failed recipe: %i -> file: %i' % (recipe.id, input_file_id)))
 
             RecipeFile.objects.bulk_create(recipe_files)
 
             done_count += len(recipes)
             percent = (float(done_count) / float(total_count)) * 100.00
-            print('Progress: %i/%i (%.2f%%)' % (done_count, total_count, percent))
-        print ('Migration finished. Failed: %i' % fail_count)
+            print(('Progress: %i/%i (%.2f%%)' % (done_count, total_count, percent)))
+        print(('Migration finished. Failed: %i' % fail_count))
 
     operations = [
         migrations.RunPython(populate_recipe_file),

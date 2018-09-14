@@ -1,5 +1,5 @@
 """Manages the v6 data schema"""
-from __future__ import unicode_literals
+
 
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
@@ -54,7 +54,7 @@ def convert_data_to_v6_json(data):
     files = {}
     json = {}
 
-    for value in data.values.values():
+    for value in list(data.values.values()):
         if isinstance(value, FileValue):
             files[value.name] = value.file_ids
         elif isinstance(value, JsonValue):
@@ -95,7 +95,7 @@ class DataV6(object):
             if do_validate:
                 validate(self._data, DATA_SCHEMA)
         except ValidationError as ex:
-            raise InvalidData('INVALID_DATA', 'Invalid data: %s' % unicode(ex))
+            raise InvalidData('INVALID_DATA', 'Invalid data: %s' % str(ex))
 
     def get_data(self):
         """Returns the data represented by this JSON
@@ -106,10 +106,10 @@ class DataV6(object):
 
         data = Data()
 
-        for name, file_ids in self._data['files'].items():
+        for name, file_ids in list(self._data['files'].items()):
             file_value = FileValue(name, file_ids)
             data.add_value(file_value)
-        for name, json in self._data['json'].items():
+        for name, json in list(self._data['json'].items()):
             json_value = JsonValue(name, json)
             data.add_value(json_value)
 

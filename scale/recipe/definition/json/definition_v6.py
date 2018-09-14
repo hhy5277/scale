@@ -1,5 +1,5 @@
 """Manages the v6 recipe definition schema"""
-from __future__ import unicode_literals
+
 
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
@@ -172,7 +172,7 @@ def convert_recipe_definition_to_v6_json(definition):
     :rtype: :class:`recipe.definition.json.definition_v6.RecipeDefinitionV6`
     """
 
-    nodes_dict = {n.name: convert_node_to_v6_json(n) for n in definition.graph.values()}
+    nodes_dict = {n.name: convert_node_to_v6_json(n) for n in list(definition.graph.values())}
     json_dict = {'version': SCHEMA_VERSION, 'nodes': nodes_dict,
                  'input': convert_interface_to_v6_json(definition.input_interface).get_dict()}
 
@@ -188,10 +188,10 @@ def convert_node_to_v6_json(node):
     :rtype: dict
     """
 
-    dependencies = [{'name': name} for name in node.parents.keys()]
+    dependencies = [{'name': name} for name in list(node.parents.keys())]
 
     input_dict = {}
-    for connection in node.connections.values():
+    for connection in list(node.connections.values()):
         if isinstance(connection, DependencyInputConnection):
             conn_dict = {'type': 'dependency', 'node': connection.node_name, 'output': connection.output_name}
         elif isinstance(connection, RecipeInputConnection):
@@ -240,7 +240,7 @@ class RecipeDefinitionV6(object):
             if do_validate:
                 validate(self._definition, RECIPE_DEFINITION_SCHEMA)
         except ValidationError as ex:
-            raise InvalidDefinition('INVALID_DEFINITION', 'Invalid recipe definition: %s' % unicode(ex))
+            raise InvalidDefinition('INVALID_DEFINITION', 'Invalid recipe definition: %s' % str(ex))
 
     def get_definition(self):
         """Returns the recipe definition represented by this JSON
@@ -254,7 +254,7 @@ class RecipeDefinitionV6(object):
         definition = RecipeDefinition(interface)
 
         # Add all nodes to definition first
-        for node_name, node_dict in self._definition['nodes'].items():
+        for node_name, node_dict in list(self._definition['nodes'].items()):
             node_type_dict = node_dict['node_type']
             if node_type_dict['node_type'] == 'job':
                 definition.add_job_node(node_name, node_type_dict['job_type_name'], node_type_dict['job_type_version'],
@@ -264,10 +264,10 @@ class RecipeDefinitionV6(object):
                                            node_type_dict['recipe_type_revision'])
 
         # Now add dependencies and connections
-        for node_name, node_dict in self._definition['nodes'].items():
+        for node_name, node_dict in list(self._definition['nodes'].items()):
             for dependency_dict in node_dict['dependencies']:
                 definition.add_dependency(dependency_dict['name'], node_name)
-            for conn_name, conn_dict in node_dict['input'].items():
+            for conn_name, conn_dict in list(node_dict['input'].items()):
                 if conn_dict['type'] == 'recipe':
                     definition.add_recipe_input_connection(node_name, conn_name, conn_dict['input'])
                 elif conn_dict['type'] == 'dependency':

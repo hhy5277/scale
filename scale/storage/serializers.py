@@ -1,5 +1,5 @@
 """Defines the serializers for Scale files and workspaces"""
-from __future__ import unicode_literals
+
 
 import rest_framework.serializers as serializers
 from rest_framework.fields import CharField

@@ -14,11 +14,9 @@ FileUpload = namedtuple('FileUpload', ['file', 'local_path'])
 FileDetails = namedtuple('FileDetails', ['file', 'size'])
 
 
-class Broker(object):
+class Broker(object, metaclass=ABCMeta):
     """Abstract class for a broker that can download and upload files for a given storage backend
     """
-
-    __metaclass__ = ABCMeta
 
     def __init__(self, broker_type):
         """Constructor

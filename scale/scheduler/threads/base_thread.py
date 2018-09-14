@@ -1,5 +1,5 @@
 """Defines the base class for scheduler background threads"""
-from __future__ import unicode_literals
+
 
 import logging
 import math
@@ -13,10 +13,8 @@ from django.utils.timezone import now
 logger = logging.getLogger(__name__)
 
 
-class BaseSchedulerThread(object):
+class BaseSchedulerThread(object, metaclass=ABCMeta):
     """This is the abstract base class for scheduler background threads"""
-
-    __metaclass__ = ABCMeta
 
     def __init__(self, name, throttle, warning_threshold):
         """Constructor

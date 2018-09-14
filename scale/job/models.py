@@ -1,6 +1,6 @@
 """Defines the database models for jobs and job types"""
-from __future__ import absolute_import
-from __future__ import unicode_literals
+
+
 
 import copy
 import datetime
@@ -767,7 +767,7 @@ class JobManager(models.Manager):
         # Create JobInputFile models in batches
         all_file_ids = set()
         input_file_models = []
-        for file_value in job.get_input_data().values.values():
+        for file_value in list(job.get_input_data().values.values()):
             if file_value.param_type != FileParameter.PARAM_TYPE:
                 continue
             for file_id in file_value.file_ids:
@@ -1501,13 +1501,13 @@ class Job(models.Model):
             multiplier = self.job_type.mem_mult_required
             const = self.job_type.mem_const_required
 
-            memory_mb = long(math.ceil(multiplier * input_file_size + const))
+            memory_mb = int(math.ceil(multiplier * input_file_size + const))
             memory_required = max(memory_mb, MIN_MEM)
 
             # Calculate output space required in MiB rounded up to the nearest whole MiB
             multiplier = self.job_type.disk_out_mult_required
             const = self.job_type.disk_out_const_required
-            output_size_mb = long(math.ceil(multiplier * input_file_size + const))
+            output_size_mb = int(math.ceil(multiplier * input_file_size + const))
             disk_out_required = max(output_size_mb, MIN_DISK)
 
             resources.add(NodeResources([Mem(memory_required), Disk(disk_out_required + input_file_size)]))
@@ -1518,7 +1518,7 @@ class Job(models.Model):
             for resource in interface.get_scalar_resources():
                 if 'inputMultiplier' in resource:
                     multiplier = resource['inputMultiplier']
-                    initial_value = long(math.ceil(multiplier * input_file_size + resource['value']))
+                    initial_value = int(math.ceil(multiplier * input_file_size + resource['value']))
                     value_required = max(initial_value, MIN_RESOURCE.get(resource['name'], 0.0))
                     scalar_resources.append(ScalarResource(resource['name'], value_required))
 
@@ -2050,7 +2050,7 @@ class JobExecution(models.Model):
         :rtype: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         """
 
-        if isinstance(self.configuration, basestring):
+        if isinstance(self.configuration, str):
             self.configuration = {}
         return ExecutionConfiguration(self.configuration, do_validate=False)
 
@@ -2138,7 +2138,7 @@ class JobExecution(models.Model):
         :rtype: :class:`node.resources.node_resources.NodeResources`
         """
 
-        if isinstance(self.resources, basestring):
+        if isinstance(self.resources, str):
             self.resources = {}
 
         logger.debug('Job execution for job id %d using resources: %s' % (self.job.id,
@@ -2931,7 +2931,7 @@ class JobTypeManager(models.Manager):
                 num_versions_by_id[row[0]] = row[1]
 
         # Retrieve job types by ID
-        job_types = self.filter(id__in=num_versions_by_id.keys())
+        job_types = self.filter(id__in=list(num_versions_by_id.keys()))
         # Apply sorting
         if order:
             job_types = job_types.order_by(*order)

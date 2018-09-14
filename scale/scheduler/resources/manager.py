@@ -1,5 +1,5 @@
 """Defines the class that manages all scheduler resources"""
-from __future__ import unicode_literals
+
 
 import datetime
 import logging
@@ -56,7 +56,7 @@ class ResourceManager(object):
 
         allocated_offers = {}
         with self._agent_resources_lock:
-            for agent_resources in self._agent_resources.values():
+            for agent_resources in list(self._agent_resources.values()):
                 if agent_resources.agent_id in resources:
                     requested_resources = resources[agent_resources.agent_id]
                 else:
@@ -142,7 +142,7 @@ class ResourceManager(object):
 
         # Remove new offers from the lost agent
         with self._new_offers_lock:
-            for offer in self._new_offers.values():
+            for offer in list(self._new_offers.values()):
                 if offer.agent_id == agent_id:
                     del self._new_offers[offer.id]
 
@@ -171,7 +171,7 @@ class ResourceManager(object):
         # Group tasks and new offers by agent ID
         agent_offers = {}  # {Agent ID: [ResourceOffer]}
         agent_tasks = {}  # {Agent ID: [Tasks]}
-        for offer in new_offers.values():
+        for offer in list(new_offers.values()):
             if offer.agent_id not in agent_offers:
                 agent_offers[offer.agent_id] = []
             agent_offers[offer.agent_id].append(offer)
@@ -184,12 +184,12 @@ class ResourceManager(object):
 
         with self._agent_resources_lock:
             # Create any new agents if this is their first offer
-            for offer in new_offers.values():
+            for offer in list(new_offers.values()):
                 if offer.agent_id not in self._agent_resources:
                     self._agent_resources[offer.agent_id] = AgentResources(offer.agent_id)
 
             # Refresh agents
-            for agent_resources in self._agent_resources.values():
+            for agent_resources in list(self._agent_resources.values()):
                 the_offers = agent_offers[agent_resources.agent_id] if agent_resources.agent_id in agent_offers else []
                 the_tasks = agent_tasks[agent_resources.agent_id] if agent_resources.agent_id in agent_tasks else []
                 resource_set = agent_resources.refresh_resources(the_offers, the_tasks)
@@ -197,7 +197,7 @@ class ResourceManager(object):
 
             # Reset rolling watermarks if period has passed
             if not self._last_watermark_reset or when > self._last_watermark_reset + WATERMARK_RESET_PERIOD:
-                for agent_resources in self._agent_resources.values():
+                for agent_resources in list(self._agent_resources.values()):
                     agent_resources.reset_watermark()
                 self._last_watermark_reset = when
 
@@ -216,7 +216,7 @@ class ResourceManager(object):
                     del self._new_offers[offer_id]
 
         with self._agent_resources_lock:
-            for agent_resources in self._agent_resources.values():
+            for agent_resources in list(self._agent_resources.values()):
                 agent_resources.rescind_offers(offer_ids)
 
     def set_agent_shortages(self, agent_shortages):
@@ -227,7 +227,7 @@ class ResourceManager(object):
         """
 
         with self._agent_resources_lock:
-            for agent_resources in self._agent_resources.values():
+            for agent_resources in list(self._agent_resources.values()):
                 if agent_resources.agent_id in agent_shortages:
                     agent_resources.set_shortage(agent_shortages[agent_resources.agent_id])
                 else:
@@ -244,7 +244,7 @@ class ResourceManager(object):
 
         agents_needing_totals = set()
         with self._agent_resources_lock:
-            for agent_resources in self._agent_resources.values():
+            for agent_resources in list(self._agent_resources.values()):
                 if not agent_resources.has_total_resources():
                     agents_needing_totals.add(agent_resources.agent_id)
 

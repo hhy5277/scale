@@ -1,5 +1,5 @@
 """Defines the data needed for executing a recipe"""
-from __future__ import unicode_literals
+
 
 from data.data.exceptions import InvalidData
 from data.data.value import FileValue, JsonValue
@@ -19,7 +19,7 @@ def convert_data_to_v1_json(data):
 
     input_data = []
 
-    for value in data.values.values():
+    for value in list(data.values.values()):
         if isinstance(value, FileValue):
             if len(value.file_ids) > 1:
                 input_data.append({'name': value.name, 'file_ids': value.file_ids})

@@ -1,5 +1,5 @@
 """Defines the class that manages system tasks"""
-from __future__ import unicode_literals
+
 
 import datetime
 import logging

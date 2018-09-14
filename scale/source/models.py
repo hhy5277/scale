@@ -1,5 +1,5 @@
 """Defines the database model for source files"""
-from __future__ import unicode_literals
+
 
 import logging
 

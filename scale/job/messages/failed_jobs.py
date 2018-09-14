@@ -1,5 +1,5 @@
 """Defines a command message that sets FAILED status for job models"""
-from __future__ import unicode_literals
+
 
 import logging
 from collections import namedtuple
@@ -92,7 +92,7 @@ class FailedJobs(CommandMessage):
         """
 
         error_list = []
-        for error_id, job_list in self._failed_jobs.items():
+        for error_id, job_list in list(self._failed_jobs.items()):
             jobs_list = []
             for failed_job in job_list:
                 jobs_list.append({'id': failed_job.job_id, 'exe_num': failed_job.exe_num})
@@ -124,7 +124,7 @@ class FailedJobs(CommandMessage):
         from queue.messages.queued_jobs import create_queued_jobs_messages, QueuedJob
 
         job_ids = []
-        for job_list in self._failed_jobs.values():
+        for job_list in list(self._failed_jobs.values()):
             for failed_job in job_list:
                 job_ids.append(failed_job.job_id)
 
@@ -141,7 +141,7 @@ class FailedJobs(CommandMessage):
 
             jobs_to_retry = []
             all_failed_job_ids = []
-            for error_id, job_list in self._failed_jobs.items():
+            for error_id, job_list in list(self._failed_jobs.items()):
                 error = get_error(error_id)
                 jobs_to_fail = []
                 for failed_job in job_list:

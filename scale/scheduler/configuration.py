@@ -1,5 +1,5 @@
 """Defines the class represents the scheduler configuration"""
-from __future__ import unicode_literals
+
 
 from queue.models import DEFAULT_QUEUE_ORDER
 

@@ -1,5 +1,5 @@
 """Defines the class for representing a diff between two recipe definitions"""
-from __future__ import unicode_literals
+
 
 from collections import namedtuple
 
@@ -40,7 +40,7 @@ class RecipeDiff(object):
         nodes_to_copy = {}
 
         if self.can_be_reprocessed:
-            for node_diff in self.graph.values():
+            for node_diff in list(self.graph.values()):
                 if node_diff.should_be_copied():
                     nodes_to_copy[node_diff.name] = node_diff
 
@@ -56,7 +56,7 @@ class RecipeDiff(object):
         nodes_to_supersede = {}
 
         if self.can_be_reprocessed:
-            for node_diff in self.graph.values():
+            for node_diff in list(self.graph.values()):
                 if node_diff.should_be_superseded():
                     nodes_to_supersede[node_diff.name] = node_diff
 
@@ -72,7 +72,7 @@ class RecipeDiff(object):
         nodes_to_unpublish = {}
 
         if self.can_be_reprocessed:
-            for node_diff in self.graph.values():
+            for node_diff in list(self.graph.values()):
                 if node_diff.should_be_unpublished():
                     nodes_to_unpublish[node_diff.name] = node_diff
 
@@ -88,7 +88,7 @@ class RecipeDiff(object):
         :type reprocess_nodes: dict
         """
 
-        for node_name in reprocess_nodes.keys():
+        for node_name in list(reprocess_nodes.keys()):
             if node_name in self.graph:
                 self.graph[node_name].set_force_reprocess(reprocess_nodes)
 
@@ -107,7 +107,7 @@ class RecipeDiff(object):
             node = recipe_definition.graph[node_name]
             node_diff = create_diff_for_node(node, self.can_be_reprocessed, NodeDiff.NEW)
             self.graph[node_diff.name] = node_diff
-            for parent_name in node.parents.keys():
+            for parent_name in list(node.parents.keys()):
                 parent_diff = self.graph[parent_name]
                 node_diff.add_dependency(parent_diff)
 
@@ -123,7 +123,7 @@ class RecipeDiff(object):
             deleted_node = prev_recipe_definition.graph[node_name]
             deleted_node_diff = create_diff_for_node(deleted_node, self.can_be_reprocessed, NodeDiff.DELETED)
             self.graph[deleted_node_diff.name] = deleted_node_diff
-            for parent_name in deleted_node.parents.keys():
+            for parent_name in list(deleted_node.parents.keys()):
                 parent_diff = self.graph[parent_name]
                 deleted_node_diff.add_dependency(parent_diff)
 

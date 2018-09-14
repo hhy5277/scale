@@ -1,5 +1,5 @@
 """Defines the functions necessary to perform the ingest of a source file"""
-from __future__ import unicode_literals
+
 
 import logging
 import os

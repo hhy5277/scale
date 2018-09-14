@@ -1,5 +1,5 @@
 """Contains the functionality of the Scale clock process"""
-from __future__ import unicode_literals
+
 import abc
 import datetime
 import logging
@@ -23,9 +23,8 @@ class ClockEventError(Exception):
     pass
 
 
-class ClockEventProcessor(object):
+class ClockEventProcessor(object, metaclass=abc.ABCMeta):
     """Base class used to process triggered clock events."""
-    __metaclass__ = abc.ABCMeta
 
     def process_event(self, event, last_event=None):
         """Callback when a new event is triggered that sub-classes have registered to process.

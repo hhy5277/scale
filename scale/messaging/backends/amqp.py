@@ -1,10 +1,10 @@
 """Backend supporting AMQP 0.9.1, specifically targeting RabbitMQ message broker"""
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
 
-import Queue
+
+
+
+
+import queue
 import logging
 from contextlib import closing
 
@@ -44,6 +44,6 @@ class AMQPMessagingBackend(MessagingBackend):
                         success = yield message.payload
                         if success:
                             message.ack()
-                    except Queue.Empty:
+                    except queue.Empty:
                         # We've reached the end of the queue... exit loop
                         break

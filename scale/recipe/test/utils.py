@@ -1,5 +1,5 @@
 """Defines utility methods for testing jobs and job types"""
-from __future__ import unicode_literals
+
 
 import django.utils.timezone as timezone
 

@@ -1,5 +1,5 @@
 """Defines the views for the RESTful queue services"""
-from __future__ import unicode_literals
+
 
 import datetime
 import logging
@@ -92,7 +92,7 @@ class QueueNewJobView(GenericAPIView):
             job_id = Queue.objects.queue_new_job_for_user(job_type, job_data)
         except InvalidData as err:
             logger.exception('Invalid job data.')
-            return Response('Invalid job data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
+            return Response('Invalid job data: ' + str(err), status=status.HTTP_400_BAD_REQUEST)
 
         try:
             # TODO: remove this check when REST API v5 is removed. 
@@ -144,7 +144,7 @@ class QueueNewRecipeView(GenericAPIView):
         try:
             handler = Queue.objects.queue_new_recipe_for_user(recipe_type, LegacyRecipeData(recipe_data))
         except InvalidRecipeData as err:
-            return Response('Invalid recipe data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
+            return Response('Invalid recipe data: ' + str(err), status=status.HTTP_400_BAD_REQUEST)
 
         try:
             # TODO: remove this check when REST API v5 is removed

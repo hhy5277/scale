@@ -1,7 +1,7 @@
 # Settings file for use with travis-ci
 
 # Include all the default settings.
-from settings import *
+from .settings import *
 
 # Use the following lines to enable developer/debug mode.
 DEBUG = False

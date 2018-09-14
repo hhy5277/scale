@@ -5,7 +5,7 @@ logger = logging.getLogger(__name__)
 try:
     from kazoo.client import KazooClient
     from kazoo.recipe.election import Election
-    from urlparse import urlparse
+    from urllib.parse import urlparse
 
     def wait_for_leader(zk_url, my_id, func, *args, **kargs):
         logger.info("Identifying scale scheduler leader")

@@ -1,6 +1,6 @@
 """Defines the class that manages the messaging background thread"""
-from __future__ import absolute_import
-from __future__ import unicode_literals
+
+
 
 import datetime
 import logging

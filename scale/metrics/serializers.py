@@ -1,5 +1,5 @@
 """Defines the serializers for metrics"""
-from __future__ import unicode_literals
+
 
 import rest_framework.serializers as serializers
 

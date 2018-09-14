@@ -1,5 +1,5 @@
 """Defines the configuration for the storage application"""
-from __future__ import unicode_literals
+
 from django.apps import AppConfig
 
 

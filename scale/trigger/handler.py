@@ -1,5 +1,5 @@
 """Defines the base class for handling trigger rules and provides apps a way to register handler sub-classes"""
-from __future__ import unicode_literals
+
 
 from abc import ABCMeta, abstractmethod
 
@@ -39,11 +39,9 @@ def register_trigger_rule_handler(trigger_rule_handler):
     TRIGGER_RULE_HANDLERS[trigger_rule_handler.trigger_rule_type] = trigger_rule_handler
 
 
-class TriggerRuleHandler(object):
+class TriggerRuleHandler(object, metaclass=ABCMeta):
     """Base class for handling trigger rules
     """
-
-    __metaclass__ = ABCMeta
 
     def __init__(self, trigger_rule_type):
         """Constructor

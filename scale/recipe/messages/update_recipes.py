@@ -1,5 +1,5 @@
 """Defines a command message that evaluates and updates recipes"""
-from __future__ import unicode_literals
+
 
 import logging
 
@@ -147,7 +147,7 @@ class UpdateRecipes(CommandMessage):
                 for handler in handlers:
                     handler_dict = handler.get_jobs_to_create()
                     recipe_handler_dicts[handler.recipe.id] = handler_dict
-                    for job_list in handler_dict.values():
+                    for job_list in list(handler_dict.values()):
                         for job in job_list:
                             jobs_to_create.append(job)
                 if jobs_to_create:
@@ -157,7 +157,7 @@ class UpdateRecipes(CommandMessage):
                     recipe_id = handler.recipe.id
                     handler_dict = recipe_handler_dicts[recipe_id]
                     recipe_jobs = []
-                    for job_name, job_list in handler_dict.iteritems():
+                    for job_name, job_list in handler_dict.items():
                         for job in job_list:
                             recipe_job = RecipeNode()
                             recipe_job.job = job

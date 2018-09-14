@@ -1,5 +1,5 @@
 """Defines the JSON schema for describing the execution configuration"""
-from __future__ import unicode_literals
+
 
 import logging
 from copy import deepcopy
@@ -388,7 +388,7 @@ class ExecutionConfiguration(object):
 
         workspace_names = set()
         if 'input_files' in self._configuration:
-            for file_list in self._configuration['input_files'].values():
+            for file_list in list(self._configuration['input_files'].values()):
                 for file_dict in file_list:
                     workspace_names.add(file_dict['workspace_name'])
         return list(workspace_names)
@@ -418,7 +418,7 @@ class ExecutionConfiguration(object):
         volumes = set()
         for task_dict in self._configuration['tasks']:
             if 'volumes' in task_dict:
-                for name, vol_dict in task_dict['volumes'].items():
+                for name, vol_dict in list(task_dict['volumes'].items()):
                     if vol_dict['type'] == 'volume':
                         volumes.add(name)
         return list(volumes)
@@ -446,7 +446,7 @@ class ExecutionConfiguration(object):
         for task_dict in self._configuration['tasks']:
             if task_dict['type'] == task_type and 'resources' in task_dict:
                 resources = []
-                for name, value in task_dict['resources'].items():
+                for name, value in list(task_dict['resources'].items()):
                     resources.append(ScalarResource(name, value))
                 return NodeResources(resources)
         return None
@@ -505,7 +505,7 @@ class ExecutionConfiguration(object):
         for task_dict in self._configuration['tasks']:
             if task_dict['type'] == task_type:
                 if 'volumes' in task_dict:
-                    for name, vol_dict in task_dict['volumes'].items():
+                    for name, vol_dict in list(task_dict['volumes'].items()):
                         if vol_dict['type'] == 'host':
                             vol = Volume(name, vol_dict['container_path'], vol_dict['mode'], is_host=True,
                                          host_path=vol_dict['host_path'])
@@ -534,7 +534,7 @@ class ExecutionConfiguration(object):
         for task_dict in self._configuration['tasks']:
             if task_dict['type'] == task_type:
                 if 'workspaces' in task_dict:
-                    for name, workspace_dict in task_dict['workspaces'].items():
+                    for name, workspace_dict in list(task_dict['workspaces'].items()):
                         workspaces.append(TaskWorkspace(name, workspace_dict['mode']))
         return workspaces
 
@@ -628,7 +628,7 @@ class ExecutionConfiguration(object):
             task_env_vars = {}
             task_dict['env_vars'] = task_env_vars
 
-        for name, value in env_vars.items():
+        for name, value in list(env_vars.items()):
             task_env_vars[name] = value
 
     @staticmethod
@@ -649,7 +649,7 @@ class ExecutionConfiguration(object):
             task_dict['mounts'] = task_mounts
 
         volumes = []
-        for mount_name, volume in mount_volumes.items():
+        for mount_name, volume in list(mount_volumes.items()):
             if volume:
                 task_mounts[mount_name] = volume.name
                 volumes.append(volume)
@@ -689,7 +689,7 @@ class ExecutionConfiguration(object):
             task_settings = {}
             task_dict['settings'] = task_settings
 
-        for name, value in settings.items():
+        for name, value in list(settings.items()):
             task_settings[name] = value
 
     @staticmethod
@@ -739,12 +739,12 @@ class ExecutionConfiguration(object):
             task_workspaces = {}
             task_dict['workspaces'] = task_workspaces
 
-        for name, volume in wksp_volumes.items():
+        for name, volume in list(wksp_volumes.items()):
             wksp_dict = {'mode': volume.mode}
             if volume.name:
                 wksp_dict['volume_name'] = volume.name
             task_workspaces[name] = wksp_dict
-        ExecutionConfiguration._add_volumes_to_task(task_dict, wksp_volumes.values())
+        ExecutionConfiguration._add_volumes_to_task(task_dict, list(wksp_volumes.values()))
 
     @staticmethod
     def _add_workspaces_to_task(task_dict, workspaces):
@@ -762,7 +762,7 @@ class ExecutionConfiguration(object):
             task_workspaces = {}
             task_dict['workspaces'] = task_workspaces
 
-        for workspace in workspaces.values():
+        for workspace in list(workspaces.values()):
             if workspace.name in task_workspaces:
                 # Only replace existing workspace if upgrading mode from RO to RW
                 existing_workspace = task_workspaces[workspace.name]

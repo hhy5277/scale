@@ -1,5 +1,5 @@
 """Defines the database model for a queue entry"""
-from __future__ import unicode_literals
+
 
 import logging
 
@@ -89,7 +89,7 @@ class JobLoadManager(models.Manager):
 
         if job_loads:
             # Save all the database models
-            JobLoad.objects.bulk_create(job_loads.values())
+            JobLoad.objects.bulk_create(list(job_loads.values()))
         else:
             # Save an empty record as a place holder
             JobLoad(measured=measured, pending_count=0, queued_count=0, running_count=0, total_count=0).save()

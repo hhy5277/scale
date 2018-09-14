@@ -1,7 +1,7 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
+
+
+
+
 
 import django
 from django.test import TestCase
@@ -38,7 +38,7 @@ class TestCommandMessage(TestCase):
         """Validate correct initialization of messages internal properties"""
 
         message = DummyMessage()
-        self.assertEquals(message.type, 'dummy')
+        self.assertEqual(message.type, 'dummy')
         self.assertEqual(message.new_messages, [])
 
 
@@ -50,7 +50,7 @@ class TestChainedCommandMessage(TestCase):
         """Validate correct initialization of messages internal properties"""
 
         message = ChainCommandMessage()
-        self.assertEquals(message.type, 'chain')
+        self.assertEqual(message.type, 'chain')
         self.assertEqual(message.new_messages, [])
 
 
@@ -59,14 +59,14 @@ class TestChainedCommandMessage(TestCase):
 
         message = ChainCommandMessage()
         self.assertTrue(message.execute())
-        self.assertEquals(len(message.new_messages), 1)
+        self.assertEqual(len(message.new_messages), 1)
 
     def test_valid_from_json(self):
         """Validate instantiation of echo command message from json"""
 
         payload = {'test': 'value'}
         message = ChainCommandMessage.from_json(payload)
-        self.assertEquals(message._payload, payload)
+        self.assertEqual(message._payload, payload)
 
     def test_valid_to_json(self):
         """Validate serialization of echo command message to json"""
@@ -74,7 +74,7 @@ class TestChainedCommandMessage(TestCase):
         payload = {'test': 'value'}
         message = ChainCommandMessage()
         message._payload = payload
-        self.assertEquals(message.to_json(), payload)
+        self.assertEqual(message.to_json(), payload)
 
 
 class TestEchoCommandMessage(TestCase):
@@ -85,7 +85,7 @@ class TestEchoCommandMessage(TestCase):
         """Validate correct initialization of messages internal properties"""
 
         message = EchoCommandMessage()
-        self.assertEquals(message.type, 'echo')
+        self.assertEqual(message.type, 'echo')
         self.assertEqual(message.new_messages, [])
 
     def test_valid_execute(self):
@@ -99,7 +99,7 @@ class TestEchoCommandMessage(TestCase):
 
         payload = {'test': 'value'}
         message = EchoCommandMessage.from_json(payload)
-        self.assertEquals(message._payload, payload)
+        self.assertEqual(message._payload, payload)
 
     def test_valid_to_json(self):
         """Validate serialization of echo command message to json"""
@@ -107,7 +107,7 @@ class TestEchoCommandMessage(TestCase):
         payload = {'test': 'value'}
         message = EchoCommandMessage()
         message._payload = payload
-        self.assertEquals(message.to_json(), payload)
+        self.assertEqual(message.to_json(), payload)
 
 class TestFailingCommandMessage(TestCase):
     def setUp(self):
@@ -117,7 +117,7 @@ class TestFailingCommandMessage(TestCase):
         """Validate correct initialization of messages internal properties"""
 
         message = FailCommandMessage()
-        self.assertEquals(message.type, 'failing')
+        self.assertEqual(message.type, 'failing')
         self.assertEqual(message.new_messages, [])
 
     def test_valid_execute(self):
@@ -131,7 +131,7 @@ class TestFailingCommandMessage(TestCase):
 
         payload = {'test': 'value'}
         message = FailCommandMessage.from_json(payload)
-        self.assertEquals(message._payload, payload)
+        self.assertEqual(message._payload, payload)
 
     def test_valid_to_json(self):
         """Validate serialization of echo command message to json"""
@@ -139,7 +139,7 @@ class TestFailingCommandMessage(TestCase):
         payload = {'test': 'value'}
         message = FailCommandMessage()
         message._payload = payload
-        self.assertEquals(message.to_json(), payload)
+        self.assertEqual(message.to_json(), payload)
 
 
 class TestMessagesFactory(TestCase):
@@ -154,7 +154,7 @@ class TestMessagesFactory(TestCase):
         message_factory.add_message_type(message)
         # Yeah, not a typo... coverage
         message_factory.add_message_type(message)
-        self.assertEqual(message_factory._MESSAGE_TYPES.keys(), ['dummy'])
+        self.assertEqual(list(message_factory._MESSAGE_TYPES.keys()), ['dummy'])
 
     def test_successfully_get_message_backend(self):
         """Validate successful retrieval of message type from factory"""
@@ -173,4 +173,4 @@ class TestMessagesFactory(TestCase):
         """Validate listing behavior of types from factory"""
         message_factory._MESSAGE_TYPES = {'key1': 'value', 'key2': 'value'}
 
-        self.assertEqual(message_factory.get_message_types(), message_factory._MESSAGE_TYPES.keys())
+        self.assertEqual(message_factory.get_message_types(), list(message_factory._MESSAGE_TYPES.keys()))

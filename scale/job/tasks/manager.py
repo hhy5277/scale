@@ -1,5 +1,5 @@
 """Defines the class that managers the currently running tasks"""
-from __future__ import unicode_literals
+
 
 import logging
 import threading
@@ -33,7 +33,7 @@ class TaskManager(object):
         system_tasks = {}  # {Agent ID: [task]}
 
         with self._lock:
-            for task in self._tasks.values():
+            for task in list(self._tasks.values()):
                 if isinstance(task, NodeTask):
                     if task.agent_id in node_tasks:
                         node_tasks[task.agent_id].append(task)
@@ -55,7 +55,7 @@ class TaskManager(object):
                     else:
                         task_dicts[task.task_type] = {'type': task.task_type, 'title': task.title,
                                                       'description': task.description, 'count': 1}
-                node_dict['node_tasks'] = task_dicts.values()
+                node_dict['node_tasks'] = list(task_dicts.values())
             if agent_id in system_tasks:
                 task_dicts = {}  # {task type: task dict}
                 for task in system_tasks[agent_id]:
@@ -64,7 +64,7 @@ class TaskManager(object):
                     else:
                         task_dicts[task.task_type] = {'type': task.task_type, 'title': task.title,
                                                       'description': task.description, 'count': 1}
-                node_dict['system_tasks'] = task_dicts.values()
+                node_dict['system_tasks'] = list(task_dicts.values())
 
     def get_all_tasks(self):
         """Returns all of current tasks
@@ -97,7 +97,7 @@ class TaskManager(object):
 
         tasks = []
         with self._lock:
-            for task in self._tasks.values():
+            for task in list(self._tasks.values()):
                 if task.needs_killed():
                     tasks.append(task)
         return tasks
@@ -113,7 +113,7 @@ class TaskManager(object):
 
         tasks = []
         with self._lock:
-            for task in self._tasks.values():
+            for task in list(self._tasks.values()):
                 if task.needs_reconciliation(when):
                     tasks.append(task)
         return tasks
@@ -129,7 +129,7 @@ class TaskManager(object):
 
         tasks = []
         with self._lock:
-            for task in self._tasks.values():
+            for task in list(self._tasks.values()):
                 if task.check_timeout(when):
                     tasks.append(task)
         return tasks

@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 
 import logging
 
@@ -93,7 +93,7 @@ class QueueScaleBakeView(GenericAPIView):
 
         # TODO: in the future, send command message to do this asynchronously
         job_type = JobType.objects.get(name='scale-bake', version='1.0')
-        for _ in xrange(num):
+        for _ in range(num):
             Queue.objects.queue_new_job_for_user(job_type, {})
 
         return Response(status=status.HTTP_202_ACCEPTED)
@@ -173,7 +173,7 @@ class QueueScaleCasinoView(GenericAPIView):
 
         # TODO: in the future, send command message to do this asynchronously
         recipe_type = RecipeType.objects.get(name='scale-casino', version='1.0')
-        for _ in xrange(num):
+        for _ in range(num):
             Queue.objects.queue_new_recipe_for_user(recipe_type, LegacyRecipeData())
 
         return Response(status=status.HTTP_202_ACCEPTED)
@@ -253,7 +253,7 @@ class QueueScaleHelloView(GenericAPIView):
 
         # TODO: in the future, send command message to do this asynchronously
         job_type = JobType.objects.get(name='scale-hello', version='1.0')
-        for _ in xrange(num):
+        for _ in range(num):
             Queue.objects.queue_new_job_for_user(job_type, {})
 
         return Response(status=status.HTTP_202_ACCEPTED)
@@ -333,7 +333,7 @@ class QueueScaleRouletteView(GenericAPIView):
 
         # TODO: in the future, send command message to do this asynchronously
         job_type = JobType.objects.get(name='scale-roulette', version='1.0')
-        for _ in xrange(num):
+        for _ in range(num):
             Queue.objects.queue_new_job_for_user(job_type, {})
 
         return Response(status=status.HTTP_202_ACCEPTED)

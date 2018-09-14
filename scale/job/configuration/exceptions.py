@@ -1,5 +1,5 @@
 """Defines exceptions that can occur when interacting with job configuration"""
-from __future__ import unicode_literals
+
 
 from util.exceptions import ValidationException
 

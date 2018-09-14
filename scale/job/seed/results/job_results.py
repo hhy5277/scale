@@ -1,5 +1,5 @@
 """Defines the results obtained after executing a job"""
-from __future__ import unicode_literals
+
 
 import json
 import logging
@@ -132,7 +132,7 @@ class JobResults(object):
 
                 outputs.append(i)
             # Catch KeyError exceptions as a newly constructed JobResults object prior to execution will be missing keys
-            except KeyError, ex:
+            except KeyError as ex:
                 logger.debug(ex)
 
         for i in output_json:
@@ -141,7 +141,7 @@ class JobResults(object):
                 i['value'] = self.json[i['name']]
                 outputs.append(i)
             # Catch KeyError exceptions as a newly constructed JobResults object prior to execution will be missing keys
-            except KeyError, ex:
+            except KeyError as ex:
                 logger.debug(ex)
 
         return outputs
@@ -252,7 +252,7 @@ class JobResults(object):
         # Organize the data files
         workspace_files = {}  # Workspace ID -> [`ProductFileMetadata`]
         params_by_file_path = {}  # Absolute local file path -> output parameter name
-        output_workspaces = JobData.create_output_workspace_dict(data_files.keys(), job_data, job_exe)
+        output_workspaces = JobData.create_output_workspace_dict(list(data_files.keys()), job_data, job_exe)
         for name in data_files:
             workspace_id = output_workspaces[name]
             if workspace_id in workspace_files:

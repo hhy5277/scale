@@ -1,5 +1,5 @@
 """Manages the v6 batch configuration schema"""
-from __future__ import unicode_literals
+
 
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
@@ -71,7 +71,7 @@ class BatchConfigurationV6(object):
             if do_validate:
                 validate(self._configuration, BATCH_CONFIGURATION_SCHEMA)
         except ValidationError as ex:
-            raise InvalidConfiguration('INVALID_BATCH_CONFIGURATION', 'Invalid batch configuration: %s' % unicode(ex))
+            raise InvalidConfiguration('INVALID_BATCH_CONFIGURATION', 'Invalid batch configuration: %s' % str(ex))
 
     def get_configuration(self):
         """Returns the batch configuration represented by this JSON

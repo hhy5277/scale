@@ -1,5 +1,5 @@
 """Defines utility methods for testing batches"""
-from __future__ import unicode_literals
+
 
 from django.utils.timezone import now
 

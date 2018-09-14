@@ -1,5 +1,5 @@
 """Defines the base monitor class"""
-from __future__ import unicode_literals
+
 
 import logging
 from abc import ABCMeta
@@ -13,13 +13,11 @@ from util.file_size import file_size_to_string
 logger = logging.getLogger(__name__)
 
 
-class Monitor(object):
+class Monitor(object, metaclass=ABCMeta):
     """Abstract class for a monitor that processes incoming files to ingest. Sub-classes must have a no-argument
     constructor that passes in the correct monitor type and supported broker types and should override the
     load_configuration(), run(), stop(), and validate_configuration() methods.
     """
-
-    __metaclass__ = ABCMeta
 
     def __init__(self, monitor_type, supported_broker_types):
         """Constructor

@@ -1,6 +1,6 @@
 """Defines the command line method for running the Scale Hello job"""
-from __future__ import unicode_literals
-from __future__ import print_function
+
+
 
 import sys
 

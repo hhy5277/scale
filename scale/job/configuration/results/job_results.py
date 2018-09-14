@@ -1,5 +1,5 @@
 """Defines the results obtained after executing a job"""
-from __future__ import unicode_literals
+
 
 
 class JobResults(object):

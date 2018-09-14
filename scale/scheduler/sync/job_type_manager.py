@@ -1,5 +1,5 @@
 """Defines the class that manages the syncing of the scheduler with the job type models"""
-from __future__ import unicode_literals
+
 
 import threading
 
@@ -29,7 +29,7 @@ class JobTypeManager(object):
         job_types_list = []
         status_dict['job_types'] = job_types_list
         with self._lock:
-            for job_type in self._job_types.values():
+            for job_type in list(self._job_types.values()):
                 job_type_dict = {'id': job_type.id, 'name': job_type.name, 'version': job_type.version,
                                  'title': job_type.title, 'description': job_type.description,
                                  'is_system': job_type.is_system, 'icon_code': job_type.icon_code}

@@ -1,5 +1,5 @@
 """Defines the messaging service that handles the backend messaging"""
-from __future__ import unicode_literals
+
 
 import logging
 

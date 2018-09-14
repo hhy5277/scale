@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 
 import os
 
@@ -280,16 +280,16 @@ class TestScheduledExecutionConfigurator(TestCase):
 
         expected_main_task = {'task_id': '%s_main' % job_exe_model.get_cluster_id(), 'type': 'main',
                               'resources': {'cpus': resources.cpus, 'mem': resources.mem, 'disk': resources.disk, 'gpus': resources.gpus},
-                              'args': 'scale_ingest -i %s' % unicode(ingest.id),
-                              'env_vars': {'ALLOCATED_CPUS': unicode(resources.cpus),
-                                           'ALLOCATED_MEM': unicode(resources.mem),
-                                           'ALLOCATED_DISK': unicode(resources.disk),
-                                           'ALLOCATED_GPUS': unicode(resources.gpus), 'SCALE_DB_NAME': 'TEST_NAME',
+                              'args': 'scale_ingest -i %s' % str(ingest.id),
+                              'env_vars': {'ALLOCATED_CPUS': str(resources.cpus),
+                                           'ALLOCATED_MEM': str(resources.mem),
+                                           'ALLOCATED_DISK': str(resources.disk),
+                                           'ALLOCATED_GPUS': str(resources.gpus), 'SCALE_DB_NAME': 'TEST_NAME',
                                            'SCALE_DB_USER': 'TEST_USER', 'SCALE_DB_PASS': 'TEST_PASSWORD',
                                            'SCALE_DB_HOST': 'TEST_HOST', 'SCALE_DB_PORT': 'TEST_PORT',
-                                           'INGEST_ID': unicode(ingest.id), 'WORKSPACE': workspace.name,
+                                           'INGEST_ID': str(ingest.id), 'WORKSPACE': workspace.name,
                                            'NEW_WORKSPACE': new_workspace.name, 'SYSTEM_LOGGING_LEVEL': 'INFO',
-                                           'SCALE_JOB_ID': unicode(job.id), 'SCALE_EXE_NUM': unicode(job.num_exes),
+                                           'SCALE_JOB_ID': str(job.id), 'SCALE_EXE_NUM': str(job.num_exes),
                                            'SCALE_BROKER_URL': 'mock://broker-url'
                               },
                               'workspaces': {workspace.name: {'mode': 'rw', 'volume_name': wksp_vol_name},
@@ -311,12 +311,12 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                 {'flag': 'env', 'value': 'ALLOCATED_GPUS=%.1f' % resources.gpus},
                                                 {'flag': 'env', 'value': 'SCALE_DB_PASS=TEST_PASSWORD'},
                                                 {'flag': 'env', 'value': 'SCALE_DB_PORT=TEST_PORT'},
-                                                {'flag': 'env', 'value': 'INGEST_ID=%s' % unicode(ingest.id)},
+                                                {'flag': 'env', 'value': 'INGEST_ID=%s' % str(ingest.id)},
                                                 {'flag': 'env', 'value': 'WORKSPACE=%s' % workspace.name},
                                                 {'flag': 'env', 'value': 'NEW_WORKSPACE=%s' % new_workspace.name},
                                                 {'flag': 'env', 'value': 'SYSTEM_LOGGING_LEVEL=INFO'},
-                                                {'flag': 'env', 'value': 'SCALE_JOB_ID=%s' % unicode(job.id)},
-                                                {'flag': 'env', 'value': 'SCALE_EXE_NUM=%s' % unicode(job.num_exes)},
+                                                {'flag': 'env', 'value': 'SCALE_JOB_ID=%s' % str(job.id)},
+                                                {'flag': 'env', 'value': 'SCALE_EXE_NUM=%s' % str(job.num_exes)},
                                                 {'flag': 'volume',
                                                  'value': '/w_1/host/path:%s:rw' % wksp_vol_path},
                                                 {'flag': 'volume',
@@ -493,34 +493,34 @@ class TestScheduledExecutionConfigurator(TestCase):
         expected_pull_task = {'task_id': '%s_pull' % job_exe_model.get_cluster_id(), 'type': 'pull',
                               'resources': {'cpus': resources.cpus, 'mem': resources.mem, 'disk': resources.disk, 'gpus': resources.gpus},
                               'args': create_pull_command(job_type.docker_image),
-                              'env_vars': {'ALLOCATED_CPUS': unicode(resources.cpus),
-                                           'ALLOCATED_MEM': unicode(resources.mem),
-                                           'ALLOCATED_DISK': unicode(resources.disk),
-                                           'ALLOCATED_GPUS': unicode(resources.gpus),
-                                           'SCALE_JOB_ID': unicode(job.id),
-                                           'SCALE_EXE_NUM': unicode(job.num_exes),
-                                           'SCALE_RECIPE_ID': unicode(recipe.id),
-                                           'SCALE_BATCH_ID': unicode(batch.id)
+                              'env_vars': {'ALLOCATED_CPUS': str(resources.cpus),
+                                           'ALLOCATED_MEM': str(resources.mem),
+                                           'ALLOCATED_DISK': str(resources.disk),
+                                           'ALLOCATED_GPUS': str(resources.gpus),
+                                           'SCALE_JOB_ID': str(job.id),
+                                           'SCALE_EXE_NUM': str(job.num_exes),
+                                           'SCALE_RECIPE_ID': str(recipe.id),
+                                           'SCALE_BATCH_ID': str(batch.id)
                               },
                               'docker_params': [{'flag': 'env', 'value': 'ALLOCATED_MEM=%.1f' % resources.mem},
                                                 {'flag': 'env', 'value': 'ALLOCATED_CPUS=%.1f' % resources.cpus},
                                                 {'flag': 'env', 'value': 'ALLOCATED_DISK=%.1f' % resources.disk},
                                                 {'flag': 'env', 'value': 'ALLOCATED_GPUS=%.1f' % resources.gpus},
-                                                {'flag': 'env', 'value': 'SCALE_JOB_ID=%s' % unicode(job.id)},
-                                                {'flag': 'env', 'value': 'SCALE_EXE_NUM=%s' % unicode(job.num_exes)},
-                                                {'flag': 'env', 'value': 'SCALE_RECIPE_ID=%s' % unicode(recipe.id)},
-                                                {'flag': 'env', 'value': 'SCALE_BATCH_ID=%s' % unicode(batch.id)}]}
+                                                {'flag': 'env', 'value': 'SCALE_JOB_ID=%s' % str(job.id)},
+                                                {'flag': 'env', 'value': 'SCALE_EXE_NUM=%s' % str(job.num_exes)},
+                                                {'flag': 'env', 'value': 'SCALE_RECIPE_ID=%s' % str(recipe.id)},
+                                                {'flag': 'env', 'value': 'SCALE_BATCH_ID=%s' % str(batch.id)}]}
         expected_pre_task = {'task_id': '%s_pre' % job_exe_model.get_cluster_id(), 'type': 'pre',
                              'resources': {'cpus': resources.cpus, 'mem': resources.mem, 'disk': resources.disk, 'gpus': resources.gpus},
                              'args': PRE_TASK_COMMAND_ARGS,
-                             'env_vars': {'ALLOCATED_CPUS': unicode(resources.cpus),
-                                          'ALLOCATED_MEM': unicode(resources.mem),
-                                          'ALLOCATED_DISK': unicode(resources.disk),
-                                          'ALLOCATED_GPUS': unicode(resources.gpus), 'SCALE_DB_NAME': 'TEST_NAME',
+                             'env_vars': {'ALLOCATED_CPUS': str(resources.cpus),
+                                          'ALLOCATED_MEM': str(resources.mem),
+                                          'ALLOCATED_DISK': str(resources.disk),
+                                          'ALLOCATED_GPUS': str(resources.gpus), 'SCALE_DB_NAME': 'TEST_NAME',
                                           'SCALE_DB_USER': 'TEST_USER', 'SCALE_DB_PASS': 'TEST_PASSWORD',
                                           'SCALE_DB_HOST': 'TEST_HOST', 'SCALE_DB_PORT': 'TEST_PORT',
-                                          'SCALE_JOB_ID': unicode(job.id), 'SCALE_EXE_NUM': unicode(job.num_exes),
-                                          'SCALE_RECIPE_ID': unicode(recipe.id), 'SCALE_BATCH_ID': unicode(batch.id),
+                                          'SCALE_JOB_ID': str(job.id), 'SCALE_EXE_NUM': str(job.num_exes),
+                                          'SCALE_RECIPE_ID': str(recipe.id), 'SCALE_BATCH_ID': str(batch.id),
                                           'SCALE_BROKER_URL': 'mock://broker-url',
                                           'SYSTEM_LOGGING_LEVEL': 'INFO'
                              },
@@ -545,10 +545,10 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                {'flag': 'env', 'value': 'ALLOCATED_GPUS=%.1f' % post_resources.gpus},
                                                {'flag': 'env', 'value': 'SCALE_DB_PASS=TEST_PASSWORD'},
                                                {'flag': 'env', 'value': 'SCALE_DB_PORT=TEST_PORT'},
-                                               {'flag': 'env', 'value': 'SCALE_JOB_ID=%s' % unicode(job.id)},
-                                               {'flag': 'env', 'value': 'SCALE_EXE_NUM=%s' % unicode(job.num_exes)},
-                                               {'flag': 'env', 'value': 'SCALE_RECIPE_ID=%s' % unicode(recipe.id)},
-                                               {'flag': 'env', 'value': 'SCALE_BATCH_ID=%s' % unicode(batch.id)},
+                                               {'flag': 'env', 'value': 'SCALE_JOB_ID=%s' % str(job.id)},
+                                               {'flag': 'env', 'value': 'SCALE_EXE_NUM=%s' % str(job.num_exes)},
+                                               {'flag': 'env', 'value': 'SCALE_RECIPE_ID=%s' % str(recipe.id)},
+                                               {'flag': 'env', 'value': 'SCALE_BATCH_ID=%s' % str(batch.id)},
                                                {'flag': 'env', 'value': 'SYSTEM_LOGGING_LEVEL=INFO'},
                                                {'flag': 'volume', 'value': '%s:%s:rw' %
                                                                            (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)},
@@ -562,14 +562,14 @@ class TestScheduledExecutionConfigurator(TestCase):
                              'resources': {'cpus': post_resources.cpus, 'mem': post_resources.mem,
                                            'disk': post_resources.disk, 'gpus': post_resources.gpus},
                              'args': POST_TASK_COMMAND_ARGS,
-                             'env_vars': {'ALLOCATED_CPUS': unicode(post_resources.cpus),
-                                          'ALLOCATED_MEM': unicode(post_resources.mem),
-                                          'ALLOCATED_DISK': unicode(post_resources.disk),
-                                          'ALLOCATED_GPUS': unicode(post_resources.gpus), 'SCALE_DB_NAME': 'TEST_NAME',
+                             'env_vars': {'ALLOCATED_CPUS': str(post_resources.cpus),
+                                          'ALLOCATED_MEM': str(post_resources.mem),
+                                          'ALLOCATED_DISK': str(post_resources.disk),
+                                          'ALLOCATED_GPUS': str(post_resources.gpus), 'SCALE_DB_NAME': 'TEST_NAME',
                                           'SCALE_DB_USER': 'TEST_USER', 'SCALE_DB_PASS': 'TEST_PASSWORD',
                                           'SCALE_DB_HOST': 'TEST_HOST', 'SCALE_DB_PORT': 'TEST_PORT',
-                                          'SCALE_JOB_ID': unicode(job.id), 'SCALE_EXE_NUM': unicode(job.num_exes),
-                                          'SCALE_RECIPE_ID': unicode(recipe.id), 'SCALE_BATCH_ID': unicode(batch.id),
+                                          'SCALE_JOB_ID': str(job.id), 'SCALE_EXE_NUM': str(job.num_exes),
+                                          'SCALE_RECIPE_ID': str(recipe.id), 'SCALE_BATCH_ID': str(batch.id),
                                           'SCALE_BROKER_URL': 'mock://broker-url',
                                           'SYSTEM_LOGGING_LEVEL': 'INFO'
                              },
@@ -597,10 +597,10 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                {'flag': 'env', 'value': 'ALLOCATED_DISK=%.1f' % post_resources.disk},
                                                {'flag': 'env', 'value': 'SCALE_DB_PASS=TEST_PASSWORD'},
                                                {'flag': 'env', 'value': 'SCALE_DB_PORT=TEST_PORT'},
-                                               {'flag': 'env', 'value': 'SCALE_JOB_ID=%s' % unicode(job.id)},
-                                               {'flag': 'env', 'value': 'SCALE_EXE_NUM=%s' % unicode(job.num_exes)},
-                                               {'flag': 'env', 'value': 'SCALE_RECIPE_ID=%s' % unicode(recipe.id)},
-                                               {'flag': 'env', 'value': 'SCALE_BATCH_ID=%s' % unicode(batch.id)},
+                                               {'flag': 'env', 'value': 'SCALE_JOB_ID=%s' % str(job.id)},
+                                               {'flag': 'env', 'value': 'SCALE_EXE_NUM=%s' % str(job.num_exes)},
+                                               {'flag': 'env', 'value': 'SCALE_RECIPE_ID=%s' % str(recipe.id)},
+                                               {'flag': 'env', 'value': 'SCALE_BATCH_ID=%s' % str(batch.id)},
                                                {'flag': 'env', 'value': 'SYSTEM_LOGGING_LEVEL=INFO'},
                                                {'flag': 'volume', 'value': '%s:%s:ro' %
                                                                            (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)},
@@ -618,12 +618,12 @@ class TestScheduledExecutionConfigurator(TestCase):
                                            'job_output_dir': SCALE_JOB_EXE_OUTPUT_PATH,
                                            'OUTPUT_DIR': SCALE_JOB_EXE_OUTPUT_PATH, 'S_1': 's_1_value',
                                            'S_2': 's_2_secret', 'my_special_env': 's_2_secret',
-                                           'ALLOCATED_CPUS': unicode(main_resources.cpus),
-                                           'ALLOCATED_MEM': unicode(main_resources.mem),
-                                           'ALLOCATED_DISK': unicode(main_resources.disk),
-                                           'ALLOCATED_GPUS': unicode(main_resources.gpus),
-                                           'SCALE_JOB_ID': unicode(job.id), 'SCALE_EXE_NUM': unicode(job.num_exes),
-                                           'SCALE_RECIPE_ID': unicode(recipe.id), 'SCALE_BATCH_ID': unicode(batch.id)
+                                           'ALLOCATED_CPUS': str(main_resources.cpus),
+                                           'ALLOCATED_MEM': str(main_resources.mem),
+                                           'ALLOCATED_DISK': str(main_resources.disk),
+                                           'ALLOCATED_GPUS': str(main_resources.gpus),
+                                           'SCALE_JOB_ID': str(job.id), 'SCALE_EXE_NUM': str(job.num_exes),
+                                           'SCALE_RECIPE_ID': str(recipe.id), 'SCALE_BATCH_ID': str(batch.id)
                               },
                               'workspaces': {input_workspace.name: {'mode': 'ro', 'volume_name': input_wksp_vol_name}},
                               'mounts': {'m_1': m_1_vol_name, 'm_2': None, 'm_3': None, input_mnt_name: input_vol_name,
@@ -649,10 +649,10 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                 {'flag': 'env', 'value': 'INPUT_1=my_val'},
                                                 {'flag': 'env', 'value': 'job_output_dir=%s' % SCALE_JOB_EXE_OUTPUT_PATH},
                                                 {'flag': 'env', 'value': 'OUTPUT_DIR=%s' % SCALE_JOB_EXE_OUTPUT_PATH},
-                                                {'flag': 'env', 'value': 'SCALE_JOB_ID=%s' % unicode(job.id)},
-                                                {'flag': 'env', 'value': 'SCALE_EXE_NUM=%s' % unicode(job.num_exes)},
-                                                {'flag': 'env', 'value': 'SCALE_RECIPE_ID=%s' % unicode(recipe.id)},
-                                                {'flag': 'env', 'value': 'SCALE_BATCH_ID=%s' % unicode(batch.id)},
+                                                {'flag': 'env', 'value': 'SCALE_JOB_ID=%s' % str(job.id)},
+                                                {'flag': 'env', 'value': 'SCALE_EXE_NUM=%s' % str(job.num_exes)},
+                                                {'flag': 'env', 'value': 'SCALE_RECIPE_ID=%s' % str(recipe.id)},
+                                                {'flag': 'env', 'value': 'SCALE_BATCH_ID=%s' % str(batch.id)},
                                                 {'flag': 'volume', 'value': '%s:%s:rw' %
                                                                             (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)},
                                                 {'flag': 'volume',
@@ -752,12 +752,12 @@ class TestScheduledExecutionConfigurator(TestCase):
         did_main_task = False
         for task_dict in exe_config_with_secrets.get_dict()['tasks']:
             if task_dict['type'] == 'pre':
-                for setting_name, setting_value in task_dict['settings'].items():
+                for setting_name, setting_value in list(task_dict['settings'].items()):
                     if setting_name in expected_pre_secret_settings:
                         expected_value = expected_pre_secret_settings[setting_name]
                         self.assertEqual(setting_value, expected_value)
                         del expected_pre_secret_settings[setting_name]
-                for env_name, env_value in task_dict['env_vars'].items():
+                for env_name, env_value in list(task_dict['env_vars'].items()):
                     if env_name in expected_pre_secret_env_vars:
                         expected_value = expected_pre_secret_env_vars[env_name]
                         self.assertEqual(env_value, expected_value)
@@ -766,12 +766,12 @@ class TestScheduledExecutionConfigurator(TestCase):
                 self.assertDictEqual(expected_pre_secret_env_vars, {}, 'Config did not contain some expected env vars')
                 did_pre_task = True
             elif task_dict['type'] == 'main':
-                for setting_name, setting_value in task_dict['settings'].items():
+                for setting_name, setting_value in list(task_dict['settings'].items()):
                     if setting_name in expected_main_secret_settings:
                         expected_value = expected_main_secret_settings[setting_name]
                         self.assertEqual(setting_value, expected_value)
                         del expected_main_secret_settings[setting_name]
-                for env_name, env_value in task_dict['env_vars'].items():
+                for env_name, env_value in list(task_dict['env_vars'].items()):
                     if env_name in expected_main_secret_env_vars:
                         expected_value = expected_main_secret_env_vars[env_name]
                         self.assertEqual(env_value, expected_value)
@@ -788,12 +788,12 @@ class TestScheduledExecutionConfigurator(TestCase):
         exe_config_censored = job_exe_model.get_execution_configuration()
         for task_dict in exe_config_censored.get_dict()['tasks']:
             if task_dict['type'] == 'pre':
-                for setting_name, setting_value in task_dict['settings'].items():
+                for setting_name, setting_value in list(task_dict['settings'].items()):
                     if setting_name in expected_pre_censored_settings:
                         expected_value = expected_pre_censored_settings[setting_name]
                         self.assertEqual(setting_value, expected_value)
                         del expected_pre_censored_settings[setting_name]
-                for env_name, env_value in task_dict['env_vars'].items():
+                for env_name, env_value in list(task_dict['env_vars'].items()):
                     if env_name in expected_pre_censored_env_vars:
                         expected_value = expected_pre_censored_env_vars[env_name]
                         self.assertEqual(env_value, expected_value)
@@ -804,12 +804,12 @@ class TestScheduledExecutionConfigurator(TestCase):
                                      'Config did not contain some expected env vars')
                 did_pre_task = True
             elif task_dict['type'] == 'main':
-                for setting_name, setting_value in task_dict['settings'].items():
+                for setting_name, setting_value in list(task_dict['settings'].items()):
                     if setting_name in expected_main_censored_settings:
                         expected_value = expected_main_censored_settings[setting_name]
                         self.assertEqual(setting_value, expected_value)
                         del expected_main_censored_settings[setting_name]
-                for env_name, env_value in task_dict['env_vars'].items():
+                for env_name, env_value in list(task_dict['env_vars'].items()):
                     if env_name in expected_main_censored_env_vars:
                         expected_value = expected_main_censored_env_vars[env_name]
                         self.assertEqual(env_value, expected_value)

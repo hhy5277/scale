@@ -1,5 +1,5 @@
 """Defines the class for managing a batch definition"""
-from __future__ import unicode_literals
+
 
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
@@ -146,7 +146,7 @@ class BatchDefinition(object):
         try:
             validate(definition, BATCH_DEFINITION_SCHEMA)
         except ValidationError as ex:
-            raise InvalidDefinition('', 'Invalid batch definition: %s' % unicode(ex))
+            raise InvalidDefinition('', 'Invalid batch definition: %s' % str(ex))
 
         self._populate_default_values()
         if not self._definition['version'] == '1.0':

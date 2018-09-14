@@ -1,5 +1,5 @@
 """Defines a command message that performs a bulk cancel operation"""
-from __future__ import unicode_literals
+
 
 import logging
 

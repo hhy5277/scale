@@ -1,7 +1,7 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
+
+
+
+
 
 import django
 from django.test import TestCase
@@ -26,7 +26,7 @@ class TestSingletonCommandMessageManager(TestCase):
     def test_verify_singleton(self, broker_details, get_message_backend):
         """Validate that multiple instantiation attempts result in single instance"""
 
-        self.assertEquals(CommandMessageManager(), CommandMessageManager())
+        self.assertEqual(CommandMessageManager(), CommandMessageManager())
 
     @patch('messaging.manager.get_message_backend')
     @patch('messaging.manager.BrokerDetails')

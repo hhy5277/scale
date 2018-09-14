@@ -1,6 +1,6 @@
 """Defines the interface for executing a job"""
-from __future__ import absolute_import
-from __future__ import unicode_literals
+
+
 
 import copy
 import json
@@ -420,7 +420,7 @@ class SeedManifest(object):
         :type exe_configuration: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         """
 
-        for name, mount_volume in exe_configuration.get_mounts('main').items():
+        for name, mount_volume in list(exe_configuration.get_mounts('main').items()):
             if mount_volume is None:
                 raise MissingMount(name)
 
@@ -431,7 +431,7 @@ class SeedManifest(object):
         :type exe_configuration: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         """
 
-        for name, value in exe_configuration.get_settings('main').items():
+        for name, value in list(exe_configuration.get_settings('main').items()):
             if value is None:
                 raise MissingSetting(name)
 
@@ -531,7 +531,7 @@ class SeedManifest(object):
                 if not secret_settings:
                     secret_settings = secrets_mgr.retrieve_job_type_secrets(job_index)
 
-                if setting_name in secret_settings.keys():
+                if setting_name in list(secret_settings.keys()):
                     if censor:
                         settings_value = '*****'
                     else:

@@ -1,5 +1,5 @@
 """Defines the class that manages the scheduler status background thread"""
-from __future__ import unicode_literals
+
 
 import datetime
 

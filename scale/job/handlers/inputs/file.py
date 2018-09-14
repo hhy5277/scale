@@ -1,5 +1,5 @@
 """Defines the class for handling file inputs"""
-from __future__ import unicode_literals
+
 
 from job.handlers.inputs.base_input import Input
 

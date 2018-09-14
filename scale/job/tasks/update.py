@@ -1,5 +1,5 @@
 """Defines the class that represents a task status update"""
-from __future__ import unicode_literals
+
 
 import logging
 import re

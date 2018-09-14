@@ -1,14 +1,12 @@
 """Defines the base configuration class for a trigger rule"""
-from __future__ import unicode_literals
+
 
 from abc import ABCMeta, abstractmethod
 
 
-class TriggerRuleConfiguration(object):
+class TriggerRuleConfiguration(object, metaclass=ABCMeta):
     """The base class that represents the configuration for a trigger rule
     """
-
-    __metaclass__ = ABCMeta
 
     def __init__(self, trigger_rule_type, config_dict):
         """Base Constructor

@@ -1,5 +1,5 @@
 """Defines the command line method for listing files within a workspace"""
-from __future__ import unicode_literals
+
 
 import logging
 import sys

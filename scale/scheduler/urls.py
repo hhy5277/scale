@@ -1,9 +1,9 @@
 """Defines the URLs for the RESTful node services"""
-from __future__ import unicode_literals
+
 
 from django.conf.urls import url
 
-import views
+from . import views
 
 urlpatterns = [
     url(r'^scheduler/$', views.SchedulerView.as_view(), name='scheduler_view'),

@@ -1,5 +1,5 @@
 """Defines a command message that creates and queues a system job for deleting files"""
-from __future__ import unicode_literals
+
 
 import json
 import logging
@@ -82,7 +82,7 @@ class SpawnDeleteFilesJob(CommandMessage):
                 files.append({'id': f.id,
                               'file_path': f.file_path,
                               'workspace': f.workspace.name})
-                if f.workspace.name not in [k for wrkspc in workspaces for k in wrkspc.keys()]:
+                if f.workspace.name not in [k for wrkspc in workspaces for k in list(wrkspc.keys())]:
                     workspaces.append({f.workspace.name: f.workspace.json_config})
 
             inputs = Data()

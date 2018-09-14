@@ -1,5 +1,5 @@
 """Defines the URLs for the RESTful job services"""
-from __future__ import unicode_literals
+
 
 from django.conf.urls import url
 

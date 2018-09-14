@@ -1,5 +1,5 @@
 """Defines the abstract base class for all system tasks"""
-from __future__ import unicode_literals
+
 
 from abc import ABCMeta
 
@@ -9,11 +9,9 @@ from job.execution.configuration.docker_param import DockerParameter
 from job.tasks.base_task import Task
 
 
-class SystemTask(Task):
+class SystemTask(Task, metaclass=ABCMeta):
     """Abstract base class for a system task
     """
-
-    __metaclass__ = ABCMeta
 
     def __init__(self, task_id, task_name):
         """Constructor

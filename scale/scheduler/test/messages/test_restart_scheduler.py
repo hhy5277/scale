@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 
 import datetime
 
@@ -47,7 +47,7 @@ class TestRestartScheduler(TestCase):
                 failed_jobs_msg = msg
             elif msg.type == 'create_job_exe_ends':
                 job_exe_end_msg = msg
-        self.assertEqual(failed_jobs_msg._failed_jobs.values()[0][0].job_id, running_job_exe.job_id)
+        self.assertEqual(list(failed_jobs_msg._failed_jobs.values())[0][0].job_id, running_job_exe.job_id)
         self.assertEqual(job_exe_end_msg._job_exe_ends[0].job_exe_id, running_job_exe.id)
 
     def test_execute(self):
@@ -89,7 +89,7 @@ class TestRestartScheduler(TestCase):
         expected_failed_jobs = {FailedJob(running_job_exe_1.job_id, running_job_exe_1.exe_num, error.id),
                                 FailedJob(running_job_exe_2.job_id, running_job_exe_2.exe_num, error.id)}
         expected_failed_job_exe_ids = {running_job_exe_1.id, running_job_exe_2.id}
-        self.assertSetEqual(set(failed_jobs_msg._failed_jobs.values()[0]), expected_failed_jobs)
+        self.assertSetEqual(set(list(failed_jobs_msg._failed_jobs.values())[0]), expected_failed_jobs)
         failed_job_exe_ids = set()
         for job_exe_end_model in job_exe_end_msg._job_exe_ends:
             failed_job_exe_ids.add(job_exe_end_model.job_exe_id)
@@ -105,7 +105,7 @@ class TestRestartScheduler(TestCase):
         expected_failed_jobs = {FailedJob(running_job_exe_1.job_id, running_job_exe_1.exe_num, error.id),
                                 FailedJob(running_job_exe_2.job_id, running_job_exe_2.exe_num, error.id)}
         expected_failed_job_exe_ids = {running_job_exe_1.id, running_job_exe_2.id}
-        self.assertSetEqual(set(failed_jobs_msg._failed_jobs.values()[0]), expected_failed_jobs)
+        self.assertSetEqual(set(list(failed_jobs_msg._failed_jobs.values())[0]), expected_failed_jobs)
         failed_job_exe_ids = set()
         for job_exe_end_model in job_exe_end_msg._job_exe_ends:
             failed_job_exe_ids.add(job_exe_end_model.job_exe_id)

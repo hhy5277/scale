@@ -1,5 +1,5 @@
 """Defines the data needed for executing a job"""
-from __future__ import unicode_literals
+
 
 import logging
 import os
@@ -370,11 +370,11 @@ class JobData(object):
             file_ids = []
             if multiple:
                 for file_id in file_input['file_ids']:
-                    file_id = long(file_id)
+                    file_id = int(file_id)
                     file_ids.append(file_id)
                     files_to_retrieve[file_id] = (dir_path, partial)
             else:
-                file_id = long(file_input['file_id'])
+                file_id = int(file_input['file_id'])
                 file_ids.append(file_id)
                 files_to_retrieve[file_id] = (dir_path, partial)
             param_file_ids[name] = file_ids
@@ -384,7 +384,7 @@ class JobData(object):
         for file_id in retrieved_files:
             del files_to_retrieve[file_id]
         if files_to_retrieve:
-            msg = 'Failed to retrieve file with ID %i' % files_to_retrieve.keys()[0]
+            msg = 'Failed to retrieve file with ID %i' % list(files_to_retrieve.keys())[0]
             raise Exception(msg)
 
         # Organize the results
@@ -452,7 +452,7 @@ class JobData(object):
         # Organize the data files
         workspace_files = {}  # Workspace ID -> [(absolute local file path, media type)]
         params_by_file_path = {}  # Absolute local file path -> output parameter name
-        output_workspaces = JobData.create_output_workspace_dict(data_files.keys(), self, job_exe)
+        output_workspaces = JobData.create_output_workspace_dict(list(data_files.keys()), self, job_exe)
         for name in data_files:
             workspace_id = output_workspaces[name]
             if workspace_id in workspace_files:
@@ -546,7 +546,7 @@ class JobData(object):
                             msg = ('Invalid job data: Data input %s must have a list of integers in its "file_ids" '
                                    'field')
                             raise InvalidData(msg % name)
-                        file_ids.append(long(file_id))
+                        file_ids.append(int(file_id))
                 else:
                     if 'file_id' not in file_input:
                         msg = 'Invalid job data: Data input %s is a file and must have a "file_id" field' % name
@@ -557,7 +557,7 @@ class JobData(object):
                     if not isinstance(file_id, Integral):
                         msg = 'Invalid job data: Data input %s must have an integer in its "file_id" field' % name
                         raise InvalidData(msg)
-                    file_ids.append(long(file_id))
+                    file_ids.append(int(file_id))
                 warnings.extend(self._validate_file_ids(file_ids, file_desc))
             else:
                 # Don't have this input, check if it is required
@@ -636,7 +636,7 @@ class JobData(object):
                     msg = 'Invalid job data: Data input %s is a property and must have a "value" field' % name
                     raise InvalidData(msg)
                 value = property_input['value']
-                if not isinstance(value, basestring):
+                if not isinstance(value, str):
                     raise InvalidData('Invalid job data: Data input %s must have a string in its "value" field' % name)
             else:
                 # Don't have this input, check if it is required
@@ -685,7 +685,7 @@ class JobData(object):
         :raises DeletedFile: If any of the files has been deleted
         """
 
-        file_ids = data_files.keys()
+        file_ids = list(data_files.keys())
         files = ScaleFile.objects.filter(id__in=file_ids)
 
         file_downloads = []
@@ -758,7 +758,7 @@ class JobData(object):
 
         if job_data.has_workspaces():
             # Do the old way of getting output workspaces from job data
-            for name, output_dict in job_data.data_outputs_by_name.items():
+            for name, output_dict in list(job_data.data_outputs_by_name.items()):
                 workspace_id = output_dict['workspace_id']
                 workspace_dict[name] = workspace_id
         else:
@@ -774,8 +774,8 @@ class JobData(object):
                     raise Exception('No output workspace configured for output \'%s\'' % name)
 
             from storage.models import Workspace
-            workspace_mapping = {w.name: w.id for w in Workspace.objects.filter(name__in=workspace_names_dict.values())}
-            for output_name, workspace_name in workspace_names_dict.items():
+            workspace_mapping = {w.name: w.id for w in Workspace.objects.filter(name__in=list(workspace_names_dict.values()))}
+            for output_name, workspace_name in list(workspace_names_dict.items()):
                 workspace_dict[output_name] = workspace_mapping[workspace_name]
 
         return workspace_dict

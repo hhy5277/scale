@@ -1,5 +1,5 @@
 """Defines the class that manages pushing task status updates to the database"""
-from __future__ import unicode_literals
+
 
 import logging
 import threading

@@ -1,5 +1,5 @@
 """Defines the JSON schema for a job configuration"""
-from __future__ import unicode_literals
+
 
 import logging
 
@@ -76,7 +76,7 @@ class JobConfigurationV1(object):
             value/name.
         """
 
-        for setting_name, setting_value in self.definition['default_settings'].iteritems():
+        for setting_name, setting_value in self.definition['default_settings'].items():
             if setting_name in self._default_setting_names:
                 msg = 'Duplicate setting name %s in default_settings'
                 raise InvalidJobConfiguration('INVALID_CONFIGURATION', msg % setting_name)
@@ -90,7 +90,7 @@ class JobConfigurationV1(object):
                 msg = 'Blank setting value (name = %s) in default_settings'
                 raise InvalidJobConfiguration('INVALID_CONFIGURATION', msg % setting_name)
 
-            if not isinstance(setting_value, basestring):
+            if not isinstance(setting_value, str):
                 msg = 'Setting value (name = %s) is not a string'
                 raise InvalidJobConfiguration('INVALID_CONFIGURATION', msg % setting_name)
 

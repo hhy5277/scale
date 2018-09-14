@@ -1,5 +1,5 @@
 """Defines the class that represents queued job executions being considered for scheduling"""
-from __future__ import unicode_literals
+
 
 from job.models import JobExecution
 from node.resources.node_resources import NodeResources

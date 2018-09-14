@@ -15,9 +15,7 @@ SPECIAL_FILES = [METADATA_SUFFIX, SEED_OUPUTS_JSON_FILENAME, LEGACY_RESULTS_MANI
 logger = logging.getLogger(__name__)
 
 
-class SeedFiles(object):
-    __metaclass__ = ABCMeta
-
+class SeedFiles(object, metaclass=ABCMeta):
     def __init__(self, data):
         """Create a SeedFiles from dict input equivalent
 
@@ -108,9 +106,7 @@ class SeedOutputFiles(SeedFiles):
         return results
 
 
-class SeedJson(object):
-    __metaclass__ = ABCMeta
-
+class SeedJson(object, metaclass=ABCMeta):
     def __init__(self, data):
         """Create a SeedJson from dict input equivalent
 
@@ -135,7 +131,7 @@ class SeedJson(object):
         value_type = self.type.upper()
 
         if value_type == 'STRING':
-            return basestring
+            return str
         elif value_type == 'NUMBER':
             return float
         elif value_type == 'INTEGER':

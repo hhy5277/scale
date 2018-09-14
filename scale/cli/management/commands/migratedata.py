@@ -41,7 +41,7 @@ class Command(BaseCommand):
 
         This method migrates existing data files into scale.
         """
-        logger.info(u'Command starting: migratedata')
+        logger.info('Command starting: migratedata')
 
         workspace, workspace_path, local_path, data_types = None, None, None, []
         if options['workspace'] is not None and options['workspace_path'] is not None:
@@ -125,7 +125,7 @@ class Command(BaseCommand):
         if mnt_dirs is not None:
             workspace.cleanup_download_dir(*mnt_dirs)
 
-        logger.info(u'Command completed: migratedata')
+        logger.info('Command completed: migratedata')
 
     @staticmethod
     def generate_file_list(path, include, exclude):
@@ -136,8 +136,8 @@ class Command(BaseCommand):
                 tmp = files
             else:
                 for inc in include:
-                    tmp.extend(filter(lambda fname, glb=inc: fnmatch.fnmatch(fname, glb), files))
+                    tmp.extend(list(filter(lambda fname, glb=inc: fnmatch.fnmatch(fname, glb), files)))
             for excl in exclude:
-                tmp = filter(lambda fname, glb=excl: not fnmatch.fnmatch(fname, glb), tmp)
-            all_files.extend(map(lambda fname, pth=root: os.path.join(pth, fname), tmp))
+                tmp = list(filter(lambda fname, glb=excl: not fnmatch.fnmatch(fname, glb), tmp))
+            all_files.extend(list(map(lambda fname, pth=root: os.path.join(pth, fname), tmp)))
         return all_files

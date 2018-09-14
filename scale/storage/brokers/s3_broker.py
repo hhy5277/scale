@@ -1,5 +1,5 @@
 """Defines an S3 broker that utilizes the Amazon Web Services Simple Storage Service (S3) as its storage system"""
-from __future__ import unicode_literals
+
 
 import logging
 import os

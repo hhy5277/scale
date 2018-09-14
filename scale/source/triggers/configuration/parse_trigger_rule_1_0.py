@@ -1,5 +1,5 @@
 """Defines the configuration for a parse trigger"""
-from __future__ import unicode_literals
+
 
 import logging
 

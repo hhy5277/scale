@@ -1,5 +1,5 @@
 """Defines the product data file input type contained within job data"""
-from __future__ import unicode_literals
+
 
 import os
 
@@ -35,7 +35,7 @@ class ProductDataFileStore(AbstractDataFileStore):
         """See :meth:`job.configuration.data.data_file.AbstractDataFileStore.store_files`
         """
 
-        workspace_ids = data_files.keys()
+        workspace_ids = list(data_files.keys())
         workspaces = Workspace.objects.filter(id__in=workspace_ids)
         results = {}
         remote_path = self._calculate_remote_path(job_exe, input_file_ids)

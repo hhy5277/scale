@@ -1,5 +1,5 @@
 """Manages the v6 recipe instance schema"""
-from __future__ import unicode_literals
+
 
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
@@ -178,7 +178,7 @@ def convert_recipe_to_v6_json(recipe):
     :rtype: :class:`recipe.instance.json.recipe_v6.RecipeInstanceV6`
     """
 
-    json_dict = {'nodes': {n.name: convert_node_to_v6_json(n) for n in recipe.graph.values()}}
+    json_dict = {'nodes': {n.name: convert_node_to_v6_json(n) for n in list(recipe.graph.values())}}
 
     return RecipeInstanceV6(json=json_dict, do_validate=False)
 
@@ -191,7 +191,7 @@ def convert_node_to_v6_json(node):
     :rtype: dict
     """
 
-    dependencies = [{'name': name} for name in node.parents.keys()]
+    dependencies = [{'name': name} for name in list(node.parents.keys())]
     node_def = node.definition
 
     if node.node_type == JobNodeDefinition.NODE_TYPE:
@@ -242,7 +242,7 @@ class RecipeInstanceV6(object):
             if do_validate:
                 validate(self._json, RECIPE_INSTANCE_SCHEMA)
         except ValidationError as ex:
-            raise InvalidRecipe('Invalid recipe instance: %s' % unicode(ex))
+            raise InvalidRecipe('Invalid recipe instance: %s' % str(ex))
 
     def get_dict(self):
         """Returns the internal dictionary

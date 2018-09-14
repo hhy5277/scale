@@ -1,5 +1,5 @@
 """Defines utilities for building RESTful APIs."""
-from __future__ import unicode_literals
+
 
 import datetime
 import uuid
@@ -64,7 +64,7 @@ def check_update(request, fields):
     """
     fields = fields or []
     assert (isinstance(fields, list))
-    extra = filter(lambda x, y=fields: x not in y, request.data.keys())
+    extra = list(filter(lambda x, y=fields: x not in y, list(request.data.keys())))
     if extra:
         raise ReadOnly('Fields do not allow updates: %s' % ', '.join(extra))
     return True
@@ -262,7 +262,7 @@ def parse_bool(request, name, default_value=None, required=True):
     :raises :class:`util.rest.BadParameter`: If the value cannot be parsed.
     """
     value = _get_param(request, name, default_value, required)
-    if not isinstance(value, basestring):
+    if not isinstance(value, str):
         return value
 
     value = value.strip().lower()
@@ -293,7 +293,7 @@ def parse_int(request, name, default_value=None, required=True, accepted_values=
     :raises :class:`util.rest.BadParameter`: If the value cannot be parsed.
     """
     value = _get_param(request, name, default_value, required)
-    if not isinstance(value, basestring):
+    if not isinstance(value, str):
         return value
 
     try:
@@ -357,7 +357,7 @@ def parse_float(request, name, default_value=None, required=True, accepted_value
     :raises :class:`util.rest.BadParameter`: If the value cannot be parsed.
     """
     value = _get_param(request, name, default_value, required)
-    if not isinstance(value, basestring):
+    if not isinstance(value, str):
         return value
 
     try:
@@ -386,7 +386,7 @@ def parse_timestamp(request, name, default_value=None, required=True):
     :raises :class:`util.rest.BadParameter`: If the value cannot be parsed.
     """
     value = _get_param(request, name, default_value, required)
-    if not isinstance(value, basestring):
+    if not isinstance(value, str):
         return value
 
     try:
@@ -416,7 +416,7 @@ def parse_duration(request, name, default_value=None, required=True):
     :raises :class:`util.rest.BadParameter`: If the value cannot be parsed.
     """
     value = _get_param(request, name, default_value, required)
-    if not isinstance(value, basestring):
+    if not isinstance(value, str):
         return value
 
     try:
@@ -446,7 +446,7 @@ def parse_datetime(request, name, default_value=None, required=True):
     :raises :class:`util.rest.BadParameter`: If the value cannot be parsed.
     """
     value = _get_param(request, name, default_value, required)
-    if not isinstance(value, basestring):
+    if not isinstance(value, str):
         return value
 
     try:

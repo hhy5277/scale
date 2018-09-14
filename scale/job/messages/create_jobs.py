@@ -1,5 +1,5 @@
 """Defines a command message that creates job models"""
-from __future__ import unicode_literals
+
 
 import logging
 
@@ -195,7 +195,7 @@ class CreateJobs(CommandMessage):
         try:
             with transaction.atomic():
                 # Bulk create jobs
-                for _ in xrange(self.count):
+                for _ in range(self.count):
                     input_data = DataV6(self.input_data, do_validate=True).get_data() if self.input_data else None
                     job = Job.objects.create_job_v6(job_type_rev, self.event_id, input_data=input_data,
                                                     root_recipe_id=self.root_recipe_id, recipe_id=self.recipe_id,

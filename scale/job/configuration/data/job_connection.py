@@ -1,5 +1,5 @@
 """Defines connections that will provide data to execute jobs"""
-from __future__ import unicode_literals
+
 
 from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.data.job_data import ValidationWarning

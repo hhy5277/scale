@@ -1,5 +1,5 @@
 """Defines the database models for a batch"""
-from __future__ import unicode_literals
+
 
 import logging
 from collections import namedtuple
@@ -252,7 +252,7 @@ class BatchManager(models.Manager):
             metrics_dict['recipes_estimated'].append(batch.recipes_estimated)
             metrics_dict['recipes_total'].append(batch.recipes_total)
             metrics_dict['recipes_completed'].append(batch.recipes_completed)
-            for job_name, job_metrics in job_metrics_dict.items():
+            for job_name, job_metrics in list(job_metrics_dict.items()):
                 if job_name in batch.batch_metrics_dict:
                     batch_metrics = batch.batch_metrics_dict[job_name]
                     job_metrics['jobs_total'].append(batch_metrics.jobs_total)

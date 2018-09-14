@@ -1,16 +1,14 @@
 """Defines the abstract base class for all node tasks"""
-from __future__ import unicode_literals
+
 
 from abc import ABCMeta
 
 from job.tasks.base_task import Task
 
 
-class NodeTask(Task):
+class NodeTask(Task, metaclass=ABCMeta):
     """Abstract base class for a node task
     """
-
-    __metaclass__ = ABCMeta
 
     def __init__(self, task_id, task_name, agent_id):
         """Constructor

@@ -1,5 +1,5 @@
 """Defines the command line method for running the Scale daily metrics process."""
-from __future__ import unicode_literals
+
 
 import datetime
 import logging

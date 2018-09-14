@@ -48,8 +48,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Scale'
-copyright = u'2015, NGA'
+project = 'Scale'
+copyright = '2015, NGA'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -191,8 +191,8 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'Scale.tex', u'Scale Documentation',
-   u'NGA', 'manual'),
+  ('index', 'Scale.tex', 'Scale Documentation',
+   'NGA', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -221,8 +221,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'scale', u'Scale Documentation',
-     [u'NGA'], 1)
+    ('index', 'scale', 'Scale Documentation',
+     ['NGA'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -235,8 +235,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'Scale', u'Scale Documentation',
-   u'NGA', 'Scale', 'One line description of project.',
+  ('index', 'Scale', 'Scale Documentation',
+   'NGA', 'Scale', 'One line description of project.',
    'Miscellaneous'),
 ]
 

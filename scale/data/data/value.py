@@ -1,6 +1,6 @@
 """Defines the classes for handling a data value being passed to an interface"""
-from __future__ import absolute_import
-from __future__ import unicode_literals
+
+
 
 from abc import ABCMeta
 from copy import copy
@@ -10,11 +10,9 @@ from data.data.exceptions import InvalidData
 from data.interface.parameter import FileParameter, JsonParameter
 
 
-class DataValue(object):
+class DataValue(object, metaclass=ABCMeta):
     """Represents a data value for an interface parameter
     """
-
-    __metaclass__ = ABCMeta
 
     def __init__(self, name, param_type):
         """Constructor
@@ -114,13 +112,13 @@ class JsonValue(DataValue):
             raise InvalidData('INVALID_JSON_TYPE', 'Parameter \'%s\' must receive an array' % parameter.name)
         elif parameter.json_type == 'boolean' and not isinstance(self.value, bool):
             raise InvalidData('INVALID_JSON_TYPE', 'Parameter \'%s\' must receive a boolean' % parameter.name)
-        elif parameter.json_type == 'integer' and not isinstance(self.value, (int, long)):
+        elif parameter.json_type == 'integer' and not isinstance(self.value, int):
             raise InvalidData('INVALID_JSON_TYPE', 'Parameter \'%s\' must receive an integer' % parameter.name)
         elif parameter.json_type == 'number' and not isinstance(self.value, Number):
             raise InvalidData('INVALID_JSON_TYPE', 'Parameter \'%s\' must receive a number' % parameter.name)
         elif parameter.json_type == 'object' and not isinstance(self.value, dict):
             raise InvalidData('INVALID_JSON_TYPE', 'Parameter \'%s\' must receive a JSON object' % parameter.name)
-        elif parameter.json_type == 'string' and not isinstance(self.value, basestring):
+        elif parameter.json_type == 'string' and not isinstance(self.value, str):
             raise InvalidData('INVALID_JSON_TYPE', 'Parameter \'%s\' must receive a string' % parameter.name)
 
         return warnings

@@ -1,5 +1,5 @@
 """Defines a scanner that scans an S3 bucket backed workspace for files"""
-from __future__ import unicode_literals
+
 
 import logging
 
@@ -32,7 +32,7 @@ class DirScanner(Scanner):
         """
 
         if 'transfer_suffix' in configuration:
-            if not isinstance(configuration['transfer_suffix'], basestring):
+            if not isinstance(configuration['transfer_suffix'], str):
                 raise InvalidScannerConfiguration('transfer_suffix must be a string')
             if not configuration['transfer_suffix']:
                 raise InvalidScannerConfiguration('transfer_suffix must be a non-empty string')

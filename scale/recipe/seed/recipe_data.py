@@ -1,5 +1,5 @@
 """Defines the data needed for executing a recipe"""
-from __future__ import unicode_literals
+
 
 import logging
 
@@ -93,7 +93,7 @@ class RecipeData(object):
         """
 
         file_ids = set()
-        for input_value in self._new_data.values.values():
+        for input_value in list(self._new_data.values.values()):
             if isinstance(input_value, FileValue):
                 for file_id in input_value.file_ids:
                     file_ids.add(file_id)
@@ -107,7 +107,7 @@ class RecipeData(object):
         """
 
         file_ids = {}
-        for input_value in self._new_data.values.values():
+        for input_value in list(self._new_data.values.values()):
             if isinstance(input_value, FileValue):
                 file_ids[input_value.name] = input_value.file_ids
         return file_ids
@@ -121,7 +121,7 @@ class RecipeData(object):
 
         file_info = set()
 
-        for input_value in self._new_data.values.values():
+        for input_value in list(self._new_data.values.values()):
             if isinstance(input_value, FileValue):
                 for file_id in input_value.file_ids:
                     file_info.add((file_id, input_value.name))

@@ -1,6 +1,6 @@
 """Defines the class for representing an instance of an executing recipe"""
-from __future__ import absolute_import
-from __future__ import unicode_literals
+
+
 
 from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
 from recipe.instance.node import JobNodeInstance, RecipeNodeInstance
@@ -32,7 +32,7 @@ class RecipeInstance(object):
             elif node_definition.node_type == RecipeNodeDefinition.NODE_TYPE:
                 node = RecipeNodeInstance(node_definition, recipe_node_model.sub_recipe)
             self.graph[node.name] = node
-            for parent_name in node_definition.parents.keys():
+            for parent_name in list(node_definition.parents.keys()):
                 node.add_dependency(self.graph[parent_name])
 
     def get_jobs_to_update(self):

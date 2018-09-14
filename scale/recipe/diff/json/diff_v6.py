@@ -1,5 +1,5 @@
 """Manages the v6 recipe diff schema"""
-from __future__ import unicode_literals
+
 
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
@@ -220,7 +220,7 @@ def convert_diff_to_v6(graph_diff):
     if not graph_diff.can_be_reprocessed:
         reasons.extend([{'name': r.name, 'description': r.description} for r in graph_diff.reasons])
 
-    for recipe_node in graph_diff._graph_b._nodes.values():
+    for recipe_node in list(graph_diff._graph_b._nodes.values()):
         name = recipe_node.node_name
         force_reprocess = name in graph_diff._force_reprocess
         if name in graph_diff._new_nodes:
@@ -250,7 +250,7 @@ def convert_diff_to_v6(graph_diff):
                     'changes': changes, 'node_type': job_type, 'dependencies': dependencies}
         nodes[name] = job_node
 
-    for recipe_node in graph_diff._graph_a._nodes.values():
+    for recipe_node in list(graph_diff._graph_a._nodes.values()):
         name = recipe_node.node_name
         if name not in graph_diff._deleted_nodes:
             continue
@@ -276,7 +276,7 @@ def convert_recipe_diff_to_v6_json(recipe_diff):
     """
 
     reasons = [{'name': r.name, 'description': r.description} for r in recipe_diff.reasons]
-    nodes_dict = {n.name: convert_node_diff_to_v6_json(n) for n in recipe_diff.graph.values()}
+    nodes_dict = {n.name: convert_node_diff_to_v6_json(n) for n in list(recipe_diff.graph.values())}
     json_dict = {'can_be_reprocessed': recipe_diff.can_be_reprocessed, 'reasons': reasons, 'nodes': nodes_dict}
 
     return RecipeDiffV6(diff=json_dict, do_validate=False)
@@ -291,7 +291,7 @@ def convert_node_diff_to_v6_json(node_diff):
     """
 
     changes = [{'name': c.name, 'description': c.description} for c in node_diff.changes]
-    dependencies = [{'name': name} for name in node_diff.parents.keys()]
+    dependencies = [{'name': name} for name in list(node_diff.parents.keys())]
 
     node_dict = {'status': node_diff.status, 'changes': changes, 'reprocess_new_node': node_diff.reprocess_new_node,
                  'force_reprocess': node_diff.force_reprocess, 'dependencies': dependencies,
@@ -333,7 +333,7 @@ class RecipeDiffV6(object):
             if do_validate:
                 validate(self._diff, RECIPE_DIFF_SCHEMA)
         except ValidationError as ex:
-            raise InvalidDiff('Invalid recipe graph diff: %s' % unicode(ex))
+            raise InvalidDiff('Invalid recipe graph diff: %s' % str(ex))
 
     def get_dict(self):
         """Returns the internal dictionary

@@ -1,5 +1,5 @@
 """Defines the JSON schema for a set of resources"""
-from __future__ import unicode_literals
+
 
 import logging
 
@@ -84,7 +84,7 @@ class Resources(object):
         """
 
         resource_list = []
-        for name, value in self._resources['resources'].items():
+        for name, value in list(self._resources['resources'].items()):
             resource_list.append(ScalarResource(name, float(value)))
         return NodeResources(resource_list)
 

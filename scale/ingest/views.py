@@ -1,5 +1,5 @@
 """Defines the views for the RESTful ingest and Strike services"""
-from __future__ import unicode_literals
+
 
 import datetime
 import logging
@@ -406,12 +406,12 @@ class ScansView(ListCreateAPIView):
         try:
             config = ScanConfigurationV1(configuration, do_validate=True).get_configuration()
         except InvalidScanConfiguration as ex:
-            raise BadParameter('Scan configuration invalid: %s' % unicode(ex))
+            raise BadParameter('Scan configuration invalid: %s' % str(ex))
 
         try:
             scan = Scan.objects.create_scan(name, title, description, config)
         except InvalidScanConfiguration as ex:
-            raise BadParameter('Scan configuration invalid: %s' % unicode(ex))
+            raise BadParameter('Scan configuration invalid: %s' % str(ex))
 
         serializer = ScanDetailsSerializerV5(scan)
         scan_url = reverse('scans_details_view', args=[scan.id], request=request)
@@ -435,12 +435,12 @@ class ScansView(ListCreateAPIView):
         try:
             config = ScanConfigurationV6(configuration, do_validate=True).get_configuration()
         except InvalidScanConfiguration as ex:
-            raise BadParameter('Scan configuration invalid: %s' % unicode(ex))
+            raise BadParameter('Scan configuration invalid: %s' % str(ex))
             
         try:
             scan = Scan.objects.create_scan(name, title, description, config)
         except InvalidScanConfiguration as ex:
-            raise BadParameter('Scan configuration invalid: %s' % unicode(ex))
+            raise BadParameter('Scan configuration invalid: %s' % str(ex))
 
         serializer = ScanDetailsSerializerV6(scan)
         scan_url = reverse('scans_details_view', args=[scan.id], request=request)
@@ -556,7 +556,7 @@ class ScansDetailsView(GenericAPIView):
             if configuration:
                 config = ScanConfigurationV1(configuration, do_validate=True).get_configuration()
         except InvalidScanConfiguration as ex:
-            raise BadParameter('Scan configuration invalid: %s' % unicode(ex))
+            raise BadParameter('Scan configuration invalid: %s' % str(ex))
             
         try:
             Scan.objects.edit_scan(scan_id, title, description, config)
@@ -566,7 +566,7 @@ class ScansDetailsView(GenericAPIView):
             raise Http404
         except InvalidScanConfiguration as ex:
             logger.exception('Unable to edit Scan process: %s', scan_id)
-            raise BadParameter(unicode(ex))
+            raise BadParameter(str(ex))
 
         serializer = self.get_serializer(scan)
         return Response(serializer.data)
@@ -591,7 +591,7 @@ class ScansDetailsView(GenericAPIView):
             if configuration:
                 config = ScanConfigurationV6(configuration, do_validate=True).get_configuration()
         except InvalidScanConfiguration as ex:
-            raise BadParameter('Scan configuration invalid: %s' % unicode(ex))
+            raise BadParameter('Scan configuration invalid: %s' % str(ex))
             
         try:
             Scan.objects.edit_scan(scan_id, title, description, config)
@@ -599,7 +599,7 @@ class ScansDetailsView(GenericAPIView):
             raise Http404
         except InvalidScanConfiguration as ex:
             logger.exception('Unable to edit Scan process: %s', scan_id)
-            raise BadParameter(unicode(ex))
+            raise BadParameter(str(ex))
 
         return Response(status=status.HTTP_204_NO_CONTENT)
         
@@ -643,7 +643,7 @@ class ScansValidationView(APIView):
             warnings = config.validate()
         except InvalidScanConfiguration as ex:
             logger.exception('Unable to validate Scan configuration.')
-            raise BadParameter(unicode(ex))
+            raise BadParameter(str(ex))
 
         results = [{'id': w.key, 'details': w.details} for w in warnings]
         return Response({'warnings': results})
@@ -759,12 +759,12 @@ class StrikesView(ListCreateAPIView):
             if configuration:
                 config = StrikeConfigurationV2(configuration, do_validate=True).get_configuration()
         except InvalidStrikeConfiguration as ex:
-            raise BadParameter('Strike configuration invalid: %s' % unicode(ex))
+            raise BadParameter('Strike configuration invalid: %s' % str(ex))
 
         try:
             strike = Strike.objects.create_strike(name, title, description, config)
         except InvalidStrikeConfiguration as ex:
-            raise BadParameter('Strike configuration invalid: %s' % unicode(ex))
+            raise BadParameter('Strike configuration invalid: %s' % str(ex))
 
         # Fetch the full strike process with details
         try:
@@ -795,12 +795,12 @@ class StrikesView(ListCreateAPIView):
             if configuration:
                 config = StrikeConfigurationV6(configuration, do_validate=True).get_configuration()
         except InvalidStrikeConfiguration as ex:
-            raise BadParameter('Strike configuration invalid: %s' % unicode(ex))
+            raise BadParameter('Strike configuration invalid: %s' % str(ex))
 
         try:
             strike = Strike.objects.create_strike(name, title, description, config)
         except InvalidStrikeConfiguration as ex:
-            raise BadParameter('Strike configuration invalid: %s' % unicode(ex))
+            raise BadParameter('Strike configuration invalid: %s' % str(ex))
 
         # Fetch the full strike process with details
         try:
@@ -905,7 +905,7 @@ class StrikeDetailsView(GenericAPIView):
             if configuration:
                 config = StrikeConfigurationV2(configuration, do_validate=True).get_configuration()
         except InvalidStrikeConfiguration as ex:
-            raise BadParameter('Strike configuration invalid: %s' % unicode(ex))
+            raise BadParameter('Strike configuration invalid: %s' % str(ex))
             
         try:
             Strike.objects.edit_strike(strike_id, title, description, config)
@@ -915,7 +915,7 @@ class StrikeDetailsView(GenericAPIView):
             raise Http404
         except InvalidStrikeConfiguration as ex:
             logger.exception('Unable to edit Strike process: %s', strike_id)
-            raise BadParameter(unicode(ex))
+            raise BadParameter(str(ex))
 
         serializer = self.get_serializer(strike)
         return Response(serializer.data)
@@ -940,7 +940,7 @@ class StrikeDetailsView(GenericAPIView):
             if configuration:
                 config = StrikeConfigurationV6(configuration, do_validate=True).get_configuration()
         except InvalidStrikeConfiguration as ex:
-            raise BadParameter('Strike configuration invalid: %s' % unicode(ex))
+            raise BadParameter('Strike configuration invalid: %s' % str(ex))
 
         try:
             Strike.objects.edit_strike(strike_id, title, description, config)
@@ -948,7 +948,7 @@ class StrikeDetailsView(GenericAPIView):
             raise Http404
         except InvalidStrikeConfiguration as ex:
             logger.exception('Unable to edit Strike process: %s', strike_id)
-            raise BadParameter(unicode(ex))
+            raise BadParameter(str(ex))
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -996,7 +996,7 @@ class StrikesValidationView(APIView):
             warnings = config.validate()
         except InvalidStrikeConfiguration as ex:
             logger.exception('Unable to validate new Strike process: %s', name)
-            raise BadParameter(unicode(ex))
+            raise BadParameter(str(ex))
 
         results = [{'id': w.key, 'details': w.details} for w in warnings]
         return Response({'warnings': results})

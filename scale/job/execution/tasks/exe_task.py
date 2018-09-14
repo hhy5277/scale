@@ -1,5 +1,5 @@
 """Defines the abstract base class for all job execution tasks"""
-from __future__ import unicode_literals
+
 
 from abc import ABCMeta, abstractmethod
 
@@ -10,11 +10,9 @@ from job.tasks.base_task import Task
 JOB_TASK_ID_PREFIX = 'scale_job'
 
 
-class JobExecutionTask(Task):
+class JobExecutionTask(Task, metaclass=ABCMeta):
     """Abstract base class for a job execution task
     """
-
-    __metaclass__ = ABCMeta
 
     def __init__(self, task_id, agent_id, job_exe, job_type):
         """Constructor

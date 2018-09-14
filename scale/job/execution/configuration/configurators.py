@@ -1,7 +1,7 @@
 """Defines the classes that handle processing job and execution configuration"""
-from __future__ import unicode_literals
 
-import json
+
+from . import json
 import logging
 import math
 
@@ -77,7 +77,7 @@ class QueuedExecutionConfigurator(object):
                 # Set output workspaces using legacy job data
                 self._cache_workspace_names(data.get_output_workspace_ids())
                 output_workspaces = {}
-                for output, workspace_id in data.get_output_workspaces().items():
+                for output, workspace_id in list(data.get_output_workspaces().items()):
                     output_workspaces[output] = self._cached_workspace_names[workspace_id]
                 config.set_output_workspaces(output_workspaces)
             else:
@@ -125,7 +125,7 @@ class QueuedExecutionConfigurator(object):
 
         files_dict = {}
 
-        for input_name, file_ids in job_data.get_input_file_ids_by_input().items():
+        for input_name, file_ids in list(job_data.get_input_file_ids_by_input().items()):
             file_list = []
             file_names = set()
             for file_id in file_ids:
@@ -199,7 +199,7 @@ class QueuedExecutionConfigurator(object):
         # Configure Scale Delete Files workspaces based on input workspaces
         if job.job_type.name == 'scale-delete-files':
             wrkspc_list = json.loads(data.get_property_values(['workspaces'])['workspaces'])
-            workspaces = {w_name: TaskWorkspace(w_name, MODE_RW) for d in wrkspc_list for w_name, _v in d.items()}
+            workspaces = {w_name: TaskWorkspace(w_name, MODE_RW) for d in wrkspc_list for w_name, _v in list(d.items())}
 
         return workspaces
 
@@ -223,7 +223,7 @@ class ScheduledExecutionConfigurator(object):
                                  'SCALE_DB_HOST': db['HOST'], 'SCALE_DB_PORT': db['PORT']}
         if settings.QUEUE_NAME:
             self._system_settings['SCALE_QUEUE_NAME'] = settings.QUEUE_NAME
-        self._system_settings_hidden = {key: '*****' for key in self._system_settings.keys()}
+        self._system_settings_hidden = {key: '*****' for key in list(self._system_settings.keys())}
 
     def configure_scheduled_job(self, job_exe, job_type, interface, system_logging_level):
         """Configures the JSON configuration field for the given scheduled job execution. The given job_exe and job_type
@@ -283,12 +283,12 @@ class ScheduledExecutionConfigurator(object):
                 env_vars[env_name] = '%.1f' % resource.value  # Assumes scalar resources
 
             # Configure env vars for Scale meta-data
-            env_vars['SCALE_JOB_ID'] = unicode(job_exe.job_id)
-            env_vars['SCALE_EXE_NUM'] = unicode(job_exe.exe_num)
+            env_vars['SCALE_JOB_ID'] = str(job_exe.job_id)
+            env_vars['SCALE_EXE_NUM'] = str(job_exe.exe_num)
             if job_exe.recipe_id:
-                env_vars['SCALE_RECIPE_ID'] = unicode(job_exe.recipe_id)
+                env_vars['SCALE_RECIPE_ID'] = str(job_exe.recipe_id)
             if job_exe.batch_id:
-                env_vars['SCALE_BATCH_ID'] = unicode(job_exe.batch_id)
+                env_vars['SCALE_BATCH_ID'] = str(job_exe.batch_id)
 
             # Configure workspace volumes
             workspace_volumes = {}
@@ -515,7 +515,7 @@ class ScheduledExecutionConfigurator(object):
         for _config in [config, config_with_secrets]:
             for task_type in _config.get_task_types():
                 env_vars = {}
-                for name, value in _config.get_settings(task_type).items():
+                for name, value in list(_config.get_settings(task_type).items()):
                     if value is not None:
                         env_name = normalize_env_var_name(name)
                         env_vars[env_name] = value
@@ -526,9 +526,9 @@ class ScheduledExecutionConfigurator(object):
             existing_volumes = set()
             for task_type in _config.get_task_types():
                 docker_params = []
-                for name, value in _config.get_env_vars(task_type).items():
+                for name, value in list(_config.get_env_vars(task_type).items()):
                     docker_params.append(DockerParameter('env', '%s=%s' % (name, value)))
-                for name, volume in _config.get_volumes(task_type).items():
+                for name, volume in list(_config.get_volumes(task_type).items()):
                     docker_params.append(volume.to_docker_param(is_created=(name in existing_volumes)))
                     existing_volumes.add(name)
                 _config.add_to_task(task_type, docker_params=docker_params)
@@ -537,7 +537,7 @@ class ScheduledExecutionConfigurator(object):
         # Configure docker parameters listed in job type
         if job_type.docker_params:
             docker_params = []
-            for key, value in job_type.docker_params.items():
+            for key, value in list(job_type.docker_params.items()):
                 docker_params.append(DockerParameter(key, value))
             if docker_params:
                 config.add_to_task('main', docker_params=docker_params)

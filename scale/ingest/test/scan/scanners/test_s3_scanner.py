@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 
 import django
 from django.test import TestCase
@@ -37,7 +37,7 @@ class TestS3Scanner(TestCase):
 
         scanner = S3Scanner()
         scanner.load_configuration(config)
-        self.assertEquals(scanner._scanner_type, 's3')
+        self.assertEqual(scanner._scanner_type, 's3')
 
     def test_validate_configuration_extra_key(self):
         """Tests calling S3Scanner.validate_configuration() with extra key"""
@@ -78,7 +78,7 @@ class TestScanner(TestCase):
         scanner._process_scanned([])
 
         # Ensure no files were detected
-        self.assertEquals(scanner._count, 0)
+        self.assertEqual(scanner._count, 0)
 
     @patch('ingest.scan.scanners.s3_scanner.S3Scanner._deduplicate_ingest_list')
     @patch('ingest.scan.scanners.s3_scanner.S3Scanner._ingest_file', return_value=None)
@@ -91,7 +91,7 @@ class TestScanner(TestCase):
         scanner._process_scanned([FileDetails('test', 0)])
 
         # Ensure we counted the one file
-        self.assertEquals(scanner._count, 1)
+        self.assertEqual(scanner._count, 1)
         # Ensure the ingest file method was called
         self.assertTrue(ingest_file.called)
         # Verify we returned prior to calling _deduplicate_ingest_list 
@@ -109,7 +109,7 @@ class TestScanner(TestCase):
         scanner._process_scanned([FileDetails('test', 0)])
 
         # Ensure we counted the one file
-        self.assertEquals(scanner._count, 1)
+        self.assertEqual(scanner._count, 1)
         # Ensure the ingest file method was called
         self.assertTrue(process_ingest.called)
         # Verify we returned prior to calling _deduplicate_ingest_list
@@ -125,9 +125,9 @@ class TestScanner(TestCase):
         scanner._process_scanned([FileDetails('test1', 0), FileDetails('test2', 0)])
 
         # Verify that 2 files were received
-        self.assertEquals(scanner._count, 2)
+        self.assertEqual(scanner._count, 2)
         # Verify that _ingest_file was called twice
-        self.assertEquals(ingest_file.call_count, 2)
+        self.assertEqual(ingest_file.call_count, 2)
 
         # Verify that all method calls were made from callback method
         self.assertTrue(dedup.called)
@@ -153,8 +153,8 @@ class TestScanner(TestCase):
         ingests = [Ingest(file_name='test1'), Ingest(file_name='test1')]
         final_ingests = S3Scanner._deduplicate_ingest_list(None, ingests)
 
-        self.assertEquals(len(final_ingests), 1)
-        self.assertEquals(final_ingests[0].file_name, 'test1')
+        self.assertEqual(len(final_ingests), 1)
+        self.assertEqual(final_ingests[0].file_name, 'test1')
 
     @patch('ingest.models.Ingest.objects.get_ingests_by_scan')
     def test_deduplicate_ingest_list_with_existing_no_other_dups(self, ingests_by_scan):
@@ -165,8 +165,8 @@ class TestScanner(TestCase):
         ingests = [Ingest(file_name='test1'), Ingest(file_name='test2')]
         final_ingests = S3Scanner._deduplicate_ingest_list(None, ingests)
 
-        self.assertEquals(len(final_ingests), 1)
-        self.assertEquals(final_ingests[0].file_name, 'test2')
+        self.assertEqual(len(final_ingests), 1)
+        self.assertEqual(final_ingests[0].file_name, 'test2')
 
     def test_set_recursive_false(self):
         """Tests calling S3Scanner.set_recursive() to false"""

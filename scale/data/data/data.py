@@ -1,6 +1,6 @@
 """Defines the class for handling data"""
-from __future__ import absolute_import
-from __future__ import unicode_literals
+
+
 
 from data.data.exceptions import InvalidData
 
@@ -62,12 +62,12 @@ class Data(object):
         warnings = []
 
         # Remove extra data values
-        for data_value in self.values.values():
+        for data_value in list(self.values.values()):
             if data_value.name not in interface.parameters:
                 del self.values[data_value.name]
 
         # Check the data value being passed to each parameter
-        for parameter in interface.parameters.values():
+        for parameter in list(interface.parameters.values()):
             if parameter.name in self.values:
                 data_value = self.values[parameter.name]
                 warnings.extend(data_value.validate(parameter))

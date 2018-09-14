@@ -1,5 +1,5 @@
 """Defines an input file and its meta-data in an execution configuration"""
-from __future__ import unicode_literals
+
 
 
 class InputFile(object):

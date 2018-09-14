@@ -1,5 +1,5 @@
 """Defines the views for the RESTful source services"""
-from __future__ import unicode_literals
+
 
 import logging
 

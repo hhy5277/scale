@@ -1,5 +1,5 @@
 """Defines the class that manages all scheduler cleanup tasks"""
-from __future__ import unicode_literals
+
 
 import threading
 

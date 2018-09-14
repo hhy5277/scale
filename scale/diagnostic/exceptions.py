@@ -1,5 +1,5 @@
 """Defines the exceptions related to diagnostics"""
-from __future__ import unicode_literals
+
 
 from error.exceptions import ScaleError
 

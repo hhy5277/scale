@@ -1,14 +1,12 @@
 """Defines the classes for handling recipe node connections"""
-from __future__ import unicode_literals
+
 
 from abc import ABCMeta, abstractmethod
 
 
-class NodeInputConnection(object):
+class NodeInputConnection(object, metaclass=ABCMeta):
     """Abstract base class that represents a connection to a recipe node input
     """
-
-    __metaclass__ = ABCMeta
 
     def __init__(self, input_name):
         """Constructor

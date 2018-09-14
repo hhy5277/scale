@@ -1,5 +1,5 @@
 """Defines utility methods for testing source files"""
-from __future__ import unicode_literals
+
 
 import hashlib
 

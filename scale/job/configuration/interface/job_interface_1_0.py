@@ -1,5 +1,5 @@
 """Defines the interface for executing a job"""
-from __future__ import unicode_literals
+
 
 import json
 import logging
@@ -515,7 +515,7 @@ class JobInterface(object):
                 artifacts_found[artifact_name]['paths'] = paths
             else:
                 artifacts_found[artifact_name] = {'name': artifact_name, 'path': artifact_path}
-        return artifacts_found.values()
+        return list(artifacts_found.values())
 
     def _get_one_file_from_directory(self, dir_path):
         """Checks a directory for one and only one file.  If there is not one file, raise a
@@ -593,7 +593,7 @@ class JobInterface(object):
         """
         ret_str = command_arguments
 
-        for param_name, param_value in param_replacements.iteritems():
+        for param_name, param_value in param_replacements.items():
             param_pattern = '\$\{([^\}]*\:)?' + re.escape(param_name) + '\}'
             pattern_prog = re.compile(param_pattern)
 

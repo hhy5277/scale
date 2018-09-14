@@ -1,5 +1,5 @@
 """Defines the data file inputs and data file outputs that are contained within job data"""
-from __future__ import unicode_literals
+
 
 from abc import ABCMeta
 
@@ -14,12 +14,10 @@ DATA_FILE_PARSE_SAVER = {'DATA_FILE_PARSE_SAVER': None}
 DATA_FILE_STORE = {'DATA_FILE_STORE': None}
 
 
-class AbstractDataFileParseSaver(object):
+class AbstractDataFileParseSaver(object, metaclass=ABCMeta):
     """Abstract base class for a data file parse saver. A data file parse saver provides a way to save parse results for
     input data files.
     """
-
-    __metaclass__ = ABCMeta
 
     def save_parse_results(self, parse_results, input_file_ids):
         """Saves the given parse results
@@ -37,12 +35,10 @@ class AbstractDataFileParseSaver(object):
         raise NotImplementedError()
 
 
-class AbstractDataFileStore(object):
+class AbstractDataFileStore(object, metaclass=ABCMeta):
     """Abstract base class for a data file store. A data file store provides a way to validate data file output
     configuration and store output data files.
     """
-
-    __metaclass__ = ABCMeta
 
     def get_workspaces(self, workspace_ids):
         """Retrieves the workspaces with the given IDs. If no workspace has a given ID, it will not be retrieved.

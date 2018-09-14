@@ -1,5 +1,5 @@
 """Defines functions for geospatial information"""
-from __future__ import unicode_literals
+
 
 import json
 

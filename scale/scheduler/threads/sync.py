@@ -1,5 +1,5 @@
 """Defines the class that manages the synchronization background thread"""
-from __future__ import unicode_literals
+
 
 import datetime
 import logging

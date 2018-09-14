@@ -1,5 +1,5 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
+
+
 
 import logging
 
@@ -170,7 +170,7 @@ class JobTypesView(ListCreateAPIView):
             if interface_dict:
                 interface = JobInterfaceSunset.create(interface_dict)
         except InvalidInterfaceDefinition as ex:
-            raise BadParameter('Job type interface invalid: %s' % unicode(ex))
+            raise BadParameter('Job type interface invalid: %s' % str(ex))
 
         # Validate the job configuration and pull out secrets
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
@@ -182,7 +182,7 @@ class JobTypesView(ListCreateAPIView):
                 secrets = configuration.get_secret_settings(interface.get_dict())
                 configuration.validate(interface.get_dict())
         except InvalidJobConfiguration as ex:
-            raise BadParameter('Job type configuration invalid: %s' % unicode(ex))
+            raise BadParameter('Job type configuration invalid: %s' % str(ex))
 
         # Validate the error mapping
         error_dict = rest_util.parse_dict(request, 'error_mapping', required=False)
@@ -192,7 +192,7 @@ class JobTypesView(ListCreateAPIView):
                 error_mapping = create_legacy_error_mapping(error_dict)
                 error_mapping.validate_legacy()
         except InvalidInterfaceDefinition as ex:
-            raise BadParameter('Job type error mapping invalid: %s' % unicode(ex))
+            raise BadParameter('Job type error mapping invalid: %s' % str(ex))
 
         # Validate the custom resources
         resources_dict = rest_util.parse_dict(request, 'custom_resources', required=False)
@@ -201,7 +201,7 @@ class JobTypesView(ListCreateAPIView):
             if resources_dict:
                 custom_resources = Resources(resources_dict)
         except InvalidResources as ex:
-            raise BadParameter('Job type custom resources invalid: %s' % unicode(ex))
+            raise BadParameter('Job type custom resources invalid: %s' % str(ex))
 
         # Check for optional trigger rule parameters
         trigger_rule_dict = rest_util.parse_dict(request, 'trigger_rule', required=False)
@@ -217,14 +217,14 @@ class JobTypesView(ListCreateAPIView):
                 rule_handler = trigger_handler.get_trigger_rule_handler(trigger_rule_dict['type'])
             except InvalidTriggerType as ex:
                 logger.exception('Invalid trigger type for new job type: %s', name)
-                raise BadParameter(unicode(ex))
+                raise BadParameter(str(ex))
 
         # Extract the fields that should be updated as keyword arguments
         extra_fields = {}
         # TODO: Remove interface from base_fields in v6
         base_fields = {'name', 'version', 'interface', 'manifest', 'trigger_rule', 'error_mapping', 'custom_resources',
                        'configuration'}
-        for key, value in request.data.iteritems():
+        for key, value in request.data.items():
             if key not in base_fields and key not in JobType.UNEDITABLE_FIELDS:
                 extra_fields[key] = value
         if title:
@@ -252,7 +252,7 @@ class JobTypesView(ListCreateAPIView):
         except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection,
                 InvalidSecretsConfiguration, ValueError) as ex:
             logger.exception('Unable to create new job type: %s', name)
-            raise BadParameter(unicode(ex))
+            raise BadParameter(str(ex))
 
         # Fetch the full job type with details
         try:
@@ -293,7 +293,7 @@ class JobTypesView(ListCreateAPIView):
         except InvalidSeedManifestDefinition as ex:
             message = 'Seed Manifest invalid'
             logger.exception(message)
-            raise BadParameter('%s: %s' % (message, unicode(ex)))
+            raise BadParameter('%s: %s' % (message, str(ex)))
 
         # Validate the job configuration and pull out secrets
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
@@ -305,11 +305,11 @@ class JobTypesView(ListCreateAPIView):
             except InvalidJobConfiguration as ex:
                 message = 'Job type configuration invalid'
                 logger.exception(message)
-                raise BadParameter('%s: %s' % (message, unicode(ex)))
+                raise BadParameter('%s: %s' % (message, str(ex)))
 
         # Check for invalid fields
         fields = {'icon_code', 'max_scheduled', 'docker_image', 'configuration', 'manifest'}
-        for key, value in request.data.iteritems():
+        for key, value in request.data.items():
             if key not in fields:
                 raise InvalidJobField
 
@@ -329,15 +329,15 @@ class JobTypesView(ListCreateAPIView):
             except (InvalidJobField, InvalidSecretsConfiguration, ValueError) as ex:
                 message = 'Unable to create new job type'
                 logger.exception(message)
-                raise BadParameter('%s: %s' % (message, unicode(ex)))
+                raise BadParameter('%s: %s' % (message, str(ex)))
             except InvalidSeedManifestDefinition as ex:
                 message = 'Job type manifest invalid'
                 logger.exception(message)
-                raise BadParameter('%s: %s' % (message, unicode(ex)))
+                raise BadParameter('%s: %s' % (message, str(ex)))
             except InvalidJobConfiguration as ex:
                 message = 'Job type configuration invalid'
                 logger.exception(message)
-                raise BadParameter('%s: %s' % (message, unicode(ex)))
+                raise BadParameter('%s: %s' % (message, str(ex)))
         else:
             try:
                 JobType.objects.edit_job_type_v6(job_type_id=existing_job_type.id, manifest=manifest,
@@ -346,15 +346,15 @@ class JobTypesView(ListCreateAPIView):
                                                  configuration=configuration)
             except (InvalidJobField, InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
                 logger.exception('Unable to update job type: %i', existing_job_type.id)
-                raise BadParameter(unicode(ex))
+                raise BadParameter(str(ex))
             except InvalidSeedManifestDefinition as ex:
                 message = 'Job type manifest invalid'
                 logger.exception(message)
-                raise BadParameter('%s: %s' % (message, unicode(ex)))
+                raise BadParameter('%s: %s' % (message, str(ex)))
             except InvalidJobConfiguration as ex:
                 message = 'Job type configuration invalid'
                 logger.exception(message)
-                raise BadParameter('%s: %s' % (message, unicode(ex)))
+                raise BadParameter('%s: %s' % (message, str(ex)))
 
         # Fetch the full job type with details
         try:
@@ -442,7 +442,7 @@ class JobTypeIDDetailsView(GenericAPIView):
             if interface_dict:
                 interface = JobInterface(interface_dict)
         except InvalidInterfaceDefinition as ex:
-            raise BadParameter('Job type interface invalid: %s' % unicode(ex))
+            raise BadParameter('Job type interface invalid: %s' % str(ex))
 
         # Validate the job configuration and pull out secrets
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
@@ -459,7 +459,7 @@ class JobTypeIDDetailsView(GenericAPIView):
                     secrets = configuration.get_secret_settings(stored_interface)
                     configuration.validate(stored_interface)
         except InvalidJobConfiguration as ex:
-            raise BadParameter('Job type configuration invalid: %s' % unicode(ex))
+            raise BadParameter('Job type configuration invalid: %s' % str(ex))
 
         # Validate the error mapping
         error_dict = rest_util.parse_dict(request, 'error_mapping', required=False)
@@ -469,7 +469,7 @@ class JobTypeIDDetailsView(GenericAPIView):
                 error_mapping = create_legacy_error_mapping(error_dict)
                 error_mapping.validate_legacy()
         except InvalidInterfaceDefinition as ex:
-            raise BadParameter('Job type error mapping invalid: %s' % unicode(ex))
+            raise BadParameter('Job type error mapping invalid: %s' % str(ex))
 
         # Validate the custom resources
         resources_dict = rest_util.parse_dict(request, 'custom_resources', required=False)
@@ -478,7 +478,7 @@ class JobTypeIDDetailsView(GenericAPIView):
             if resources_dict:
                 custom_resources = Resources(resources_dict)
         except InvalidResources as ex:
-            raise BadParameter('Job type custom resources invalid: %s' % unicode(ex))
+            raise BadParameter('Job type custom resources invalid: %s' % str(ex))
 
         # Check for optional trigger rule parameters
         trigger_rule_dict = rest_util.parse_dict(request, 'trigger_rule', required=False)
@@ -501,13 +501,13 @@ class JobTypeIDDetailsView(GenericAPIView):
                 rule_handler = trigger_handler.get_trigger_rule_handler(trigger_rule_dict['type'])
             except InvalidTriggerType as ex:
                 logger.exception('Invalid trigger type for job type: %i', job_type_id)
-                raise BadParameter(unicode(ex))
+                raise BadParameter(str(ex))
 
         # Extract the fields that should be updated as keyword arguments
         extra_fields = {}
         base_fields = {'name', 'version', 'interface', 'manifest', 'trigger_rule', 'error_mapping', 'custom_resources',
                        'configuration'}
-        for key, value in request.data.iteritems():
+        for key, value in request.data.items():
             if key not in base_fields and key not in JobType.UNEDITABLE_FIELDS:
                 extra_fields[key] = value
         # Change mem_required to mem_const_required, TODO: remove once mem_required field is removed from REST API
@@ -537,7 +537,7 @@ class JobTypeIDDetailsView(GenericAPIView):
         except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition,
                 InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
             logger.exception('Unable to update job type: %i', job_type_id)
-            raise BadParameter(unicode(ex))
+            raise BadParameter(str(ex))
 
         # Fetch the full job type with details
         try:
@@ -672,7 +672,7 @@ class JobTypeDetailsView(GenericAPIView):
             if configuration_dict:
                 configuration = JobConfigurationV6(configuration_dict).get_configuration()
         except InvalidJobConfiguration as ex:
-            raise BadParameter('Job type configuration invalid: %s' % unicode(ex))
+            raise BadParameter('Job type configuration invalid: %s' % str(ex))
 
         # Fetch the current job type model
         try:
@@ -682,7 +682,7 @@ class JobTypeDetailsView(GenericAPIView):
 
         # Check for invalid fields
         fields = {'icon_code', 'is_active', 'is_paused', 'max_scheduled', 'configuration'}
-        for key, value in request.data.iteritems():
+        for key, value in request.data.items():
             if key not in fields:
                 raise InvalidJobField
 
@@ -696,7 +696,7 @@ class JobTypeDetailsView(GenericAPIView):
         except (InvalidJobField, InvalidSecretsConfiguration, ValueError,
                 InvalidJobConfiguration, InvalidInterfaceDefinition) as ex:
             logger.exception('Unable to update job type: %i', job_type.id)
-            raise BadParameter(unicode(ex))
+            raise BadParameter(str(ex))
 
         return HttpResponse(status=204)
 
@@ -844,7 +844,7 @@ class JobTypesValidationView(APIView):
             if interface_dict:
                 interface = JobInterfaceSunset.create(interface_dict)
         except InvalidInterfaceDefinition as ex:
-            raise BadParameter('Job type interface invalid: %s' % unicode(ex))
+            raise BadParameter('Job type interface invalid: %s' % str(ex))
 
         # Pull down top-level fields from Seed Interface
         if manifest_dict:
@@ -860,7 +860,7 @@ class JobTypesValidationView(APIView):
         try:
             configuration = JobConfigurationV2(configuration_dict)
         except InvalidJobConfiguration as ex:
-            raise BadParameter('Job type configuration invalid: %s' % unicode(ex))
+            raise BadParameter('Job type configuration invalid: %s' % str(ex))
 
         # Validate the error mapping
         error_dict = rest_util.parse_dict(request, 'error_mapping', required=False)
@@ -870,7 +870,7 @@ class JobTypesValidationView(APIView):
                 error_mapping = create_legacy_error_mapping(error_dict)
                 error_mapping.validate_legacy()
         except InvalidInterfaceDefinition as ex:
-            raise BadParameter('Job type error mapping invalid: %s' % unicode(ex))
+            raise BadParameter('Job type error mapping invalid: %s' % str(ex))
 
         # Validate the custom resources
         resources_dict = rest_util.parse_dict(request, 'custom_resources', required=False)
@@ -878,7 +878,7 @@ class JobTypesValidationView(APIView):
             if resources_dict:
                 Resources(resources_dict)
         except InvalidResources as ex:
-            raise BadParameter('Job type custom resources invalid: %s' % unicode(ex))
+            raise BadParameter('Job type custom resources invalid: %s' % str(ex))
 
         # Check for optional trigger rule parameters
         trigger_rule_dict = rest_util.parse_dict(request, 'trigger_rule', required=False)
@@ -893,7 +893,7 @@ class JobTypesValidationView(APIView):
                 rule_handler = trigger_handler.get_trigger_rule_handler(trigger_rule_dict['type'])
             except InvalidTriggerType as ex:
                 logger.exception('Invalid trigger type for job validation: %s', name)
-                raise BadParameter(unicode(ex))
+                raise BadParameter(str(ex))
 
         # Attempt to look up the trigger rule configuration
         trigger_config = None
@@ -902,7 +902,7 @@ class JobTypesValidationView(APIView):
                 trigger_config = rule_handler.create_configuration(trigger_rule_dict['configuration'])
             except InvalidTriggerRule as ex:
                 logger.exception('Invalid trigger rule configuration for job validation: %s', name)
-                raise BadParameter(unicode(ex))
+                raise BadParameter(str(ex))
 
         # Validate the job type
         try:
@@ -911,7 +911,7 @@ class JobTypesValidationView(APIView):
                                                             configuration=configuration)
         except (InvalidInterfaceDefinition, InvalidDefinition, InvalidTriggerType, InvalidTriggerRule) as ex:
             logger.exception('Unable to validate new job type: %s', name)
-            raise BadParameter(unicode(ex))
+            raise BadParameter(str(ex))
 
         results = [{'id': w.key, 'details': w.details} for w in warnings]
         return Response({'warnings': results})

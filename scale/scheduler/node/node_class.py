@@ -1,5 +1,5 @@
 """Defines the class that represents nodes in the scheduler"""
-from __future__ import unicode_literals
+
 
 import datetime
 import logging

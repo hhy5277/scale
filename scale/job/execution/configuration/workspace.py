@@ -1,5 +1,5 @@
 """Defines a workspace that is needed by a task"""
-from __future__ import unicode_literals
+
 
 
 class TaskWorkspace(object):

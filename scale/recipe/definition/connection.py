@@ -1,16 +1,14 @@
 """Defines the classes for representing a connection between two interface parameters within a recipe definition"""
-from __future__ import unicode_literals
+
 
 from abc import ABCMeta, abstractmethod
 
 from data.interface.exceptions import InvalidInterfaceConnection
 
 
-class InputConnection(object):
+class InputConnection(object, metaclass=ABCMeta):
     """Abstract base class that represents a connection between two interface parameters
     """
-
-    __metaclass__ = ABCMeta
 
     def __init__(self, input_name):
         """Constructor

@@ -1,5 +1,5 @@
 """Defines the views for the RESTful import/export services"""
-from __future__ import unicode_literals
+
 
 import json
 import logging
@@ -109,7 +109,7 @@ class ConfigurationView(APIView):
             warnings = importer.import_config(import_dict)
         except (InvalidConfiguration, InvalidTriggerType) as ex:
             logger.exception('Unable to import configuration.')
-            raise BadParameter(unicode(ex))
+            raise BadParameter(str(ex))
 
         results = [{'id': w.key, 'details': w.details} for w in warnings]
         return Response({'warnings': results})
@@ -150,7 +150,7 @@ class ConfigurationUploadView(APIView):
             # File content must be already processed by the request
             if len(request.data) != 1:
                 return Response('Missing embedded file content.', status=status.HTTP_400_BAD_REQUEST)
-            file_handle = request.data.values()[0]
+            file_handle = list(request.data.values())[0]
             file_name = file_handle.name
             file_content = file_handle
 
@@ -169,7 +169,7 @@ class ConfigurationUploadView(APIView):
             warnings = importer.import_config(import_dict)
         except InvalidConfiguration as ex:
             logger.exception('Unable to import configuration.')
-            raise BadParameter(unicode(ex))
+            raise BadParameter(str(ex))
 
         results = [{'id': w.key, 'details': w.details} for w in warnings]
         return Response({'warnings': results})
@@ -196,7 +196,7 @@ class ConfigurationValidationView(APIView):
             warnings = importer.validate_config(import_dict)
         except InvalidConfiguration as ex:
             logger.exception('Unable to validate import configuration.')
-            raise BadParameter(unicode(ex))
+            raise BadParameter(str(ex))
 
         results = [{'id': w.key, 'details': w.details} for w in warnings]
         return Response({'warnings': results})

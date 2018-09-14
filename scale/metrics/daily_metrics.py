@@ -1,5 +1,5 @@
 """Defines the clock event processor for daily system metrics."""
-from __future__ import unicode_literals
+
 import datetime
 import logging
 
@@ -30,7 +30,7 @@ class DailyMetricsProcessor(ClockEventProcessor):
 
         if last_event:
             # Build a list of days that require metrics
-            day_count = xrange((event.occurred.date() - last_event.occurred.date()).days)
+            day_count = range((event.occurred.date() - last_event.occurred.date()).days)
             days = [last_event.occurred.date() + datetime.timedelta(days=d) for d in day_count]
         else:
             # Use the previous day when first triggered

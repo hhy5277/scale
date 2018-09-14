@@ -1,5 +1,5 @@
 """Defines a monitor that watches a file system directory for incoming files"""
-from __future__ import unicode_literals
+
 
 import logging
 import math
@@ -80,7 +80,7 @@ class DirWatcherMonitor(Monitor):
 
         if 'transfer_suffix' not in configuration:
             raise InvalidMonitorConfiguration('transfer_suffix is required for dir-watcher monitor')
-        if not isinstance(configuration['transfer_suffix'], basestring):
+        if not isinstance(configuration['transfer_suffix'], str):
             raise InvalidMonitorConfiguration('transfer_suffix must be a string')
         if not configuration['transfer_suffix']:
             raise InvalidMonitorConfiguration('transfer_suffix must be a non-empty string')
@@ -105,10 +105,10 @@ class DirWatcherMonitor(Monitor):
 
         if not os.path.exists(self._deferred_dir):
             logger.info('Creating %s', self._deferred_dir)
-            os.makedirs(self._deferred_dir, mode=0755)
+            os.makedirs(self._deferred_dir, mode=0o755)
         if not os.path.exists(self._ingest_dir):
             logger.info('Creating %s', self._ingest_dir)
-            os.makedirs(self._ingest_dir, mode=0755)
+            os.makedirs(self._ingest_dir, mode=0o755)
 
     def _is_still_transferring(self, file_name):
         """ Indicates whether the given file in the Strike directory is still transferring
@@ -195,7 +195,7 @@ class DirWatcherMonitor(Monitor):
                 logger.exception('Error processing %s', file_path)
 
         # Process ingests where the file is missing from the Strike dir
-        for file_name in ingests.iterkeys():
+        for file_name in ingests.keys():
             ingest = ingests[file_name]
             logger.warning('Processing ingest for missing file %s', file_name)
             try:

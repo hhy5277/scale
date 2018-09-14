@@ -1,5 +1,5 @@
 """Defines exceptions that can occur when interacting with a job results"""
-from __future__ import unicode_literals
+
 
 from error.exceptions import ScaleError
 

@@ -1,5 +1,5 @@
 """Defines the command line method for downloading a file"""
-from __future__ import unicode_literals
+
 
 import logging
 import os

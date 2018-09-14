@@ -1,5 +1,5 @@
 """Defines a command message that sets COMPLETED status for job models"""
-from __future__ import unicode_literals
+
 
 import logging
 from collections import namedtuple

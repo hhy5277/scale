@@ -1,5 +1,5 @@
 """Defines the class for representing a recipe definition"""
-from __future__ import unicode_literals
+
 
 from data.interface.exceptions import InvalidInterface
 from recipe.definition.connection import DependencyInputConnection, RecipeInputConnection
@@ -253,7 +253,7 @@ class RecipeDefinition(object):
 
         if node.name not in perm_set:
             temp_set.add(node.name)
-            for child_node in node.children.values():
+            for child_node in list(node.children.values()):
                 self._topological_order_visit(child_node, results, perm_set, temp_set)
             perm_set.add(node.name)
             temp_set.remove(node.name)

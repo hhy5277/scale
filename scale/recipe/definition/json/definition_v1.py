@@ -1,5 +1,5 @@
 """Defines the class for managing a recipe definition"""
-from __future__ import unicode_literals
+
 
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
@@ -171,7 +171,7 @@ def convert_recipe_definition_to_v1_json(definition):
     """
 
     input_data = []
-    for parameter in definition.input_interface.parameters.values():
+    for parameter in list(definition.input_interface.parameters.values()):
         input_data_dict = {'name': parameter.name, 'required': parameter.required}
         if parameter.param_type == FileParameter.PARAM_TYPE:
             input_data_dict['type'] = 'files' if parameter.multiple else 'file'
@@ -182,7 +182,7 @@ def convert_recipe_definition_to_v1_json(definition):
             input_data.append(input_data_dict)
 
     jobs = []
-    for node in definition.graph.values():
+    for node in list(definition.graph.values()):
         if node.node_type == JobNodeDefinition.NODE_TYPE:
             jobs.append(convert_job_to_v1_json(node))
 
@@ -204,7 +204,7 @@ def convert_job_to_v1_json(node):
     dependencies = []
     connections = {}  # {Dependency name: [Connection]}
     recipe_inputs = []
-    for conn in node.connections.values():
+    for conn in list(node.connections.values()):
         if isinstance(conn, DependencyInputConnection):
             conn_dict = {'output': conn.output_name, 'input': conn.input_name}
             if conn.node_name not in connections:
@@ -213,10 +213,10 @@ def convert_job_to_v1_json(node):
         elif isinstance(conn, RecipeInputConnection):
             recipe_inputs.append({'recipe_input': conn.recipe_input_name, 'job_input': conn.input_name})
 
-    for d_name, conns in connections.items():
+    for d_name, conns in list(connections.items()):
         dependencies.append({'name': d_name, 'connections': conns})
         dependency_names.add(d_name)
-    for d_name in node.parents.keys():
+    for d_name in list(node.parents.keys()):
         if d_name not in dependency_names:
             dependencies.append({'name': d_name, 'connections': []})
             dependency_names.add(d_name)
@@ -258,7 +258,7 @@ class RecipeDefinitionV1(object):
             if do_validate:
                 validate(definition, RECIPE_DEFINITION_SCHEMA)
         except ValidationError as ex:
-            raise InvalidDefinition('INVALID_DEFINITION', 'Invalid recipe definition: %s' % unicode(ex))
+            raise InvalidDefinition('INVALID_DEFINITION', 'Invalid recipe definition: %s' % str(ex))
 
     def get_dict(self):
         """Returns the internal dictionary that represents this recipe definition

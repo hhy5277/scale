@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 
 from copy import deepcopy
 from datetime import datetime
@@ -176,7 +176,7 @@ class TestSQSClient(TestCase):
 
         with SQSClient(self.credentials, self.region_name) as client:
             results = list(client.receive_messages('queue', batch_size=1))
-            self.assertEquals(results, outputs)
+            self.assertEqual(results, outputs)
 
         receive_messages.assert_called_once()
         receive_messages.assert_called_with(MaxNumberOfMessages=1, VisibilityTimeout=30, WaitTimeSeconds=20)
@@ -190,21 +190,21 @@ class TestSQSClient(TestCase):
 
         with SQSClient(self.credentials, self.region_name) as client:
             results = list(client.receive_messages('queue', batch_size=100))
-            self.assertEquals(results, outputs)
+            self.assertEqual(results, outputs)
 
         receive_messages.assert_called_once()
         receive_messages.assert_called_with(MaxNumberOfMessages=10, VisibilityTimeout=30, WaitTimeSeconds=20)
 
     @patch('util.aws.SQSClient.get_queue_by_name')
     def test_receive_messages_10(self, get_queue_by_name):
-        outputs = [x for x in range(0,10), None]
+        outputs = [x for x in (list(range(0,10)), None)]
 
         receive_messages = MagicMock(return_value=outputs)
         get_queue_by_name.return_value.receive_messages = receive_messages
 
         with SQSClient(self.credentials, self.region_name) as client:
             results = list(client.receive_messages('queue'))
-            self.assertEquals(results, outputs)
+            self.assertEqual(results, outputs)
 
         receive_messages.assert_called_once()
 
@@ -219,6 +219,6 @@ class TestSQSClient(TestCase):
 
         with SQSClient(self.credentials, self.region_name) as client:
             results = list(client.receive_messages('queue'))
-            self.assertEquals(results, outputs)
+            self.assertEqual(results, outputs)
 
-        self.assertEquals(receive_messages.call_count, 2)
+        self.assertEqual(receive_messages.call_count, 2)

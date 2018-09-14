@@ -1,5 +1,5 @@
 """Defines the JSON schema for describing task results"""
-from __future__ import unicode_literals
+
 
 from django.utils import dateparse
 from jsonschema import validate

@@ -1,5 +1,5 @@
 """Defines the class for representing the diff for a node within a recipe definition"""
-from __future__ import unicode_literals
+
 
 from abc import ABCMeta, abstractmethod
 from collections import namedtuple
@@ -32,11 +32,9 @@ def create_diff_for_node(node, diff_can_be_reprocessed, status):
     raise ScaleLogicBug('Unknown node type %s' % node.node_type)
 
 
-class NodeDiff(object):
+class NodeDiff(object, metaclass=ABCMeta):
     """Represents a diff for a node within a recipe definition
     """
-
-    __metaclass__ = ABCMeta
 
     # Node statuses
     UNCHANGED = 'UNCHANGED'
@@ -127,7 +125,7 @@ class NodeDiff(object):
         self.force_reprocess = True
         self._calculate_reprocess_new_node()
 
-        for child_node_diff in self.children.values():
+        for child_node_diff in list(self.children.values()):
             child_node_diff.set_force_reprocess(reprocess_nodes)
 
     def should_be_copied(self):
@@ -181,7 +179,7 @@ class NodeDiff(object):
         :type prev_node: :class:`recipe.definition.node.NodeDefinition`
         """
 
-        for connection in self._node.connections.values():
+        for connection in list(self._node.connections.values()):
             if connection.input_name not in prev_node.connections:
                 self.changes.append(Change('INPUT_NEW', 'New input %s added' % connection.input_name))
             else:
@@ -189,8 +187,8 @@ class NodeDiff(object):
                 if not connection.is_equal_to(prev_connection):
                     self.changes.append(Change('INPUT_CHANGE', 'Input %s changed' % connection.input_name))
 
-        input_names = self._node.connections.keys()
-        for prev_input_name in prev_node.connections.keys():
+        input_names = list(self._node.connections.keys())
+        for prev_input_name in list(prev_node.connections.keys()):
             if prev_input_name not in input_names:
                 self.changes.append(Change('INPUT_REMOVED', 'Previous input %s removed' % prev_input_name))
 
@@ -201,16 +199,16 @@ class NodeDiff(object):
         :type prev_node: :class:`recipe.definition.node.NodeDefinition`
         """
 
-        prev_parent_names = prev_node.parents.keys()
-        for parent_diff in self.parents.values():
+        prev_parent_names = list(prev_node.parents.keys())
+        for parent_diff in list(self.parents.values()):
             if parent_diff.name not in prev_parent_names:
                 self.changes.append(Change('PARENT_NEW', 'New parent node %s added' % parent_diff.name))
             else:
                 if parent_diff.status == NodeDiff.CHANGED:
                     self.changes.append(Change('PARENT_CHANGED', 'Parent node %s changed' % parent_diff.name))
 
-        parent_names = self.parents.keys()
-        for prev_parent_name in prev_node.parents.keys():
+        parent_names = list(self.parents.keys())
+        for prev_parent_name in list(prev_node.parents.keys()):
             if prev_parent_name not in parent_names:
                 self.changes.append(Change('PARENT_REMOVED', 'Previous parent node %s removed' % prev_parent_name))
 

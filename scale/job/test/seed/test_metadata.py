@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 
 import django
 from django.test import TestCase
@@ -20,7 +20,7 @@ class TestSeedMetadata(TestCase):
         }
 
         object = SeedMetadata.metadata_from_json(json)
-        self.assertEquals(object.data, json)
+        self.assertEqual(object.data, json)
 
     def test_metadata_from_json_geometry(self):
         json = {
@@ -32,7 +32,7 @@ class TestSeedMetadata(TestCase):
 
         self.assertIn('geometry', object._data)
         self.assertIn('properties', object._data)
-        self.assertEquals(json, object._data['geometry'])
+        self.assertEqual(json, object._data['geometry'])
 
     def test_metadata_from_json_feature_collection(self):
         json = {
@@ -69,20 +69,20 @@ class TestSeedMetadata(TestCase):
     def test_get_properties_null(self):
         object = SeedMetadata()
 
-        self.assertEquals({}, object.properties)
+        self.assertEqual({}, object.properties)
 
     def test_get_properties_empty_dict(self):
         object = SeedMetadata()
         object._data['properties'] = {}
 
-        self.assertEquals({}, object.properties)
+        self.assertEqual({}, object.properties)
 
     def test_get_properties_values(self):
         object = SeedMetadata()
         value = { 'key': 'value' }
         object._data['properties'] = value
 
-        self.assertEquals(value, object.properties)
+        self.assertEqual(value, object.properties)
 
     def test_get_data_copy_by_value(self):
         object = SeedMetadata()

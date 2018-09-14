@@ -1,5 +1,5 @@
 """Defines the command that performs a Scale database update"""
-from __future__ import unicode_literals
+
 
 import logging
 import signal

@@ -1,5 +1,5 @@
 """Defines utility methods for testing files and workspaces"""
-from __future__ import unicode_literals
+
 
 import datetime
 import os

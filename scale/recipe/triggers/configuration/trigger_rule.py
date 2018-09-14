@@ -1,16 +1,14 @@
 """Defines the base configuration class for a trigger rule that triggers recipe creation"""
-from __future__ import unicode_literals
+
 
 from abc import ABCMeta, abstractmethod
 
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 
 
-class RecipeTriggerRuleConfiguration(JobTriggerRuleConfiguration):
+class RecipeTriggerRuleConfiguration(JobTriggerRuleConfiguration, metaclass=ABCMeta):
     """The base class that represents trigger rule configurations that can create jobs and/or recipes when triggered
     """
-
-    __metaclass__ = ABCMeta
 
     @abstractmethod
     def validate_trigger_for_recipe(self, recipe_definition):

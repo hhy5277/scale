@@ -1,13 +1,12 @@
 from abc import ABCMeta, abstractmethod
 
 
-class CommandMessage(object):
+class CommandMessage(object, metaclass=ABCMeta):
     """This ABC defines the interface all CommandMessage classes should implement.
 
     If a CommandMessage needs to chain processing together, it should define this via
     the new_messages array.
     """
-    __metaclass__ = ABCMeta
 
     def __init__(self, message_type):
         # List to contain messages that must be passed on downstream by calling CommandMessageManager

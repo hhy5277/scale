@@ -1,5 +1,5 @@
 """Defines the class that manages the scheduler nodes"""
-from __future__ import unicode_literals
+
 
 import logging
 import threading
@@ -42,7 +42,7 @@ class NodeManager(object):
         nodes_list = []
         status_dict['nodes'] = nodes_list
         with self._lock:
-            for node in self._nodes.values():
+            for node in list(self._nodes.values()):
                 node.generate_status_json(nodes_list)
 
     def get_next_tasks(self, when):
@@ -56,7 +56,7 @@ class NodeManager(object):
 
         tasks = []
         with self._lock:
-            for node in self._nodes.values():
+            for node in list(self._nodes.values()):
                 tasks.extend(node.get_next_tasks(when))
         return tasks
 
@@ -155,7 +155,7 @@ class NodeManager(object):
             # Gather up all host names and new agents
             hostnames = set(self._nodes.keys())
             new_agents = {}  # {Agent ID: Agent}
-            for agent in self._new_agents.values():
+            for agent in list(self._new_agents.values()):
                 new_agents[agent.agent_id] = agent
                 hostnames.add(agent.hostname)
 
@@ -166,7 +166,7 @@ class NodeManager(object):
         # Create new nodes for host names that have never been seen before
         new_hostnames = []
         new_agent_ids = []
-        for agent in new_agents.values():
+        for agent in list(new_agents.values()):
             if agent.hostname not in node_models:
                 new_hostnames.append(agent.hostname)
                 new_agent_ids.append(agent.agent_id)
@@ -177,7 +177,7 @@ class NodeManager(object):
 
         with self._lock:
             # Handle new agents
-            for new_agent in new_agents.values():
+            for new_agent in list(new_agents.values()):
                 agent_id = new_agent.agent_id
                 hostname = new_agent.hostname
                 # For is_online, check if new agent ID is still in set or gone (i.e. removed by lost_node())
@@ -199,7 +199,7 @@ class NodeManager(object):
                     self._nodes[hostname].update_from_mesos(is_online=is_online)
                 self._agents[agent_id] = new_agent
             # Update nodes from database models
-            for node_model in node_models.values():
+            for node_model in list(node_models.values()):
                 hostname = node_model.hostname
                 if hostname in self._nodes:
                     # Host name already exists, update model information
@@ -216,7 +216,7 @@ class NodeManager(object):
                     self._nodes[hostname] = SchedulerNode('', node_model, scheduler_config)
                     self._nodes[hostname].update_from_mesos(is_online=False)
             # Finished this batch of new agents
-            for new_agent in new_agents.values():
+            for new_agent in list(new_agents.values()):
                 if new_agent.agent_id in self._new_agents:
                     del self._new_agents[new_agent.agent_id]
 

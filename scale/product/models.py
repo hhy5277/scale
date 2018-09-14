@@ -1,5 +1,5 @@
 """Defines the database model for product files"""
-from __future__ import unicode_literals
+
 
 import logging
 import os
@@ -439,8 +439,8 @@ class ProductFileManager(models.GeoManager):
         for source in src_qry:
             source_files[source.id] = source
 
-        link_qry = FileAncestryLink.objects.filter(ancestor_id__in=source_files.keys())
-        link_qry = link_qry.filter(descendant_id__in=product_lists.keys())
+        link_qry = FileAncestryLink.objects.filter(ancestor_id__in=list(source_files.keys()))
+        link_qry = link_qry.filter(descendant_id__in=list(product_lists.keys()))
         for link in link_qry:
             product_lists[link.descendant_id].append(source_files[link.ancestor_id])
 

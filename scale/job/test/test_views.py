@@ -1,5 +1,5 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import
+
+
 
 import copy
 import datetime
@@ -3356,7 +3356,7 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
 
         results = json.loads(response.content)
         self.assertTrue(results['is_valid'])
-        self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': []})
+        self.assertDictEqual(results, {'errors': [], 'is_valid': True, 'warnings': []})
 
     def test_successful_configuration(self):
         """Tests validating a new job type with a valid configuration."""
@@ -3372,7 +3372,7 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
 
         results = json.loads(response.content)
         self.assertTrue(results['is_valid'])
-        self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': []})
+        self.assertDictEqual(results, {'errors': [], 'is_valid': True, 'warnings': []})
 
     def test_missing_mount(self):
         """Tests validating a new job type with a mount referenced in manifest but not configuration."""

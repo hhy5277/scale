@@ -1,5 +1,5 @@
 """Defines a command message that updates batch metrics"""
-from __future__ import unicode_literals
+
 
 import logging
 

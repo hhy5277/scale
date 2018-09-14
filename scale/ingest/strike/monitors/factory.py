@@ -1,5 +1,5 @@
 """Defines the factory for creating monitors"""
-from __future__ import unicode_literals
+
 
 import logging
 
@@ -42,4 +42,4 @@ def get_monitor_types():
     :rtype: [string]
     """
 
-    return _MONITORS.keys()
+    return list(_MONITORS.keys())

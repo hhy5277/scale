@@ -1,5 +1,5 @@
 """Defines a command message that re-queues job models"""
-from __future__ import unicode_literals
+
 
 import logging
 

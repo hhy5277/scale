@@ -1,5 +1,5 @@
 """Defines the class that manages the syncing of the scheduler with the workspace models"""
-from __future__ import unicode_literals
+
 
 import threading
 

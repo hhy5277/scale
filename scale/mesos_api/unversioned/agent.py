@@ -1,8 +1,8 @@
 """Defines methods that call the unversioned Mesos HTTP endpoints"""
-from __future__ import unicode_literals
+
 
 import json
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 from node.resources.node_resources import NodeResources
 from node.resources.resource import ScalarResource
@@ -24,7 +24,7 @@ def get_agent_resources(hostname, port, agent_ids):
     results = {}
 
     url = 'http://%s:%i/slaves' % (hostname, port)
-    response = urllib2.urlopen(url)
+    response = urllib.request.urlopen(url)
     response_json = json.load(response)
 
     for agent_dict in response_json['slaves']:

@@ -1,5 +1,5 @@
 """Defines a command message that unpublishes a list of jobs"""
-from __future__ import unicode_literals
+
 
 import logging
 

@@ -1,5 +1,5 @@
 """Defines the command line method for running a Scan process"""
-from __future__ import unicode_literals
+
 
 import logging
 import signal

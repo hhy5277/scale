@@ -1,5 +1,5 @@
 """Defines the class that represents an agent's set of resource offers"""
-from __future__ import unicode_literals
+
 
 import datetime
 import logging
@@ -70,7 +70,7 @@ class AgentResources(object):
         allocated_resources = NodeResources()
         available_offer_ids = set(self._offers.keys())
         # Automatically include all offers that have been held too long
-        for offer in self._offers.values():
+        for offer in list(self._offers.values()):
             if when - offer.received >= MAX_OFFER_HOLD_DURATION:
                 allocated_offers[offer.id] = offer
                 allocated_resources.add(offer.resources)
@@ -88,10 +88,10 @@ class AgentResources(object):
                 allocated_resources.add(offer.resources)
 
         # Remove allocated offers and return them
-        for offer in allocated_offers.values():
+        for offer in list(allocated_offers.values()):
             del self._offers[offer.id]
         self._update_resources()
-        return allocated_offers.values()
+        return list(allocated_offers.values())
 
     def generate_status_json(self, node_dict, total_running=None, total_offered=None, total_watermark=None, total=None):
         """Generates the portion of the status JSON that describes the resources for this agent
@@ -237,7 +237,7 @@ class AgentResources(object):
 
         # Add up offered resources
         self._offer_resources = NodeResources()
-        for offer in self._offers.values():
+        for offer in list(self._offers.values()):
             self._offer_resources.add(offer.resources)
 
         # Recalculate task resources if needed

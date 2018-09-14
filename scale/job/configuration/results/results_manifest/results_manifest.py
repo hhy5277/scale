@@ -2,7 +2,7 @@
 Scale needs to parse this manifest to bring the information into the system. The output files should match the job
 interface
 """
-from __future__ import unicode_literals
+
 
 import copy
 import logging
@@ -294,7 +294,7 @@ class ResultsManifest(object):
             entry_name = manifest_file_entry['name']
             file_entry_map[entry_name] = manifest_file_entry
 
-        for file_name, (is_multiple, is_required) in output_file_definitions.items():
+        for file_name, (is_multiple, is_required) in list(output_file_definitions.items()):
             if file_name not in file_entry_map:
                 if is_required:
                     raise MissingRequiredOutput(file_name)

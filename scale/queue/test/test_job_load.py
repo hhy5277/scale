@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 
 import django
 from django.test import TestCase
@@ -22,5 +22,5 @@ class TestJobLoadProcessor(TestCase):
         event = job_test_utils.create_clock_event()
         self.processor.process_event(event)
 
-        job_loads = JobLoad.objects.values()
+        job_loads = list(JobLoad.objects.values())
         self.assertEqual(job_loads.count(), 1)

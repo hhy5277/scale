@@ -1,5 +1,5 @@
 """Defines the functions used to export configuration"""
-from __future__ import unicode_literals
+
 
 import logging
 
