@@ -7,6 +7,7 @@ import os
 import django.contrib.gis.db.models as models
 import django.utils.timezone as timezone
 from django.db import transaction
+from django.db.models import Manager as GeoManager
 
 import storage.geospatial_utils as geo_utils
 from recipe.models import Recipe
@@ -177,7 +178,7 @@ class FileAncestryLink(models.Model):
         db_table = 'file_ancestry_link'
 
 
-class ProductFileManager(models.GeoManager):
+class ProductFileManager(GeoManager):
     """Provides additional methods for handling product files
     """
 

@@ -5,6 +5,7 @@ import logging
 
 import django.contrib.gis.db.models as models
 from django.db import transaction
+from django.db.models import Manager as GeoManager
 from django.utils.timezone import now
 
 import storage.geospatial_utils as geo_utils
@@ -17,7 +18,7 @@ from storage.models import ScaleFile
 logger = logging.getLogger(__name__)
 
 
-class SourceFileManager(models.GeoManager):
+class SourceFileManager(GeoManager):
     """Provides additional methods for handling source files
     """
 
