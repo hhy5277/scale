@@ -8,7 +8,7 @@ class QueueConfig(AppConfig):
     """Configuration for the queue app
     """
     name = 'queue'
-    label = 'queue'
+    label = 'scale_queue'
     verbose_name = 'Queue'
 
     def ready(self):

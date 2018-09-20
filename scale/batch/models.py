@@ -18,7 +18,7 @@ from batch.exceptions import BatchError
 from job.configuration.data.job_data import JobData
 from job.models import JobType
 from messaging.manager import CommandMessageManager
-from queue.models import Queue
+from apps.queue.models import Queue
 from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.messages.reprocess_recipes import create_reprocess_recipes_messages
 from recipe.models import Recipe, RecipeTypeRevision
