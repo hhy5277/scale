@@ -4,6 +4,8 @@ from __future__ import print_function
 from marathon import MarathonClient, MarathonApp
 from marathon import NotFoundError
 
+import dj_database_url
+
 import json
 import os
 import requests
@@ -11,7 +13,6 @@ import sys
 import time
 
 FRAMEWORK_NAME = os.getenv('DCOS_PACKAGE_FRAMEWORK_NAME', 'scale')
-SCALE_DB_HOST = os.getenv('SCALE_DB_HOST', '')
 SCALE_LOGGING_ADDRESS = os.getenv('SCALE_LOGGING_ADDRESS', '')
 DEPLOY_WEBSERVER = os.getenv('DEPLOY_WEBSERVER', 'true')
 
@@ -60,9 +61,8 @@ def run(client):
         deploy_rabbitmq(client, rabbitmq_app_name)
 
     # Determine if db should be deployed.
-    db_host = os.getenv('SCALE_DB_HOST', '')
-    db_port = os.getenv('SCALE_DB_PORT', '')
-    if not len(db_host):
+    db_url = os.getenv('DATABASE_URL')
+    if not db_url:
         deploy_database(client, db_app_name)
 
     # Determine if logstash should be deployed.
@@ -75,11 +75,13 @@ def run(client):
         broker_url = 'amqp://guest:guest@%s.marathon.mesos:%s//' % (rabbitmq_app_name, rabbitmq_port)
         print("BROKER_URL=%s" % broker_url)
 
-    if not len(db_host):
+    if not db_url:
         db_port = get_host_port_from_healthy_app(client, db_app_name, 0)
-        db_host = "%s.marathon.mesos" % db_app_name
-        print("DB_HOST=%s" % db_host)
-        print("DB_PORT=%s" % db_port)
+        db_url = "postgis://scale:scale@%s.marathon.mesos:%s/scale" % (db_app_name, db_port)
+
+    # Create pgpass entry
+    config = dj_database_url.parse(db_url)
+    print("PG_PASS=%s:%s:*:%s:%s" % (config['HOST'], config['PORT'], config['USER'], config['PASS']))
 
     if not len(SCALE_LOGGING_ADDRESS):
         log_port = get_host_port_from_healthy_app(client, log_app_name, 0)
@@ -89,7 +91,7 @@ def run(client):
     # Determine if Web Server should be deployed.
     if DEPLOY_WEBSERVER.lower() == 'true':
         app_name = '%s-webserver' % FRAMEWORK_NAME
-        webserver_port = deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_url, es_ver)
+        webserver_port = deploy_webserver(client, app_name, es_urls, es_lb, db_url, broker_url, es_ver)
         print("WEBSERVER_ADDRESS=http://%s.marathon.mesos:%s" % (app_name, webserver_port))
 
 
@@ -193,7 +195,7 @@ def wait_app_healthy(client, app_name, sleep_secs=5):
         time.sleep(sleep_secs)
 
 
-def deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_url, es_ver):
+def deploy_webserver(client, app_name, es_urls, es_lb, db_url, broker_url, es_ver):
     # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
     delete_marathon_app(client, app_name)
 
@@ -233,8 +235,7 @@ def deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_
         'DCOS_SERVICE_ACCOUNT': str(secrets_dcos_sa),
         'ENABLE_WEBSERVER': 'true',
         'SCALE_BROKER_URL': broker_url,
-        'SCALE_DB_HOST': db_host,
-        'SCALE_DB_PORT': str(db_port),
+        'DATABASE_URL': db_url,
         'SCALE_STATIC_URL': '/service/%s/static/' % FRAMEWORK_NAME,
         'SCALE_WEBSERVER_CPU': str(cpu),
         'SCALE_WEBSERVER_MEMORY': str(memory),
