@@ -14,9 +14,22 @@ SCHEMA_VERSION = '6'
 # TODO: design and implement
 DATA_FILTER_SCHEMA = {
     'type': 'object',
-    'required': [],
+    'required': ['input_type', 'data_field', 'accepts'],
     'additionalProperties': False,
     'properties': {
+        'input_type': {
+            'description': 'If this filter operates on input files or json',
+            # 'type': 'string',
+            'enum': ['file', 'json'],
+        },
+        'data_field': {
+            'description': 'The field on which the filter operates',
+        },
+        'accepts': {
+            'description': 'Describes the acceptance criteria of the filter',
+            
+        }
+        
     },
 }
 
@@ -71,7 +84,8 @@ class DataFilterV6(object):
         :rtype: :class:`data.filter.filter.DataFilter`:
         """
 
-        data_filter = DataFilter(True)
+        # data_filter = DataFilter(True)
+        data_filter = DataFilter(self._data_filter)
 
         return data_filter
 
