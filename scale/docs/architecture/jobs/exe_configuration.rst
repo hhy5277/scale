@@ -195,3 +195,58 @@ A valid execution configuration is a JSON document with the following structure:
 
             The *value* field is a required string describing the value to pass to the parameter on the Docker command
             line.
+
+Execution Environment Variables
+------------------------------------------------------------------------------------------------------------------------
+Scale provides several environment variables to the job configuration that are available for developer consumption. 
+
+    **ALLOCATED_**: 
+        These variables encapsulate the resources defined in the seed manifest. There will be an environment variable
+        for each resource specified. These may include, but are not limited to the following:
+        
+        **ALLOCATED_CPUS**: JSON decimal
+            The number of allocated CPUs as defined in the seed manifest / job configuration
+            
+        **ALLOCATED_DISK**: JSON decimal
+            The number of allocated disks as defined in the seed manifest / job configuration
+        
+        **ALLOCATED_GPUS**: JSON decimal
+            The number of allocated GPUs as defined in the seed manifest / job configuration
+        
+        **ALLOCATED_MEM**: JSON decimal
+            The amount of allocated memory as defined in the seed manifest / job configuration
+        
+        **ALLOCATED_SHAREDMEM**: JSON decimal
+            The amount of allocated shared memory as defined in the seed manifest / job configuration
+        
+    **SCALE_JOB_ID**: JSON string
+        The Scale Job Id
+    
+    **SCALE_EXE_NUM**: JSON string
+        The Scale job execution number
+    
+    **SCALE_RECIPE_ID**: JSON string
+        The Scale recipe ID the running job is located in
+    
+    **SCALE_BATCH_ID**: JSON string
+        The batch ID the running job is in
+    
+    **INPUT_METADATA**: JSON object
+        A JSON object of the inputs name and public URL provided to the job, as well as the name(s) and public URL(s) 
+        of the encompassing recipe. 
+        
+        This JSON object is in the following form:
+        
+        .. code-block:: javascript
+        {
+            "JOB": {
+                {"input_a": ["http://public/facing/url/1", "http://public/facing/url/2"]},
+                {"input_b": ["http://public/facing/url/3"]}
+            },
+            "RECIPE": {
+                {"input_a": ["http://public/facing/url/a"]},
+                {"input_b": "json_value"}
+            }
+        }
+    
+    
