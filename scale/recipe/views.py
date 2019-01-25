@@ -8,7 +8,9 @@ from django.http.response import Http404, HttpResponse
 from django.utils.timezone import now
 
 from recipe.deprecation import RecipeDefinitionSunset
+from rest_framework.decorators import permission_classes
 from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView, ListCreateAPIView
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
@@ -116,6 +118,7 @@ class RecipeTypesView(ListCreateAPIView):
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
+    @permission_classes((IsAdminUser,))
     def create(self, request):
         """Creates a new recipe type and returns a link to the detail URL
 
@@ -272,6 +275,7 @@ class RecipeTypeIDDetailsView(GenericAPIView):
         serializer = self.get_serializer(recipe_type)
         return Response(serializer.data)
 
+    @permission_classes((IsAdminUser,))
     def patch(self, request, recipe_type_id):
         """Edits an existing job type and returns the updated details
 
@@ -401,6 +405,7 @@ class RecipeTypeDetailsView(GenericAPIView):
         serializer = self.get_serializer(recipe_type)
         return Response(serializer.data)
 
+    @permission_classes((IsAdminUser,))
     def patch(self, request, name):
         """Edits an existing recipe type and returns the updated details
 
@@ -722,6 +727,7 @@ class RecipesView(ListAPIView):
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
+    @permission_classes((IsAdminUser,))
     def post(self, request):
         """Queue a recipe and returns the new job information in JSON form
 
@@ -936,6 +942,7 @@ class RecipeReprocessView(GenericAPIView):
         else:
             return OldRecipeDetailsSerializer
 
+    @permission_classes((IsAdminUser,))
     def post(self, request, recipe_id):
         """Schedules a recipe for reprocessing and returns it in JSON form
 
