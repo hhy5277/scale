@@ -62,7 +62,6 @@ class BatchesView(ListCreateAPIView):
 
         raise Http404()
 
-    @permission_classes((IsAdminUser, ))
     def create(self, request):
         """Creates a new batch and returns a link to the detail URL
 
@@ -248,7 +247,6 @@ class BatchDetailsView(RetrieveUpdateAPIView):
 
         raise Http404()
 
-    @permission_classes((IsAdminUser,))
     def update(self, request, batch_id, **kwargs):
         """Updates the given batch
 
