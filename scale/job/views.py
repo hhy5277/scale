@@ -58,7 +58,6 @@ from vault.exceptions import InvalidSecretsConfiguration
 
 logger = logging.getLogger(__name__)
 
-
 class JobTypesView(ListCreateAPIView):
     """This view is the endpoint for retrieving the list of all job types."""
     queryset = JobType.objects.all()
@@ -136,7 +135,6 @@ class JobTypesView(ListCreateAPIView):
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
-    @permission_classes((IsAdminUser,))
     def create(self, request):
         """Creates a new job type and returns a link to the detail URL
 
@@ -424,7 +422,6 @@ class JobTypeIDDetailsView(GenericAPIView):
         serializer = self.get_serializer(job_type)
         return Response(serializer.data)
 
-    @permission_classes((IsAdminUser,))
     def patch(self, request, job_type_id):
         """Edits an existing job type and returns the updated details
 
@@ -657,7 +654,6 @@ class JobTypeDetailsView(GenericAPIView):
         serializer = self.get_serializer(job_type)
         return Response(serializer.data)
 
-    @permission_classes((IsAdminUser,))
     def patch(self, request, name, version):
         """Edits an existing job type and returns the updated details
 
@@ -1175,7 +1171,6 @@ class JobsView(ListAPIView):
 
         return self.get_paginated_response(serializer.data)
 
-    @permission_classes((IsAdminUser,))
     def post(self, request):
         """Creates a new job, places it on the queue, and returns the new job information in JSON form
 
@@ -1230,7 +1225,6 @@ class JobsView(ListAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=job_url))
 
 
-@permission_classes((IsAdminUser, ))
 class CancelJobsView(GenericAPIView):
     """This view is the endpoint for canceling jobs"""
     parser_classes = (JSONParser,)
@@ -1322,7 +1316,6 @@ class CancelJobsView(GenericAPIView):
         return Response(status=status.HTTP_202_ACCEPTED)
 
 
-@permission_classes((IsAdminUser, ))
 class RequeueJobsView(GenericAPIView):
     """This view is the endpoint for re-queuing jobs that have failed or been canceled"""
     parser_classes = (JSONParser,)
@@ -1452,7 +1445,6 @@ class JobDetailsView(GenericAPIView):
         serializer = self.get_serializer(job)
         return Response(serializer.data)
 
-    @permission_classes((IsAdminUser,))
     def patch(self, request, job_id):
         """Modify job info with a subset of fields
 
