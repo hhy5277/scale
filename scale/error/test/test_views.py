@@ -10,14 +10,18 @@ from rest_framework import status
 import error.test.utils as error_test_utils
 import util.rest as rest_util
 from error.models import Error
+from rest_framework.test import APITestCase
+from util import rest
 
 
-class TestErrorsViewV5(TestCase):
+class TestErrorsViewV5(APITestCase):
 
     api = 'v5'
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         Error.objects.all().delete()  # Need to remove initial errors loaded by fixtures
         error_test_utils.create_error(category='SYSTEM', is_builtin=True)
@@ -44,7 +48,7 @@ class TestErrorsViewV5(TestCase):
             'description': 'new error #4',
             'category': 'ALGORITHM',
         }
-        response = self.client.post(url, json.dumps(json_data), 'application/json')
+        response = self.client.post(url, json.dumps(json_data), 'json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
         result = json.loads(response.content)
@@ -63,7 +67,7 @@ class TestErrorsViewV5(TestCase):
             'name': 'error4',
             'category': 'ALGORITHM',
         }
-        response = self.client.post(url, json.dumps(json_data), 'application/json')
+        response = self.client.post(url, json.dumps(json_data), 'json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -77,7 +81,7 @@ class TestErrorsViewV5(TestCase):
             'description': 'new error #4',
             'category': 'BAD',
         }
-        response = self.client.post(url, json.dumps(json_data), 'application/json')
+        response = self.client.post(url, json.dumps(json_data), 'json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -91,16 +95,19 @@ class TestErrorsViewV5(TestCase):
             'description': 'new error #4',
             'category': 'SYSTEM',
         }
-        response = self.client.post(url, json.dumps(json_data), 'application/json')
+        response = self.client.post(url, json.dumps(json_data), 'json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-class TestErrorsViewV6(TestCase):
+
+class TestErrorsViewV6(APITestCase):
 
     api = 'v6'
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         Error.objects.all().delete()  # Need to remove initial errors loaded by fixtures
         error_test_utils.create_error(category='SYSTEM', is_builtin=True)
@@ -127,16 +134,18 @@ class TestErrorsViewV6(TestCase):
             'description': 'new error #4',
             'category': 'ALGORITHM',
         }
-        response = self.client.post(url, json.dumps(json_data), 'application/json')
+        response = self.client.post(url, json.dumps(json_data), 'json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
 
-class TestErrorDetailsViewV5(TestCase):
+class TestErrorDetailsViewV5(APITestCase):
 
     api = 'v5'
     
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         Error.objects.all().delete()  # Need to remove initial errors loaded by fixtures
         self.error1 = error_test_utils.create_error(category='SYSTEM', is_builtin=True)
@@ -231,12 +240,14 @@ class TestErrorDetailsViewV5(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-class TestErrorDetailsViewV6(TestCase):
+class TestErrorDetailsViewV6(APITestCase):
 
     api = 'v6'
     
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         Error.objects.all().delete()  # Need to remove initial errors loaded by fixtures
         self.error1 = error_test_utils.create_error(category='SYSTEM', is_builtin=True)

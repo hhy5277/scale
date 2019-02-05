@@ -7,14 +7,18 @@ from django.test import TransactionTestCase
 from rest_framework import status
 
 import util.rest as rest_util
+from rest_framework.test import APITransactionTestCase
+from util import rest
 
 
-class TestQueueScaleBakeView(TransactionTestCase):
+class TestQueueScaleBakeView(APITransactionTestCase):
 
     fixtures = ['diagnostic_job_types.json']
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
     def test_bad_num(self):
         """Tests calling the view with a num of 0 (which is invalid)."""
@@ -41,12 +45,14 @@ class TestQueueScaleBakeView(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
 
 
-class TestQueueScaleCasinoView(TransactionTestCase):
+class TestQueueScaleCasinoView(APITransactionTestCase):
 
     fixtures = ['diagnostic_job_types.json', 'diagnostic_recipe_types.json']
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
     def test_bad_num(self):
         """Tests calling the view with a num of 0 (which is invalid)."""
@@ -72,12 +78,14 @@ class TestQueueScaleCasinoView(TransactionTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
 
-class TestQueueScaleHelloView(TransactionTestCase):
+class TestQueueScaleHelloView(APITransactionTestCase):
 
     fixtures = ['diagnostic_job_types.json']
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
     def test_bad_num(self):
         """Tests calling the view with a num of 0 (which is invalid)."""
@@ -104,12 +112,14 @@ class TestQueueScaleHelloView(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
 
 
-class TestQueueScaleRouletteView(TransactionTestCase):
+class TestQueueScaleRouletteView(APITransactionTestCase):
 
     fixtures = ['diagnostic_job_types.json']
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
     def test_bad_num(self):
         """Tests calling the view with a num of 0 (which is invalid)."""

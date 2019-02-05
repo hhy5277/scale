@@ -12,9 +12,11 @@ import job.test.utils as job_test_utils
 import source.test.utils as source_test_utils
 import storage.test.utils as storage_test_utils
 import util.rest as rest_util
+from rest_framework.test import APITestCase
+from util import rest
 
 
-class TestSourcesViewV5(TestCase):
+class TestSourcesViewV5(APITestCase):
     api = 'v5'
 
     def setUp(self):
@@ -25,6 +27,8 @@ class TestSourcesViewV5(TestCase):
                                                        file_name='test.txt')
         self.source2 = source_test_utils.create_source(data_started='2017-01-01T00:00:00Z',
                                                        data_ended='2017-01-01T00:00:00Z', is_parsed=False)
+
+        rest.login_client(self.client)
 
     def test_invalid_started(self):
         """Tests calling the source files view when the started parameter is invalid."""
@@ -117,7 +121,7 @@ class TestSourcesViewV5(TestCase):
         self.assertEqual(len(result['results']), 2)
 
 
-class TestSourceDetailsViewV5(TestCase):
+class TestSourceDetailsViewV5(APITestCase):
     api = 'v5'
     
     def setUp(self):
@@ -125,6 +129,8 @@ class TestSourceDetailsViewV5(TestCase):
 
         self.country = storage_test_utils.create_country()
         self.source = source_test_utils.create_source(countries=[self.country])
+
+        rest.login_client(self.client)
 
     def test_id(self):
         """Tests successfully calling the source files view by id"""
@@ -150,7 +156,7 @@ class TestSourceDetailsViewV5(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
 
-class TestSourceIngestsViewV5(TestCase):
+class TestSourceIngestsViewV5(APITestCase):
     api = 'v5'
     fixtures = ['ingest_job_types.json']
 
@@ -163,6 +169,8 @@ class TestSourceIngestsViewV5(TestCase):
         self.ingest1 = ingest_test_utils.create_ingest(source_file=self.source_file, status='QUEUED',
                                                        strike=self.strike)
         self.ingest2 = ingest_test_utils.create_ingest(source_file=self.source_file, status='INGESTED')
+
+        rest.login_client(self.client)
 
     def test_invalid_source_id(self):
         """Tests calling the source ingests view when the source ID is invalid."""
@@ -388,7 +396,7 @@ class TestSourceJobsViewV5(TransactionTestCase):
         self.assertEqual(result['results'][3]['job_type']['id'], self.job_type2.id)
 
 
-class TestSourceProductsViewV5(TestCase):
+class TestSourceProductsViewV5(APITestCase):
     api = 'v5'
     
     def setUp(self):
@@ -426,6 +434,8 @@ class TestSourceProductsViewV5(TestCase):
                                                            is_published=True, countries=[self.country])
         product_test_utils.create_file_link(ancestor=self.src_file, descendant=self.product2c, job=self.job2,
                                             job_exe=self.job_exe2, batch=self.batch)
+
+        rest.login_client(self.client)
 
     def test_invalid_source_id(self):
         """Tests calling the source products view when the source ID is invalid."""
@@ -568,7 +578,7 @@ class TestSourceProductsViewV5(TestCase):
             self.assertEqual(entry['countries'][0], self.country.iso3)
 
 
-class TestSourceUpdatesViewV5(TestCase):
+class TestSourceUpdatesViewV5(APITestCase):
     api = 'v5'
     
     def setUp(self):
@@ -579,6 +589,8 @@ class TestSourceUpdatesViewV5(TestCase):
                                                        is_parsed=True)
         self.source2 = source_test_utils.create_source(data_started='2017-01-01T00:00:00Z',
                                                        data_ended='2017-01-01T00:00:00Z', is_parsed=False)
+
+        rest.login_client(self.client)
 
     def test_invalid_started(self):
         """Tests calling the source file updates view when the started parameter is invalid."""

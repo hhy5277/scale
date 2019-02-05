@@ -4,17 +4,21 @@ from __future__ import absolute_import
 import json
 
 import django
-from django.test import TestCase, TransactionTestCase
+from django.test import TransactionTestCase
 from rest_framework import status
+from rest_framework.test import APITestCase
 
 import job.test.utils as job_test_utils
 import metrics.test.utils as metrics_test_utils
+from util import rest
 
 
-class TestMetricsViewV5(TestCase):
+class TestMetricsViewV5(APITestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client)
 
     def test_successful(self):
         """Tests successfully calling the metrics view."""
@@ -31,10 +35,12 @@ class TestMetricsViewV5(TestCase):
                 self.assertGreaterEqual(len(entry['columns']), 1)
                 self.assertFalse('choices' in entry)
                 
-class TestMetricsViewV6(TestCase):
+class TestMetricsViewV6(APITestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client)
 
     def test_successful(self):
         """Tests successfully calling the metrics view."""

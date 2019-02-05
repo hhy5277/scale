@@ -11,15 +11,20 @@ from rest_framework import status
 
 import util.rest as rest_util
 from mesos_api.api import HardwareResources, MesosError
+from rest_framework.test import APITestCase
 from scheduler.models import Scheduler
 from scheduler.threads.scheduler_status import SchedulerStatusThread
+from util import rest
 from util.parse import datetime_to_string
 
 
-class TestSchedulerViewV5(TestCase):
+class TestSchedulerViewV5(APITestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
+
         Scheduler.objects.create(id=1)
 
     def test_invalid_version(self):
@@ -86,10 +91,14 @@ class TestSchedulerViewV5(TestCase):
         response = self.client.patch(url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-class TestSchedulerViewV6(TestCase):
+
+class TestSchedulerViewV6(APITestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
+
         Scheduler.objects.create(id=1)
         
     def test_invalid_version(self):
@@ -161,12 +170,15 @@ class TestSchedulerViewV6(TestCase):
         url = '/v6/scheduler/'
         response = self.client.patch(url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-        
-class TestStatusView(TestCase):
+
+
+class TestStatusView(APITestCase):
 
     def setUp(self):
         django.setup()
         Scheduler.objects.create(id=1)
+
+        rest.login_client(self.client)
 
     def test_status_empty_dict(self):
         """Test getting scheduler status with empty initialization"""
@@ -219,10 +231,12 @@ class TestStatusView(TestCase):
         self.assertDictEqual(result['vault'], {u'status': u'Secrets Not Configured', u'message': u'', u'sealed': False})
 
 
-class TestVersionView(TestCase):
+class TestVersionView(APITestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client)
 
     def test_success(self):
         """Test getting overall version/build information successfully"""
