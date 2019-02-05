@@ -9,11 +9,10 @@ import time
 import django
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.test import TestCase, TransactionTestCase
 from django.utils.timezone import utc, now
 from mock import patch
 from rest_framework import status
-from rest_framework.test import APITestCase, APITransactionTestCase
+from rest_framework.test import APITestCase, APITransactionTestCase, APIClient
 
 import batch.test.utils as batch_test_utils
 import error.test.utils as error_test_utils
@@ -783,6 +782,8 @@ class OldTestJobDetailsViewV5(APITestCase):
     def setUp(self):
         django.setup()
 
+        rest.login_client(self.client, is_staff=True)
+
         self.country = storage_test_utils.create_country()
         self.file = storage_test_utils.create_file(countries=[self.country])
 
@@ -856,8 +857,6 @@ class OldTestJobDetailsViewV5(APITestCase):
             self.product = product_test_utils.create_product(job_exe=self.job_exe, countries=[self.country])
         except:
             self.product = None
-
-        rest.login_client(self.client, is_staff=True)
 
     def test_successful_empty(self):
         """Tests successfully calling the job details view with no data or results."""
@@ -1025,7 +1024,7 @@ class OldTestJobDetailsViewV5(APITestCase):
 
         url = '/%s/jobs/%i/' % (self.api, self.job.id)
         data = {'status': 'CANCELED'}
-        response = self.client.patch(url, json.dumps(data), 'application/json')
+        response = self.client.patch(url, data, 'json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
@@ -1036,7 +1035,7 @@ class OldTestJobDetailsViewV5(APITestCase):
 
         url = '/%s/jobs/%i/' % (self.api, self.job.id)
         data = {'foo': 'bar'}
-        response = self.client.patch(url, json.dumps(data), 'application/json')
+        response = self.client.patch(url, data, 'json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_cancel_bad_value(self):
@@ -1044,7 +1043,7 @@ class OldTestJobDetailsViewV5(APITestCase):
 
         url = '/%s/jobs/%i/' % (self.api, self.job.id)
         data = {'status': 'COMPLETED'}
-        response = self.client.patch(url, json.dumps(data), 'application/json')
+        response = self.client.patch(url, data, 'json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
@@ -1054,6 +1053,8 @@ class TestJobDetailsViewV6(APITestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         self.country = storage_test_utils.create_country()
         self.file = storage_test_utils.create_file(countries=[self.country])
@@ -1128,8 +1129,6 @@ class TestJobDetailsViewV6(APITestCase):
             self.product = product_test_utils.create_product(job_exe=self.job_exe, countries=[self.country])
         except:
             self.product = None
-
-        rest.login_client(self.client, is_staff=True)
 
     def test_successful_empty(self):
         """Tests successfully calling the job details view with no data or results."""
@@ -1212,7 +1211,7 @@ class TestJobDetailsViewV6(APITestCase):
 
         url = '/%s/jobs/%i/' % (self.api, self.job.id)
         data = {'status': 'CANCELED'}
-        response = self.client.patch(url, json.dumps(data), 'application/json')
+        response = self.client.patch(url, data, 'json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
 
@@ -1222,6 +1221,8 @@ class TestJobsUpdateView(APITestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         self.country = storage_test_utils.create_country()
         self.file = storage_test_utils.create_file(countries=[self.country])
@@ -1239,8 +1240,6 @@ class TestJobsUpdateView(APITestCase):
         )
 
         self.job3 = job_test_utils.create_job(is_superseded=True)
-
-        rest.login_client(self.client, is_staff=True)
 
     def test_successful(self):
         """Tests successfully calling the jobs view."""
@@ -2723,6 +2722,8 @@ class TestJobTypeDetailsViewV5(APITestCase):
     def setUp(self):
         django.setup()
 
+        rest.login_client(self.client, is_staff=True)
+
         self.interface = {
             'version': '1.4',
             'command': 'test_cmd',
@@ -2784,8 +2785,6 @@ class TestJobTypeDetailsViewV5(APITestCase):
 
         self.error1 = error_test_utils.create_error()
         self.error2 = error_test_utils.create_error()
-
-        rest.login_client(self.client, is_staff=True)
 
     def test_not_found(self):
         """Tests successfully calling the get job type details view with a job id that does not exist."""
@@ -3242,6 +3241,8 @@ class TestJobTypeDetailsViewV6(APITestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         self.manifest = job_test_utils.COMPLETE_MANIFEST
 
@@ -5469,12 +5470,13 @@ class TestCancelJobsViewV5(APITestCase):
         }
 
         url = '/%s/jobs/cancel/' % self.api
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
 
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
         mock_create.assert_called_with(started=started, ended=ended, error_categories=error_categories,
                                        error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
                                        status=job_status)
+
 
 class TestCancelJobsViewV6(APITestCase):
 
@@ -5528,7 +5530,7 @@ class TestCancelJobsViewV6(APITestCase):
         }
 
         url = '/%s/jobs/cancel/' % self.api
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
 
         job_type_ids.append(self.job_type1.id)
         job_type_ids.append(self.job_type2.id)
@@ -5551,7 +5553,7 @@ class TestCancelJobsViewV6(APITestCase):
         }
 
         url = '/%s/jobs/cancel/' % self.api
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
@@ -5592,7 +5594,7 @@ class TestRequeueJobsViewV5(APITestCase):
         }
 
         url = '/%s/jobs/requeue/' % self.api
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
 
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
         mock_create.assert_called_with(started=started, ended=ended, error_categories=error_categories,
@@ -5654,7 +5656,7 @@ class TestRequeueJobsViewV6(APITestCase):
         }
 
         url = '/%s/jobs/requeue/' % self.api
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
 
         job_type_ids.append(self.job_type1.id)
         job_type_ids.append(self.job_type2.id)
@@ -5678,5 +5680,5 @@ class TestRequeueJobsViewV6(APITestCase):
         }
 
         url = '/%s/jobs/requeue/' % self.api
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
