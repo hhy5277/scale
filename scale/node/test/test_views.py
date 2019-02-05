@@ -1,19 +1,11 @@
 from __future__ import unicode_literals
 
 import json
-from datetime import timedelta
 
 import django
-from django.test import TransactionTestCase
-from django.utils.timezone import now
-from mock import patch
 from rest_framework import status
 
-import error.test.utils as error_test_utils
-import job.test.utils as job_test_utils
 import node.test.utils as node_test_utils
-import util.rest as rest_util
-from mesos_api.api import SlaveInfo, HardwareResources
 from rest_framework.test import APITransactionTestCase
 from scheduler.models import Scheduler
 from util import rest
@@ -47,6 +39,7 @@ class TestNodesViewV5(APITransactionTestCase):
             else:
                 self.fail('Unexpected node in results: %i' % entry['id'])
 
+
 class TestNodesViewV6(APITransactionTestCase):
 
     def setUp(self):
@@ -73,6 +66,7 @@ class TestNodesViewV6(APITransactionTestCase):
             else:
                 self.fail('Unexpected node in results: %i' % entry['id'])
 
+
 class TestNodesViewEmptyV5(APITransactionTestCase):
 
     def setUp(self):
@@ -87,6 +81,7 @@ class TestNodesViewEmptyV5(APITransactionTestCase):
         results = json.loads(response.content)
         self.assertEqual(len(results['results']), 0)
 
+
 class TestNodesViewEmptyV6(APITransactionTestCase):
 
     def setUp(self):
@@ -100,11 +95,14 @@ class TestNodesViewEmptyV6(APITransactionTestCase):
 
         results = json.loads(response.content)
         self.assertEqual(len(results['results']), 0)
-        
+
+
 class TestNodeDetailsViewV5(APITransactionTestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         self.node1 = node_test_utils.create_node()
         self.node2 = node_test_utils.create_node()
@@ -140,7 +138,7 @@ class TestNodeDetailsViewV5(APITransactionTestCase):
         }
 
         url = '/v5/nodes/%d/' % self.node2.id
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
@@ -155,7 +153,7 @@ class TestNodeDetailsViewV5(APITransactionTestCase):
         json_data = {'is_paused': False, 'pause_reason': 'Test reason'}
 
         url = '/v5/nodes/%d/' % self.node2.id
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
@@ -172,7 +170,7 @@ class TestNodeDetailsViewV5(APITransactionTestCase):
         }
 
         url = '/v5/nodes/9999/'
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
@@ -181,7 +179,7 @@ class TestNodeDetailsViewV5(APITransactionTestCase):
 
         json_data = {}
         url = '/v5/nodes/%d/' % self.node2.id
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -193,7 +191,7 @@ class TestNodeDetailsViewV5(APITransactionTestCase):
         }
 
         url = '/v5/nodes/%d/' % self.node2.id
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -205,7 +203,7 @@ class TestNodeDetailsViewV5(APITransactionTestCase):
         }
 
         url = '/v5/nodes/%d/' % self.node2.id
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
@@ -253,7 +251,7 @@ class TestNodeDetailsViewV6(APITransactionTestCase):
         }
 
         url = '/v6/nodes/%d/' % self.node2.id
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
     def test_update_node_unpause(self):
@@ -262,7 +260,7 @@ class TestNodeDetailsViewV6(APITransactionTestCase):
         json_data = {'is_paused': False, 'pause_reason': 'Test reason'}
 
         url = '/v6/nodes/%d/' % self.node2.id
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
     def test_update_node_not_found(self):
@@ -273,7 +271,7 @@ class TestNodeDetailsViewV6(APITransactionTestCase):
         }
 
         url = '/v6/nodes/9999/'
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
@@ -282,7 +280,7 @@ class TestNodeDetailsViewV6(APITransactionTestCase):
 
         json_data = {}
         url = '/v6/nodes/%d/' % self.node2.id
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -294,7 +292,7 @@ class TestNodeDetailsViewV6(APITransactionTestCase):
         }
 
         url = '/v6/nodes/%d/' % self.node2.id
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -306,5 +304,5 @@ class TestNodeDetailsViewV6(APITransactionTestCase):
         }
 
         url = '/v6/nodes/%d/' % self.node2.id
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)

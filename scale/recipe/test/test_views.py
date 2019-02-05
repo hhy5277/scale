@@ -5,7 +5,6 @@ import datetime
 import django
 import json
 
-from django.test.testcases import TestCase, TransactionTestCase
 import django.utils.timezone as timezone
 from django.utils.timezone import utc
 from mock import patch
@@ -2792,8 +2791,6 @@ class TestRecipeInputFilesViewV5(APITestCase):
                                                          source_ended=self.f4_source_ended, recipe=self.recipe,
                                                          last_modified=self.f4_last_modified,
                                                          recipe_input=self.f4_recipe_input)
-
-        rest.login_client(self.client)
 
     def test_successful_file(self):
         """Tests successfully calling the recipe input files view"""

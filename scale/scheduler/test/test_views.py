@@ -4,13 +4,9 @@ import datetime
 import json
 
 import django
-from django.test import TestCase
 from django.utils.timezone import now
-from mock import patch
 from rest_framework import status
 
-import util.rest as rest_util
-from mesos_api.api import HardwareResources, MesosError
 from rest_framework.test import APITestCase
 from scheduler.models import Scheduler
 from scheduler.threads.scheduler_status import SchedulerStatusThread
@@ -64,7 +60,7 @@ class TestSchedulerViewV5(APITestCase):
         }
 
         url = '/v5/scheduler/'
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
@@ -77,7 +73,7 @@ class TestSchedulerViewV5(APITestCase):
         json_data = {}
 
         url = '/v5/scheduler/'
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_update_scheduler_extra_fields(self):
@@ -88,7 +84,7 @@ class TestSchedulerViewV5(APITestCase):
         }
 
         url = '/v5/scheduler/'
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
@@ -137,7 +133,7 @@ class TestSchedulerViewV6(APITestCase):
         }
 
         url = '/v6/scheduler/'
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
     def test_update_scheduler_no_fields(self):
@@ -146,7 +142,7 @@ class TestSchedulerViewV6(APITestCase):
         json_data = {}
 
         url = '/v6/scheduler/'
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_update_scheduler_invalid_fields(self):
@@ -157,7 +153,7 @@ class TestSchedulerViewV6(APITestCase):
         }
 
         url = '/v6/scheduler/'
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_update_scheduler_extra_fields(self):
@@ -168,7 +164,7 @@ class TestSchedulerViewV6(APITestCase):
         }
 
         url = '/v6/scheduler/'
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 

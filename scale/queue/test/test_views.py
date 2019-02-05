@@ -5,7 +5,6 @@ import time
 
 import django
 import django.utils.timezone as timezone
-from django.test import TestCase, TransactionTestCase
 from rest_framework import status
 
 import error.test.utils as error_test_utils
@@ -381,7 +380,7 @@ class TestRequeueJobsView(APITestCase):
         }
 
         url = '/v6/queue/requeue-jobs/'
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
     def test_no_match(self):
@@ -391,7 +390,7 @@ class TestRequeueJobsView(APITestCase):
         }
 
         url = rest_util.get_url('/queue/requeue-jobs/')
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
@@ -408,7 +407,7 @@ class TestRequeueJobsView(APITestCase):
         }
 
         url = rest_util.get_url('/queue/requeue-jobs/')
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
 
         result = json.loads(response.content)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -437,7 +436,7 @@ class TestRequeueJobsView(APITestCase):
         }
 
         url = rest_util.get_url('/queue/requeue-jobs/')
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
@@ -458,7 +457,7 @@ class TestRequeueJobsView(APITestCase):
         }
 
         url = rest_util.get_url('/queue/requeue-jobs/')
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
@@ -474,7 +473,7 @@ class TestRequeueJobsView(APITestCase):
         }
 
         url = rest_util.get_url('/queue/requeue-jobs/')
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
@@ -489,7 +488,7 @@ class TestRequeueJobsView(APITestCase):
         }
 
         url = rest_util.get_url('/queue/requeue-jobs/')
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
@@ -504,7 +503,7 @@ class TestRequeueJobsView(APITestCase):
         }
 
         url = rest_util.get_url('/queue/requeue-jobs/')
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
@@ -519,7 +518,7 @@ class TestRequeueJobsView(APITestCase):
         }
 
         url = rest_util.get_url('/queue/requeue-jobs/')
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
@@ -535,7 +534,7 @@ class TestRequeueJobsView(APITestCase):
         }
 
         url = '/v5/queue/requeue-jobs/'
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
@@ -553,7 +552,7 @@ class TestRequeueJobsView(APITestCase):
         }
 
         url = rest_util.get_url('/queue/requeue-jobs/')
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
@@ -579,7 +578,7 @@ class TestRequeueJobsView(APITestCase):
         }
 
         url = rest_util.get_url('/queue/requeue-jobs/')
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)

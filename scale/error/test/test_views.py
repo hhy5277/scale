@@ -4,11 +4,9 @@ from __future__ import absolute_import
 import json
 
 import django
-from django.test import TestCase
 from rest_framework import status
 
 import error.test.utils as error_test_utils
-import util.rest as rest_util
 from error.models import Error
 from rest_framework.test import APITestCase
 from util import rest
@@ -48,7 +46,7 @@ class TestErrorsViewV5(APITestCase):
             'description': 'new error #4',
             'category': 'ALGORITHM',
         }
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
         result = json.loads(response.content)
@@ -67,7 +65,7 @@ class TestErrorsViewV5(APITestCase):
             'name': 'error4',
             'category': 'ALGORITHM',
         }
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -81,7 +79,7 @@ class TestErrorsViewV5(APITestCase):
             'description': 'new error #4',
             'category': 'BAD',
         }
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -95,7 +93,7 @@ class TestErrorsViewV5(APITestCase):
             'description': 'new error #4',
             'category': 'SYSTEM',
         }
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -134,7 +132,7 @@ class TestErrorsViewV6(APITestCase):
             'description': 'new error #4',
             'category': 'ALGORITHM',
         }
-        response = self.client.post(url, json.dumps(json_data), 'json')
+        response = self.client.post(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
 
@@ -182,7 +180,7 @@ class TestErrorDetailsViewV5(APITestCase):
         json_data = {
             'title': 'error EDIT',
         }
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
@@ -203,7 +201,7 @@ class TestErrorDetailsViewV5(APITestCase):
         json_data = {
             'title': 'error EDIT',
         }
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
@@ -214,7 +212,7 @@ class TestErrorDetailsViewV5(APITestCase):
         json_data = {
             'category': 'BAD',
         }
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -225,7 +223,7 @@ class TestErrorDetailsViewV5(APITestCase):
         json_data = {
             'title': 'error EDIT',
         }
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -236,7 +234,7 @@ class TestErrorDetailsViewV5(APITestCase):
         json_data = {
             'category': 'SYSTEM',
         }
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -284,5 +282,5 @@ class TestErrorDetailsViewV6(APITestCase):
         json_data = {
             'title': 'error EDIT',
         }
-        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        response = self.client.patch(url, json_data, 'json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)

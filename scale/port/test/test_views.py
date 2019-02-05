@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 import json
 
 import django
-from django.test.testcases import TestCase, TransactionTestCase
 from mock import patch
 from rest_framework import status
 
@@ -12,7 +11,6 @@ import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
-import util.rest as rest_util
 from error.models import Error
 from job.models import JobType
 from recipe.models import RecipeType
