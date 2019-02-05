@@ -3476,7 +3476,7 @@ class TestJobTypesValidationViewV5(APITransactionTestCase):
     def setUp(self):
         django.setup()
 
-        rest.login_client(self.client, is_staff=True)
+        rest.login_client(self.client)
 
         self.workspace = storage_test_utils.create_workspace()
         self.error = error_test_utils.create_error(category='ALGORITHM')

@@ -1788,7 +1788,7 @@ class TestConfigurationValidationViewV5(APITestCase):
     def setUp(self):
         django.setup()
 
-        rest.login_client(self.client, is_staff=True)
+        rest.login_client(self.client)
 
     def test_successful(self):
         """Tests validating an edit of all types successfully."""

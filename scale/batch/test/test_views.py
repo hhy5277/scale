@@ -29,13 +29,13 @@ class TestBatchesViewV5(APITestCase):
     def setUp(self):
         django.setup()
 
+        rest.login_client(self.client, is_staff=True)
+
         self.recipe_type1 = recipe_test_utils.create_recipe_type_v5(name='test1', version='1.0')
         self.batch1 = batch_test_utils.create_batch_old(recipe_type=self.recipe_type1, status='SUBMITTED')
 
         self.recipe_type2 = recipe_test_utils.create_recipe_type_v5(name='test2', version='1.0')
         self.batch2 = batch_test_utils.create_batch_old(recipe_type=self.recipe_type2, status='CREATED')
-
-        rest.login_client(self.client, is_staff=True)
 
     def test_successful(self):
         """Tests successfully calling the batches view."""
@@ -851,10 +851,10 @@ class TestBatchesValidationViewV5(APITestCase):
     def setUp(self):
         django.setup()
 
+        rest.login_client(self.client)
+
         self.recipe_type1 = recipe_test_utils.create_recipe_type_v5(name='test1', version='1.0')
         self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type1)
-
-        rest.login_client(self.client, is_staff=True)
 
     def test_successful(self):
         """Tests validating a batch definition."""
@@ -963,7 +963,7 @@ class TestBatchesValidationViewV6(APITransactionTestCase):
     def setUp(self):
         django.setup()
 
-        rest.login_client(self.client, is_staff=True)
+        rest.login_client(self.client)
 
         self.recipe_type_1 = recipe_test_utils.create_recipe_type_v6()
         self.batch_1 = batch_test_utils.create_batch(recipe_type=self.recipe_type_1, is_creation_done=False)
