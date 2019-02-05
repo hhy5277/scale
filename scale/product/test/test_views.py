@@ -13,6 +13,10 @@ import storage.test.utils as storage_test_utils
 import util.rest as rest_util
 
 # TODO: remove when REST API v5 is removed
+from rest_framework.test import APITestCase
+from util import rest
+
+
 class TestProductsViewV5(TransactionTestCase):
 
     api = 'v5'
@@ -168,7 +172,7 @@ class TestProductsViewV5(TransactionTestCase):
             # Make sure country info is included
             self.assertEqual(entry['countries'][0], self.country.iso3)
 
-class TestProductDetailsViewV5(TestCase):
+class TestProductDetailsViewV5(APITestCase):
 
     api = 'v5'
     
@@ -186,6 +190,8 @@ class TestProductDetailsViewV5(TestCase):
         product_test_utils.create_file_link(ancestor=self.ancestor, descendant=self.product)
         product_test_utils.create_file_link(ancestor=self.ancestor, descendant=self.descendant)
         product_test_utils.create_file_link(ancestor=self.product, descendant=self.descendant)
+
+        rest.login_client(self.client)
 
     def test_id(self):
         """Tests successfully calling the product files view by id."""
@@ -382,7 +388,7 @@ class TestProductsUpdatesViewV5(TransactionTestCase):
             self.assertIsNotNone(entry['source_files'])
             self.assertEqual(entry['countries'][0], self.country.iso3)
 
-class TestProductSourcesViewV5(TestCase):
+class TestProductSourcesViewV5(APITestCase):
 
     api = 'v5'
     
@@ -403,6 +409,8 @@ class TestProductSourcesViewV5(TestCase):
                                                           countries=[self.country])
         product_test_utils.create_file_link(ancestor=self.src_file, descendant=self.product1, job=self.job1,
                                             job_exe=self.job_exe1)
+
+        rest.login_client(self.client)
 
     def test_invalid_product_id(self):
         """Tests calling the product file source products view when the source ID is invalid."""
@@ -506,12 +514,14 @@ class TestProductSourcesViewV5(TestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
 
-class TestProductsViewsV6(TestCase):
+class TestProductsViewsV6(APITestCase):
 
     api = 'v6'
     
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client)
 
     def test_v6_products(self):
         """Tests that product apis are removed in v6"""

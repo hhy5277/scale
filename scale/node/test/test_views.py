@@ -14,13 +14,17 @@ import job.test.utils as job_test_utils
 import node.test.utils as node_test_utils
 import util.rest as rest_util
 from mesos_api.api import SlaveInfo, HardwareResources
+from rest_framework.test import APITransactionTestCase
 from scheduler.models import Scheduler
+from util import rest
 
 
-class TestNodesViewV5(TransactionTestCase):
+class TestNodesViewV5(APITransactionTestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         self.node1 = node_test_utils.create_node()
         self.node2 = node_test_utils.create_node()
@@ -43,7 +47,7 @@ class TestNodesViewV5(TransactionTestCase):
             else:
                 self.fail('Unexpected node in results: %i' % entry['id'])
 
-class TestNodesViewV6(TransactionTestCase):
+class TestNodesViewV6(APITransactionTestCase):
 
     def setUp(self):
         django.setup()
@@ -69,7 +73,7 @@ class TestNodesViewV6(TransactionTestCase):
             else:
                 self.fail('Unexpected node in results: %i' % entry['id'])
 
-class TestNodesViewEmptyV5(TransactionTestCase):
+class TestNodesViewEmptyV5(APITransactionTestCase):
 
     def setUp(self):
         django.setup()
@@ -83,7 +87,7 @@ class TestNodesViewEmptyV5(TransactionTestCase):
         results = json.loads(response.content)
         self.assertEqual(len(results['results']), 0)
 
-class TestNodesViewEmptyV6(TransactionTestCase):
+class TestNodesViewEmptyV6(APITransactionTestCase):
 
     def setUp(self):
         django.setup()
@@ -97,7 +101,7 @@ class TestNodesViewEmptyV6(TransactionTestCase):
         results = json.loads(response.content)
         self.assertEqual(len(results['results']), 0)
         
-class TestNodeDetailsViewV5(TransactionTestCase):
+class TestNodeDetailsViewV5(APITransactionTestCase):
 
     def setUp(self):
         django.setup()
@@ -208,10 +212,12 @@ class TestNodeDetailsViewV5(TransactionTestCase):
         self.assertEqual(result['is_active'], False)
         self.assertIn('deprecated', result)
 
-class TestNodeDetailsViewV6(TransactionTestCase):
+class TestNodeDetailsViewV6(APITransactionTestCase):
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         self.node1 = node_test_utils.create_node()
         self.node2 = node_test_utils.create_node()

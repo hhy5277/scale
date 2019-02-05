@@ -16,14 +16,18 @@ import util.rest as rest_util
 from error.models import Error
 from job.models import JobType
 from recipe.models import RecipeType
+from rest_framework.test import APITransactionTestCase, APITestCase
+from util import rest
 from vault.secrets_handler import SecretsHandler
 
 
-class TestPortViewsV6(TransactionTestCase):
+class TestPortViewsV6(APITransactionTestCase):
     """Tests related to the configuration export endpoint"""
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
         self.recipe_type1 = recipe_test_utils.create_recipe_type_v6()
         self.job_type1 = job_test_utils.create_job_type()
@@ -62,7 +66,7 @@ class TestPortViewsV6(TransactionTestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
         
-class TestConfigurationViewExportV5(TransactionTestCase):
+class TestConfigurationViewExportV5(APITransactionTestCase):
     """Tests related to the configuration export endpoint"""
 
     def setUp(self):
@@ -380,11 +384,13 @@ class TestConfigurationViewExportV5(TransactionTestCase):
         self.assertTrue('SECRET_SETTING' not in result['job_types'][0]['configuration']['settings'])
         self.assertTrue('UNUSED_MOUNT' not in result['job_types'][0]['configuration']['mounts'])
 
-class TestConfigurationViewImportV5(TestCase):
+class TestConfigurationViewImportV5(APITestCase):
     """Tests related to the configuration import endpoint"""
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
     def test_errors_create(self):
         """Tests importing only errors that create new models."""
@@ -2033,7 +2039,7 @@ class TestConfigurationViewImportV5(TestCase):
         self.assertEqual(len(recipe_types), 1)
 
 
-class TestConfigurationDownloadViewV5(TransactionTestCase):
+class TestConfigurationDownloadViewV5(APITransactionTestCase):
     """Tests related to the configuration export download endpoint"""
 
     def setUp(self):
@@ -2056,11 +2062,13 @@ class TestConfigurationDownloadViewV5(TransactionTestCase):
         self.assertEqual(len(results['errors']), 1)
 
 
-class TestConfigurationUploadViewV5(TestCase):
+class TestConfigurationUploadViewV5(APITestCase):
     """Tests related to the configuration import upload endpoint"""
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
     def test_upload_missing_file(self):
         """Tests importing as a separate upload file without any provided content."""
@@ -2073,11 +2081,13 @@ class TestConfigurationUploadViewV5(TestCase):
     # TODO: Figure out to write a unit test for the success case
 
 
-class TestConfigurationValidationViewV5(TestCase):
+class TestConfigurationValidationViewV5(APITestCase):
     """Tests related to the configuration import endpoint"""
 
     def setUp(self):
         django.setup()
+
+        rest.login_client(self.client, is_staff=True)
 
     def test_successful(self):
         """Tests validating an edit of all types successfully."""
