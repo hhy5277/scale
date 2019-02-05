@@ -1151,9 +1151,9 @@ class TestScansValidationViewV5(APITestCase):
     def setUp(self):
         django.setup()
 
-        self.workspace = storage_test_utils.create_workspace(name='raw')
+        rest.login_client(self.client)
 
-        rest.login_client(self.client, is_staff=True)
+        self.workspace = storage_test_utils.create_workspace(name='raw')
 
     def test_successful(self):
         """Tests validating a new Scan process."""
@@ -1238,9 +1238,9 @@ class TestScansValidationViewV6(APITestCase):
     def setUp(self):
         django.setup()
 
-        self.workspace = storage_test_utils.create_workspace(name='raw')
+        rest.login_client(self.client)
 
-        rest.login_client(self.client, is_staff=True)
+        self.workspace = storage_test_utils.create_workspace(name='raw')
 
     def test_successful(self):
         """Tests validating a new Scan process."""
@@ -2220,9 +2220,9 @@ class TestStrikesValidationViewV5(APITestCase):
     def setUp(self):
         django.setup()
 
-        self.workspace = storage_test_utils.create_workspace(name='raw')
+        rest.login_client(self.client)
 
-        rest.login_client(self.client, is_staff=True)
+        self.workspace = storage_test_utils.create_workspace(name='raw')
 
     def test_successful(self):
         """Tests validating a new Strike process."""
@@ -2311,9 +2311,9 @@ class TestStrikesValidationViewV6(APITestCase):
     def setUp(self):
         django.setup()
 
-        self.workspace = storage_test_utils.create_workspace(name='raw')
+        rest.login_client(self.client)
 
-        rest.login_client(self.client, is_staff=True)
+        self.workspace = storage_test_utils.create_workspace(name='raw')
 
     def test_successful(self):
         """Tests validating a new Strike process."""

@@ -1107,7 +1107,7 @@ class TestRecipeTypesValidationViewV5(APITransactionTestCase):
     def setUp(self):
         django.setup()
 
-        rest.login_client(self.client, is_staff=True)
+        rest.login_client(self.client)
 
         self.workspace = storage_test_utils.create_workspace()
         self.job_type = job_test_utils.create_job_type()
@@ -1340,7 +1340,7 @@ class TestRecipeTypesValidationViewV6(APITransactionTestCase):
     def setUp(self):
         django.setup()
 
-        rest.login_client(self.client, is_staff=True)
+        rest.login_client(self.client)
 
         self.job_type1 = job_test_utils.create_seed_job_type(manifest=job_test_utils.MINIMUM_MANIFEST)
         self.job_type2 = job_test_utils.create_seed_job_type()

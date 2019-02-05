@@ -894,7 +894,7 @@ class TestWorkspacesValidationViewV5(APITestCase):
     def setUp(self):
         django.setup()
 
-        rest.login_client(self.client, is_staff=True)
+        rest.login_client(self.client)
 
     def test_successful(self):
         """Tests validating a new workspace."""
@@ -1003,7 +1003,7 @@ class TestWorkspacesValidationViewV6(APITestCase):
     def setUp(self):
         django.setup()
 
-        rest.login_client(self.client, is_staff=True)
+        rest.login_client(self.client)
 
     def test_successful(self):
         """Tests validating a new workspace."""
