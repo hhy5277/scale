@@ -73,7 +73,7 @@ ELASTICSEARCH_URLS = None
 # Placeholder for Elasticsearch object. Needed for unit tests.
 ELASTICSEARCH = None
 # placeholder for elasticsearch version. needed to properly form ES log query.
-ELASTICSERACH_VERSION = None
+ELASTICSEARCH_VERSION = None
 
 DATABASE_URL = os.getenv('DATABASE_URL')
 
