@@ -22,7 +22,7 @@ SERVICE_SECRET = os.getenv('SERVICE_SECRET')
 def dcos_login():
     # Defaults servers for both DCOS 1.10+ CE and EE.
     servers = os.getenv('MARATHON_SERVERS',
-                        'https://marathon.mesos:8443,http://marathon.mesos:8080').split(',')
+                        'http://marathon.mesos:8080,https://marathon.mesos:8443').split(',')
 
     if SERVICE_SECRET:
         print('Attempting token auth to Marathon...')
@@ -282,13 +282,6 @@ def deploy_database(client, app_name):
         apply_set_envs(marathon, env_map)
 
         deploy_marathon_app(client, marathon)
-
-
-def get_elasticsearch_urls():
-    response = requests.get('http://elasticsearch.marathon.mesos:31105/v1/tasks')
-    endpoints = ['http://%s' % x['http_address'] for x in json.loads(response.text)]
-    es_urls = ','.join(endpoints)
-    return es_urls
 
 
 def deploy_rabbitmq(client, app_name):
