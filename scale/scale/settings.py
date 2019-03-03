@@ -66,8 +66,6 @@ METRICS_DIR = None
 LOGGING_ADDRESS = None
 LOGGING_HEALTH_ADDRESS = None
 
-LOGIN_REDIRECT_URL = '/v6/accounts/profile'
-
 # Base URL of elasticsearch nodes
 ELASTICSEARCH_URLS = os.environ.get('SCALE_ELASTICSEARCH_URLS')
 # placeholder for elasticsearch version. needed to properly form ES log query.
@@ -246,6 +244,8 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+LOGIN_REDIRECT_URL = '/'
 
 #############################
 # GEOAxIS specific settings #
