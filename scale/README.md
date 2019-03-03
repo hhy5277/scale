@@ -237,6 +237,9 @@ below for reference.
 | ELASTICSEARCH_DOCKER_IMAGE  | 'elasticsearch:2.4-alpine'      | Docker image for Elasticsearch             |
 | ENABLE_BOOTSTRAP            | 'true'                          | Bootstrap Scale support containers         |
 | ENABLE_WEBSERVER            | 'true' or None                  | Used by bootstrap to enable UI and API     |
+| GEOAXIS_HOST                | 'geoaxis.gxaccess.com'          | Host address for GEOAxIS endpoints         |
+| GEOAXIS_KEY                 | None                            | GEOAxIS OAuth API Key                      |
+| GEOAXIS_SECRET              | None                            | GEOAxIS OAuth API Secret                   |
 | LOGSTASH_DOCKER_IMAGE       | 'geoint/scale-logstash'         | Docker image for logstash                  |
 | MARATHON_APP_DOCKER_IMAGE   | 'geoint/scale'                  | Scale docker image name                    |
 | MESOS_MASTER_URL            | 'zk://localhost:2181/scale'     | Mesos master location                      |
