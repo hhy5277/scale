@@ -2102,9 +2102,8 @@ class TestJobTypesViewV6(APITestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
 
-<<<<<<< HEAD
-class TestJobTypeNamesViewV6(TestCase):
 
+class TestJobTypeNamesViewV6(APITestCase):
     api = 'v6'
 
     def setUp(self):
