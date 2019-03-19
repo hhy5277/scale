@@ -1,7 +1,7 @@
 {
   "id": "scale-template-elasticsearch",
   "cpus": 1,
-  "mem": 512,
+  "mem": 1024,
   "disk": 0,
   "instances": 1,
   "container": {
@@ -35,5 +35,8 @@
       "ipProtocol": "IPv4"
     }
   ],
+  "env": {
+    "ES_JAVA_OPTS ": "-Xms512m -Xmx512m"
+  },
   "uris": []
 }
