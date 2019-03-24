@@ -13,7 +13,6 @@ import batch.test.utils as batch_test_utils
 import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
-import trigger.test.utils as trigger_test_utils
 import source.test.utils as source_test_utils
 from recipe.handlers.graph import RecipeGraph
 from recipe.handlers.graph_delta import RecipeGraphDelta
@@ -109,7 +108,7 @@ class TestRecipeTypesViewV5(APITransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
-class TestRecipeTypesViewV6(TransactionTestCase):
+class TestRecipeTypesViewV6(APITransactionTestCase):
     def test_create_bad_trigger_type(self):
         """Tests creating a new recipe type with an invalid trigger type."""
         json_data = {
@@ -1103,7 +1102,7 @@ class TestRecipeTypesValidationViewV5(APITransactionTestCase):
         self.assertEqual(results['warnings'][1]['id'], 'media_type')
 
 
-class TestRecipeTypesValidationViewV6(TransactionTestCase):
+class TestRecipeTypesValidationViewV6(APITransactionTestCase):
     def test_bad_trigger_type(self):
         """Tests validating a new recipe type with an invalid trigger type."""
         json_data = {
